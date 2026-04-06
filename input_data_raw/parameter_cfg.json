@@ -1,0 +1,462 @@
+{
+    "existing": {
+        "type": "ACSR",
+        "conductor": "795.0_DRAKE",
+        "dol_per_1000_ft": 1711,
+        "inst_dol_per_1000_ft": 2359,
+        "acess_dol_per_1000_ft": 263,
+        "area_mm2": 468,
+        "diameter_mm": 28,
+        "weight_n_per_m": 15.96,
+        "conductor_rts_kn": 140.12,
+        "temp_dc_c": 20,
+        "temp_low_c": 25,
+        "temp_high_c": 75,
+        "max_temperature_c": 100,
+        "res_low_ohm_per_m": 7.02e-5,
+        "res_high_ohm_per_m": 8.63e-5,
+        "res_dc_ohm_per_m": 7.02e-5,
+        "ampacity_max_temp_a": 907,
+        "ElasticModulus_GPa": 75.5,
+        "CoeffThermalExpan_per_Cel": 1.92e-5,
+        "structures": {
+            "dist_a_b_m": 15,
+            "nbr_conductors": 1,
+            "dist_b_c_m": 15,
+            "weather_corr_factor": 1,
+            "dist_a_c_m": 15,
+            "rigosity_coeff": 0.82,
+            "line_angle": 30,
+            "nbr_structures": 100,
+            "str_tgt": 70,
+            "str_ra": 10,
+            "str_nade": 10,
+            "str_ade": 10,
+            "mat_str": "Steel_Pole",
+            "str_tgt_height_m": 20,
+            "str_ra_height_m": 20,
+            "str_nade_height_m": 20,
+            "str_ade_height_m": 20,
+            "str_tgt_cost": 50000,
+            "str_ra_cost": 50000,
+            "str_nade_cost": 50000,
+            "str_ade_cost": 50000
+        }
+    },
+    "project": {
+        "power_mw": "500",
+        "voltage_kv": "161",
+        "nbr_ckts": "1",
+        "length_km": 4.618818708951657,
+        "nbr_structures": 52,
+        "span_m": 97.5359968788481,
+        "avg_span_m": 91.4399970739201,
+        "max_sag_m": 3.047999902464003,
+        "load_factor": "0.63",
+        "losses_check": 1,
+        "consider_corona": 1,
+        "consider_str_type": 1,
+        "voltage_upgd_kv": 230
+    },
+    "environment": {
+        "latitude": "34.41",
+        "atmosphere": "Clear",
+        "elevation_m": 375.0015239999512,
+        "date": "2023-09-06",
+        "day": 6,
+        "month": 9,
+        "year": 2023,
+        "hour": "15",
+        "wind_speed_m_per_s": 0.6095999804928006,
+        "wind_angle": "90",
+        "cw_angle_direction_rel_to_north": "90",
+        "emissivity": "0.5",
+        "solar_absorptivity": "0.5",
+        "ambient_temperature_c": "30",
+        "temp_coeff_resistivity": 0.0039
+    },
+    "loading": {
+        "initial_tension_percentage": 0.2,
+        "initial_temperature_c": "10",
+        "Loading": "NESC_250B_Heavy",
+        "ice_density_kg_per_m3": "912.9",
+        "ice_thickness_m": "1.25E-02",
+        "pressure_pa": "190",
+        "wind_speed_m_per_s": "17.67",
+        "temperature_c": "-20",
+        "additive_loading_n_per_m": "4.4",
+        "ld_select": "NESC_250B_Heavy"
+    },
+    "economics": {
+        "nbr_structures": 52,
+        "number_ckts": "1",
+        "conductors_lifetime": "40",
+        "structures_lifetime": "60",
+        "conductors_life": "25",
+        "structures_life": "15",
+        "cost_of_structures_unit": "60000",
+        "wacc": 0.07,
+        "inflation": 0.02,
+        "cost_of_losses_dol_per_mwh": "50",
+        "length_miles": 2.8699999999999997,
+        "cost_congestion": "20",
+        "cost_of_structures_upgd_unit": "20000",
+        "cost_of_structures_hvdc_unit": "20000",
+        "cost_of_ss_transfo": "1",
+        "cost_of_converters": "1",
+        "customize_inv_options": 0
+    },
+    "losses_check": 0,
+    "social_benefits_params": [
+        {
+            "ba": "p90",
+            "year": "2030",
+            "res_cap": "25840248",
+            "capacity_factor": "0.284337348",
+            "load_factor": "0.580327772",
+            "res_fraction": "12.77368554",
+            "non_res_fraction": "87.22631446",
+            "load_co2e_kg_per_mwh": "239.3769406",
+            "delta_res": "0.242295674",
+            "delta_co2e_kg": "-298802529.4",
+            "delta_co2e_ton": "-298802.5294",
+            "delta_co2e_Million_ton": "-0.298802529",
+            "load_ratio": "1.042613999"
+        },
+        {
+            "ba": "p90",
+            "year": "2035",
+            "res_cap": "73652328",
+            "capacity_factor": "0.277773304",
+            "load_factor": "0.606990507",
+            "res_fraction": "37.0524269",
+            "non_res_fraction": "62.9475731",
+            "load_co2e_kg_per_mwh": "157.0844178",
+            "delta_res": "0.082201227",
+            "delta_co2e_kg": "-443801443.1",
+            "delta_co2e_ton": "-443801.4431",
+            "delta_co2e_Million_ton": "-0.443801443",
+            "load_ratio": "1.190339528"
+        },
+        {
+            "ba": "p90",
+            "year": "2040",
+            "res_cap": "113140656",
+            "capacity_factor": "0.274688308",
+            "load_factor": "0.617222664",
+            "res_fraction": "51.25072323",
+            "non_res_fraction": "48.74927677",
+            "load_co2e_kg_per_mwh": "118.2323288",
+            "delta_res": "0.054022877",
+            "delta_co2e_kg": "-514303155",
+            "delta_co2e_ton": "-514303.155",
+            "delta_co2e_Million_ton": "-0.514303155",
+            "load_ratio": "1.29673296"
+        },
+        {
+            "ba": "p90",
+            "year": "2045",
+            "res_cap": "161210280",
+            "capacity_factor": "0.254339586",
+            "load_factor": "0.63078232",
+            "res_fraction": "56.32723236",
+            "non_res_fraction": "43.67276764",
+            "load_co2e_kg_per_mwh": "105.6342123",
+            "delta_res": "0.041495108",
+            "delta_co2e_kg": "-546485636.8",
+            "delta_co2e_ton": "-546485.6368",
+            "delta_co2e_Million_ton": "-0.546485637",
+            "load_ratio": "1.443649248"
+        },
+        {
+            "ba": "p90",
+            "year": "2050",
+            "res_cap": "170753424",
+            "capacity_factor": "0.246891443",
+            "load_factor": "0.6110315",
+            "res_fraction": "56.74463137",
+            "non_res_fraction": "43.25536863",
+            "load_co2e_kg_per_mwh": "149.9010959",
+            "delta_res": "0.03906597",
+            "delta_co2e_kg": "-458290929.5",
+            "delta_co2e_ton": "-458290.9295",
+            "delta_co2e_Million_ton": "-0.45829093",
+            "load_ratio": "1.496373928"
+        }
+    ],
+    "year_ref": 2030,
+    "str_strength": [
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Pole",
+            "structure_code": "S-12.0",
+            "moment_capacity_5ft_from_top_n_m": 130156.8,
+            "horiz_load_2f_from_top_n": 53376.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Pole",
+            "structure_code": "S-11.0",
+            "moment_capacity_5ft_from_top_n_m": 119310.4,
+            "horiz_load_2f_from_top_n": 48928.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Pole",
+            "structure_code": "S-10.0",
+            "moment_capacity_5ft_from_top_n_m": 108464.0,
+            "horiz_load_2f_from_top_n": 44480.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Pole",
+            "structure_code": "S-09.0",
+            "moment_capacity_5ft_from_top_n_m": 97617.6,
+            "horiz_load_2f_from_top_n": 40032.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Pole",
+            "structure_code": "S-08.0",
+            "moment_capacity_5ft_from_top_n_m": 86771.2,
+            "horiz_load_2f_from_top_n": 35584.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Pole",
+            "structure_code": "S-07.4",
+            "moment_capacity_5ft_from_top_n_m": 77280.6,
+            "horiz_load_2f_from_top_n": 32959.68
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Pole",
+            "structure_code": "S-06.5",
+            "moment_capacity_5ft_from_top_n_m": 67790.0,
+            "horiz_load_2f_from_top_n": 28912.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Pole",
+            "structure_code": "S-05.7",
+            "moment_capacity_5ft_from_top_n_m": 59655.2,
+            "horiz_load_2f_from_top_n": 25153.44
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Pole",
+            "structure_code": "S-04.9",
+            "moment_capacity_5ft_from_top_n_m": 51520.4,
+            "horiz_load_2f_from_top_n": 21684.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Pole",
+            "structure_code": "S-04.2",
+            "moment_capacity_5ft_from_top_n_m": 43385.6,
+            "horiz_load_2f_from_top_n": 18503.68
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Pole",
+            "structure_code": "S-03.5",
+            "moment_capacity_5ft_from_top_n_m": 36606.6,
+            "horiz_load_2f_from_top_n": 15612.48
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Pole",
+            "structure_code": "S-02.9",
+            "moment_capacity_5ft_from_top_n_m": 31183.4,
+            "horiz_load_2f_from_top_n": 13010.4
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Pole",
+            "structure_code": "S-02.4",
+            "moment_capacity_5ft_from_top_n_m": 25760.2,
+            "horiz_load_2f_from_top_n": 10697.44
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Pole",
+            "structure_code": "S-02.0",
+            "moment_capacity_5ft_from_top_n_m": 20337.0,
+            "horiz_load_2f_from_top_n": 8673.6
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "H6",
+            "moment_capacity_5ft_from_top_n_m": 121697.28,
+            "horiz_load_2f_from_top_n": 50707.2
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "H5",
+            "moment_capacity_5ft_from_top_n_m": 106752.0,
+            "horiz_load_2f_from_top_n": 44480.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "H4",
+            "moment_capacity_5ft_from_top_n_m": 92874.24,
+            "horiz_load_2f_from_top_n": 38697.6
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "H3",
+            "moment_capacity_5ft_from_top_n_m": 80064.0,
+            "horiz_load_2f_from_top_n": 33360.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "H2",
+            "moment_capacity_5ft_from_top_n_m": 68321.28,
+            "horiz_load_2f_from_top_n": 28467.2
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "H1",
+            "moment_capacity_5ft_from_top_n_m": 57646.08,
+            "horiz_load_2f_from_top_n": 24019.2
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "1",
+            "moment_capacity_5ft_from_top_n_m": 48038.4,
+            "horiz_load_2f_from_top_n": 20016.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "2",
+            "moment_capacity_5ft_from_top_n_m": 39498.24,
+            "horiz_load_2f_from_top_n": 16457.6
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "3",
+            "moment_capacity_5ft_from_top_n_m": 32025.6,
+            "horiz_load_2f_from_top_n": 13344.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "4",
+            "moment_capacity_5ft_from_top_n_m": 25620.48,
+            "horiz_load_2f_from_top_n": 10675.2
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "5",
+            "moment_capacity_5ft_from_top_n_m": 20282.88,
+            "horiz_load_2f_from_top_n": 8451.2
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "7",
+            "moment_capacity_5ft_from_top_n_m": 16012.8,
+            "horiz_load_2f_from_top_n": 6672.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "8",
+            "moment_capacity_5ft_from_top_n_m": 12810.24,
+            "horiz_load_2f_from_top_n": 5337.6
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "9",
+            "moment_capacity_5ft_from_top_n_m": 7899.648,
+            "horiz_load_2f_from_top_n": 3291.52
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Wood",
+            "structure": "Pole",
+            "structure_code": "10",
+            "moment_capacity_5ft_from_top_n_m": 3949.824,
+            "horiz_load_2f_from_top_n": 1645.76
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Tower",
+            "structure_code": "G-1",
+            "moment_capacity_5ft_from_top_n_m": 53280.0,
+            "horiz_load_2f_from_top_n": 22200.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Tower",
+            "structure_code": "G-2",
+            "moment_capacity_5ft_from_top_n_m": 62798.4,
+            "horiz_load_2f_from_top_n": 26166.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Tower",
+            "structure_code": "G-3",
+            "moment_capacity_5ft_from_top_n_m": 74169.6,
+            "horiz_load_2f_from_top_n": 30904.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Tower",
+            "structure_code": "G-5",
+            "moment_capacity_5ft_from_top_n_m": 87456.0,
+            "horiz_load_2f_from_top_n": 36440.0
+        },
+        {
+            "line_type": "HVAC",
+            "material": "Steel",
+            "structure": "Tower",
+            "structure_code": "G-6",
+            "moment_capacity_5ft_from_top_n_m": 145646.4,
+            "horiz_load_2f_from_top_n": 60686.0
+        }
+    ]
+}
