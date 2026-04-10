@@ -1,9 +1,0 @@
-Flask==3.1.1
-fiona==1.9.6
-geopandas==0.13.2
-geopy==2.4.1
-gunicorn==23.0.0
-numpy==1.26.0
-pandas==2.0.3
-scipy==1.13.1
-shapely==2.0.4

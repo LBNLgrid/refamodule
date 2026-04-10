@@ -20,21 +20,21 @@ atm = {'Clear':
         "G": 1.3236e-8}}
 
 
-def _solar_heat_gain(conductor, conditions):
+def _solar_heat_gain(conductor, environment):
 
     #  ### solar heat gain ###
-    date = datetime.strptime(conditions["date"], "%Y-%m-%d")
-    lat = conditions["latitude"]
-    at = conditions["atmosphere"]
-    alpha = conditions["solar_absorptivity"]
-    elevation = conditions["elevation_m"]
+    date = environment["date"]
+    lat = environment["latitude"]
+    at = environment["atmosphere"]
+    alpha = conductor["solar_absorptivity"]
+    elevation = environment["elevation_m"]
     area = conductor["diameter_mm"] / 1e3 # in m they are the same
-    dir_angle = conditions["cw_angle_direction_rel_to_north"]
+    dir_angle = environment["cw_angle_direction_rel_to_north"]
 
     # solar angle and declination
     day_year = date.timetuple().tm_yday
     solar_dec = 23.45 * np.sin(np.radians((284 + day_year) * 360.0 / 365.0))
-    hour_angle = 15.0 * (conditions['hour'] - 12)
+    hour_angle = 15.0 * (environment['hour'] - 12)
 
     # solar altitude
     h_c = np.degrees(np.arcsin(
@@ -75,7 +75,7 @@ def _solar_heat_gain(conductor, conditions):
     return q_s
 
 
-def _current_at_temperature(t_test, q_s, k_angle, conductor, conditions):
+def _current_at_temperature(t_test, q_s, k_angle, conductor, environment):
 
     # conductor inputs
     diameter = conductor["diameter_mm"] / 1e3
@@ -83,12 +83,12 @@ def _current_at_temperature(t_test, q_s, k_angle, conductor, conditions):
     t_low = conductor["temp_low_c"]
     res_high = conductor["res_high_ohm_per_m"]
     t_high = conductor["temp_high_c"]
+    emissivity = conductor["emissivity"]
 
-    # conditions inputs
-    t_a = conditions["ambient_temperature_c"]
-    wind_speed = conditions["wind_speed_m_per_s"]
-    emissivity = conditions["emissivity"]
-    elevation = conditions["elevation_m"]
+    # environment inputs
+    t_a = environment["ambient_temperature_c"]
+    wind_speed = environment["wind_speed_m_per_s"]
+    elevation = environment["elevation_m"]
 
     # temperature
     t_film = (t_test+t_a)/2.0
@@ -118,10 +118,10 @@ def _current_at_temperature(t_test, q_s, k_angle, conductor, conditions):
     q_r = 17.8 * diameter * emissivity \
         * (((t_test + 273) / 100) ** 4 - ((t_a + 273) / 100) ** 4)
 
-    if not conditions['DC']:
+    if not environment['DC']:
         r_tc = ((res_high - res_low) / (t_high - t_low)) * (t_test - t_low) + res_low
     else:
-        r_tc = conductor['res_dc_ohm_per_m'] * (1 + conditions['temp_coeff_resistivity'] * (t_test - conductor['temp_dc_c']))
+        r_tc = conductor['res_dc_ohm_per_m'] * (1 + environment['temp_coeff_resistivity'] * (t_test - conductor['temp_dc_c']))
 
     x = (q_c+q_r-q_s)/r_tc
     if x > 0:
@@ -132,13 +132,13 @@ def _current_at_temperature(t_test, q_s, k_angle, conductor, conditions):
     return r_tc, i
 
 
-def ieee_738_steady_state_rating(conductor, conditions):
+def ieee_738_steady_state_rating(conductor, environment):
 
-    wind_angle = conditions['wind_angle']
+    wind_angle = environment['wind_angle']
     t_c = conductor['max_temperature_c']
 
     # solar heat gain
-    q_s = _solar_heat_gain(conductor, conditions)
+    q_s = _solar_heat_gain(conductor, environment)
 
     # wind direction factor
     k_angle = 1.194 - np.cos(np.radians(wind_angle)) \
@@ -146,26 +146,26 @@ def ieee_738_steady_state_rating(conductor, conditions):
         + 0.368 * np.sin(np.radians(2 * wind_angle))
 
     r_tc, i = _current_at_temperature(t_c, q_s, k_angle,
-                                      conductor, conditions)
+                                      conductor, environment)
 
     return i
 
 
-def ieee_738_steady_state_temperature(current_a, conductor, conditions):
+def ieee_738_steady_state_temperature(current_a, conductor, environment):
 
     # Calculate initial(steady - state) conductor temperature
     # from the steady-state load current, using a binary search
 
-    tc_min = conditions["ambient_temperature_c"]
+    tc_min = environment["ambient_temperature_c"]
     r_tc = conductor["res_low_ohm_per_m"]
-    wind_angle = conditions["wind_angle"]
+    wind_angle = environment["wind_angle"]
 
     i_ss_threshold = 0.01
     tc_max = 300
     i_ss_result = 0.0
 
     # solar heat gain
-    q_s = _solar_heat_gain(conductor, conditions)
+    q_s = _solar_heat_gain(conductor, environment)
 
     # wind direction factor
     k_angle = 1.194 - np.cos(np.radians(wind_angle)) \
@@ -181,7 +181,7 @@ def ieee_738_steady_state_temperature(current_a, conductor, conditions):
 
         r_tc, i_ss_result = np.real(_current_at_temperature(
             t_test, q_s, k_angle,
-            conductor, conditions))
+            conductor, environment))
 
         if i_ss_result == current_a:
             break
@@ -194,18 +194,18 @@ def ieee_738_steady_state_temperature(current_a, conductor, conditions):
     return t_test, r_tc
 
 
-def get_feasible(current_a, cd, environment, include_unfeasible):
+def get_performance(current_a, cd, environment, include_unfeasible):
 
     cables = cd
     cables['env_ampacity_a'] = cables.apply(lambda c:
                                             ieee_738_steady_state_rating(conductor=c.to_dict(),
-                                                                         conditions=environment),
+                                                                         environment=environment),
                                             axis=1)
     cb = cables.loc[(cables['env_ampacity_a'] > current_a)
-                    & (cables['env_ampacity_a'] < current_a*300.0)] if not include_unfeasible else cables.copy()
+                    & (cables['env_ampacity_a'] < current_a*3)] if not include_unfeasible else cables.copy()
     x = cb.apply(
         lambda c: ieee_738_steady_state_temperature(
-            current_a=current_a, conductor=c.to_dict(), conditions=environment), axis=1
+            current_a=min(current_a, c['env_ampacity_a']), conductor=c.to_dict(), environment=environment), axis=1
     )
 
     x = pd.DataFrame(x.to_list()).rename(columns={
@@ -217,13 +217,13 @@ def get_feasible(current_a, cd, environment, include_unfeasible):
     return cb
 
 
-def cigre_324_sag(loading, conductor, span_m):
+def cigre_324_sag(conductor, loading, span_m):
 
     diameter = conductor["diameter_mm"] / 1e3
     A = conductor['area_mm2'] / 1e6
     W0 = conductor['weight_n_per_m']
-    alpha = conductor['CoeffThermalExpan_per_Cel']
-    E = conductor['ElasticModulus_GPa'] * 1e9
+    alpha = conductor['coeff_thermal_expan_per_cel']
+    E = conductor['elastic_modulus_gpa'] * 1e9
     S = span_m
     H0 = loading['initial_tension_percentage'] * conductor['conductor_rts_kn'] * 1e3
     T0 = loading['initial_temperature_c']
@@ -268,9 +268,10 @@ def cigre_324_sag(loading, conductor, span_m):
     return sag1, H1, {'W0': W0, 'W1': W1, 'H0':H0, 'H1': H1, 'W_ice': W_ice, 'W_wind': W_wind, 'T1': T1}
 
 
-def get_feasible_sag(conductors, sag_max_m, span_m, loading, include_unfeasible):
+def get_performance_sag(conductors, sag_max_m, span_m, loading, include_unfeasible):
+
     conductors[['sag_m', 'tension_n', 'extra']] = conductors.apply(lambda c:
-                                   cigre_324_sag(loading=loading, conductor=c.to_dict(), span_m= span_m),
+                                   cigre_324_sag(conductor=c.to_dict(), loading=loading, span_m= span_m),
                                    axis=1, result_type='expand')
 
     df = conductors.loc[conductors['sag_m'] < sag_max_m] if not include_unfeasible else conductors.copy()
@@ -278,6 +279,7 @@ def get_feasible_sag(conductors, sag_max_m, span_m, loading, include_unfeasible)
 
 
 def corona(radius, structure, environment):
+
     # Air correction factor
     delta = 293 / (273 + environment['ambient_temperature_c']) * np.exp(-0.00012 * environment['elevation_m'])
 
@@ -295,7 +297,8 @@ def corona(radius, structure, environment):
     return inception_voltage, inception_voltage / d
 
 
-def get_feasible_corona(conductors, structure, environment, voltage, include_unfeasible):
+def get_performance_corona(conductors, structure, environment, voltage, include_unfeasible):
+
     conductors[['inception_voltage_kv', 'voltage_gradient_kv_per_cm']] = (
         conductors.apply(lambda r: corona(r['diameter_mm'] / 2 * 0.1, structure, environment),
                          axis=1,
@@ -328,7 +331,7 @@ def RUS_bulletin_200_loading(cond, angle, span, tot_nbr_conds, material_structur
     return F_h, type
 
 
-def get_feasible_mechanical_loading(conductors, structure, nbr_phases, span, strength):
+def get_performance_mechanical_loading(conductors, structure, nbr_phases, span, strength):
     conds = conductors.copy()
     angle = structure['line_angle'] / 2 * np.pi / 180
     tot_nbr_conds = nbr_phases if 'nbr_conductors' not in structure else nbr_phases * structure['nbr_conductors']
@@ -350,15 +353,15 @@ def get_feasible_mechanical_loading(conductors, structure, nbr_phases, span, str
 
 
 # evaluate losses and congestion
-def losses_including_unfeasible(cond, data, current_a, voltage, environment, support_str, nbr_ph):
+def losses_including_unfeasible(cond, prj_info, current_a, voltage, environment, support_str, nbr_ph):
     nbr_conds = 1 if 'nbr_conductors' not in support_str else support_str['nbr_conductors']
     I_E = cond['env_ampacity_a']  # current in one conductor per phase of the existing line
-    P_E = I_E * voltage * np.sqrt(3) * data['nbr_ckts'] * nbr_conds * 1e-3 if not environment['DC'] \
-            else I_E * voltage * nbr_ph * data['nbr_ckts'] * nbr_conds * 1e-3
+    P_E = I_E * voltage * np.sqrt(3) * prj_info['nbr_ckts'] * nbr_conds * 1e-3 if not environment['DC'] \
+            else I_E * voltage * nbr_ph * prj_info['nbr_ckts'] * nbr_conds * 1e-3
     
-    t_E = (data['power_mw'] - P_E) / data['power_mw']
-    loss_factor = 0.3 * data['load_factor'] + 0.7 * data['load_factor'] ** 2  # coeffs set to 0.15 and 0.85 in case of distribution
-    if (data['power_mw'] - P_E) > 0:
+    t_E = (prj_info['power_mw'] - P_E) / prj_info['power_mw']
+    loss_factor = 0.3 * prj_info['load_factor'] + 0.7 * prj_info['load_factor'] ** 2  # coeffs set to 0.15 and 0.85 in case of distribution
+    if (prj_info['power_mw'] - P_E) > 0:
         # loss factor at the congested line
         load_factor_1 = (1 + t_E) / 2
         loss_factor_1 = 0.3 * load_factor_1 + 0.7 * load_factor_1 ** 2
@@ -366,78 +369,76 @@ def losses_including_unfeasible(cond, data, current_a, voltage, environment, sup
         # line resistance and loss factor at the neighboring line which takes on the congestion power from existing line
         R = 8.63 * 1e-5  # ACSR DRAKE at 75 deg. Cel
 
-        cond['losses_at_peak_mwh_per_m'] = (I_E ** 2 * cond['res_at_current_ohm_per_m'] * loss_factor_1 + \
+        cond['losses_at_peak_mwh_per_m'] = (cond['res_at_current_ohm_per_m'] * I_E ** 2 * loss_factor_1 + \
                                             (current_a - I_E) ** 2 * R * loss_factor) \
-                                           * data['nbr_ckts'] * nbr_ph * nbr_conds * 8760 * 1e-6
-        cond['congestion_mw'] = (data['power_mw'] - P_E) * t_E / 2
+                                           * prj_info['nbr_ckts'] * nbr_ph * nbr_conds * 8760 * 1e-6
+        cond['congestion_mw'] = (prj_info['power_mw'] - P_E) * t_E / 2
     else:
         cond['losses_at_peak_mwh_per_m'] = cond['res_at_current_ohm_per_m'] * current_a ** 2 \
-                                                 * loss_factor * data['nbr_ckts'] * nbr_ph * nbr_conds * 8760 * 1e-6
+                                                 * loss_factor * prj_info['nbr_ckts'] * nbr_ph * nbr_conds * 8760 * 1e-6
         cond['congestion_mw'] = 0
 
-    if data['consider_corona']:
-        # Air correction factor
+    if prj_info['consider_corona']:
         delta = 293 / (273 + environment['ambient_temperature_c']) * np.exp(
-            -0.00012 * environment['elevation_m'])
+            -0.00012 * environment['elevation_m']) # Air correction factor
         if not environment['DC']:
             gmd = pow(support_str['dist_a_b_m'] * support_str['dist_b_c_m'] * support_str['dist_a_c_m'],
                       1 / 3) * 1e2
             cond['corona_losses_mwh_per_m'] = \
                 (241 / delta * (60 + 25) * np.sqrt(cond['diameter_mm'] / 2 * 0.1 / gmd) *
                 pow((max(voltage - cond['inception_voltage_kv'], 0)) / np.sqrt(3), 2) * 1e-5 *
-                data['nbr_ckts'] * nbr_ph * nbr_conds * loss_factor * 8760 * 1e-6)
+                prj_info['nbr_ckts'] * nbr_ph * nbr_conds * loss_factor * 8760 * 1e-6)
         else:
             cond['corona_losses_mwh_per_m'] = \
                 pow(10, (11 + 40 * np.log10(cond['voltage_gradient_kv_per_cm'] / 25) +
                         20 * np.log10(cond['diameter_mm'] / 2 * 0.1 / 3.05) +
                         15 * np.log10(support_str['nbr_conductors'] / 3) -
                         10 * np.log10(support_str['str_height_m'] * support_str['dist_pos_neg_m'] / 15 / 15)) / 10) * \
-                data['nbr_ckts'] * nbr_ph * nbr_conds * loss_factor * 8760 * 1e-6
+                prj_info['nbr_ckts'] * nbr_ph * nbr_conds * loss_factor * 8760 * 1e-6
     else:
         cond['corona_losses_mwh_per_m'] = 0
 
     return cond
 
 
-def get_technically_feasible(conductors, data, environment, ld, specs, str_strength, include_unfeasible):
+def get_technical_performance(conductors, prj_info, environment, loading, prj_option, str_strength, include_unfeasible):
 
-    environment['DC'] = True if specs['option'] == 'HVDC' else False
-    nbr_conds = 1 if 'nbr_conductors' not in specs['structures'] else specs['structures']['nbr_conductors']
+    environment['DC'] = True if prj_option['hvdc'] else False
+    nbr_conds = 1 if 'nbr_conductors' not in prj_option['structures'] else prj_option['structures']['nbr_conductors']
 
-    current_a = data['power_mw'] * 1e3 / (specs['voltage'] * np.sqrt(3)) / data['nbr_ckts'] / nbr_conds if not environment['DC'] \
-        else data['power_mw'] * 1e3 / specs['voltage'] / specs['nbr_phases'] / data['nbr_ckts'] / nbr_conds
+    current_a = prj_info['power_mw'] * 1e3 / (prj_option['voltage_kv'] * np.sqrt(3)) / prj_info['nbr_ckts'] / nbr_conds if not environment['DC'] \
+        else prj_info['power_mw'] * 1e3 / prj_option['voltage_kv'] / prj_option['nbr_phases'] / prj_info['nbr_ckts'] / nbr_conds
 
-    conductors = get_feasible(current_a, conductors, environment, include_unfeasible)
+    curr_result = get_performance(current_a, conductors, environment, include_unfeasible)
 
     # get losses
-    if not conductors.empty:
-        feasible = get_feasible_sag(conductors, data['max_sag_m'], data['span_m'], ld, include_unfeasible)
-        if data['consider_corona']:
-            feasible = get_feasible_corona(feasible, specs['structures'], environment, specs['voltage'], include_unfeasible) \
-                if not feasible.empty else pd.DataFrame()
-        if data['consider_str_type']:
-            feasible = get_feasible_mechanical_loading(feasible, specs['structures'], specs['nbr_phases'], data['span_m'], str_strength) \
-                                                if not feasible.empty else pd.DataFrame()
+    if not curr_result.empty:
+        techn_result = get_performance_sag(curr_result, prj_info['max_sag_m'], prj_info['span_m'], loading, include_unfeasible)
+        if prj_info['consider_corona']:
+            techn_result = get_performance_corona(techn_result, prj_option['structures'], environment, prj_option['voltage_kv'], include_unfeasible) \
+                if not techn_result.empty else pd.DataFrame()
+        if prj_info['consider_str_type']:
+            techn_result = get_performance_mechanical_loading(techn_result, prj_option['structures'], prj_option['nbr_phases'], prj_info['span_m'], str_strength) \
+                                                if not techn_result.empty else pd.DataFrame()
 
-        feasible = feasible.apply(
-            lambda r: losses_including_unfeasible(r, data, current_a, specs['voltage'], environment, specs['structures'], specs['nbr_phases']),
+        techn_result = techn_result.apply(
+            lambda r: losses_including_unfeasible(r, prj_info, current_a, prj_option['voltage_kv'], environment, prj_option['structures'], prj_option['nbr_phases']),
             axis=1
         )
         
-        feasible['project'] = specs['option']
-        feasible['peak_current'] = current_a
+        techn_result['prj_option'] = prj_option['option']
+        techn_result['peak_current'] = current_a
 
-        return {'feasible': feasible}
+        return {'performance': techn_result}
     else:
-        return {'feasible': pd.DataFrame()}
+        return {'performance': pd.DataFrame()}
 
 
-
-def npv(conductors, ec, specs, include_losses=True, years=100, filter_type=False):
+def npv(conductors, ec, length_km, prj_option, consider_losses=True, time_horizon=100, filter_type=False):
 
     if not conductors.empty:
-        nbr_conds = 1 if 'nbr_conductors' not in specs['structures'] else specs['structures']['nbr_conductors']
-        str_data = specs['structures']
+        nbr_conds = 1 if 'nbr_conductors' not in prj_option['structures'] else prj_option['structures']['nbr_conductors']
+        str_data = prj_option['structures']
         if str_data and 'line_angle' in str_data:
             ec['cost_of_structures_unit'] = (str_data['str_tgt'] * str_data['str_tgt_cost']
                                           + str_data['str_ra'] * str_data['str_ra_cost']
@@ -446,54 +447,53 @@ def npv(conductors, ec, specs, include_losses=True, years=100, filter_type=False
             ec['nbr_structures'] = str_data['nbr_structures']
 
         c = conductors.reset_index(drop=True)
-        desired_cols = ['conductor', 'type', 'dol_per_1000_ft', 'inst_dol_per_1000_ft', 'str_costs_dol',
-               'acess_dol_per_1000_ft', 'env_ampacity_a', 'peak_current', 'temp_at_current_c', 'max_temperature_c',
+        desired_cols = ['code', 'type', 'dol_per_1000_ft', 'inst_dol_per_1000_ft', 'str_costs_dol',
+               'accessories_dol_per_1000_ft', 'env_ampacity_a', 'peak_current', 'temp_at_current_c', 'max_temperature_c',
                'sag_m', 'tension_n', 'losses_at_peak_mwh_per_m', 'inception_voltage_kv', 'structure_type', 'total_force',
                'congestion_mw', 'corona_losses_mwh_per_m']
         existing_cols = c.columns.intersection(desired_cols)
         c = c[existing_cols].copy()
 
         npv = pd.DataFrame(columns=['year'])
-        npv['year'] = list(range(years))
+        npv['year'] = list(range(time_horizon))
         npv['inflation'] = npv.year.apply(lambda x: (1+ec['inflation'])**x)
 
         npv[['structures_inv', 'conductors_inv']] = 0
-        npv.loc[npv.year.isin(range(specs['replace_st_at'], years, ec['structures_lifetime'])), 'structures_inv'] = 1
-        npv.loc[npv.year.isin(range(specs['replace_cd_at'], years, ec['conductors_lifetime'])), 'conductors_inv'] = 1
+        npv.loc[npv.year.isin(range(prj_option['replace_st_at'], time_horizon, ec['structures_lifetime'])), 'structures_inv'] = 1
+        npv.loc[npv.year.isin(range(prj_option['replace_cd_at'], time_horizon, ec['conductors_lifetime'])), 'conductors_inv'] = 1
         npv['cost_capital'] = npv['year'].apply(lambda x: 1/(1+ec['wacc'])**x)
 
-        length_kft = ec['length_miles'] * 5.28
+        length_kft = length_km * 3.28
         conductor_inv = c.dol_per_1000_ft.apply(lambda r: r * npv['inflation'] * npv['conductors_inv']) \
-                                                    * length_kft * ec['number_ckts'] * specs['nbr_phases'] * nbr_conds
+                                                    * length_kft * ec['nbr_ckts'] * prj_option['nbr_phases'] * nbr_conds
         conductor_inst = c.inst_dol_per_1000_ft.apply(lambda r: r * npv['inflation'] * npv['conductors_inv']) \
-                                                    * length_kft * ec['number_ckts'] * specs['nbr_phases'] * nbr_conds
-        conductor_access = c.acess_dol_per_1000_ft.apply(lambda r: r * npv['inflation'] * npv['conductors_inv']) \
-                           * length_kft * ec['number_ckts'] * specs['nbr_phases'] * nbr_conds
+                                                    * length_kft * ec['nbr_ckts'] * prj_option['nbr_phases'] * nbr_conds
+        conductor_access = c.accessories_dol_per_1000_ft.apply(lambda r: r * npv['inflation'] * npv['conductors_inv']) \
+                           * length_kft * ec['nbr_ckts'] * prj_option['nbr_phases'] * nbr_conds
 
-        length_m = ec['length_miles'] * 1609.34
+        length_m = length_km * 1e3
 
         if not ec['customize_inv_options']:
-            # structures = npv['inflation'] * ec['cost_of_structures_unit'] * npv['structures_inv'] * ec['nbr_structures']
             structures = c.str_costs_dol.apply(lambda r: npv['inflation'] * ec['cost_of_structures_unit'] * npv['structures_inv'] * ec['nbr_structures'])
         else:
             structures = c.str_costs_dol.apply(lambda r: r * npv['inflation'] * npv['structures_inv'])
 
-        if specs['option'] == 'Voltage Upgrade':
+        if prj_option['voltage_upgrade']:
             npv['structures_upgd_inv'] = 0
             npv.at[0, 'structures_upgd_inv'] = 1
             # costs of structure upgrade (if any) are added to structures costs
             structures[0] = ec['cost_of_structures_upgd_unit'] * ec['nbr_structures'] \
-                                    if specs['structure_upgrade'] else structures[0]
+                                    if prj_option['structure_upgrade'] else structures[0]
             # costs of substations and transformers modifications are also considered
             ss_transfo = ec['cost_of_ss_transfo'] * npv['inflation'] * npv['structures_upgd_inv']
             converters = npv['inflation'] * 0
 
-        elif specs['option'] == 'HVDC':
+        elif prj_option['hvdc']:
             npv['structures_upgd_inv'] = 0
             npv.at[0, 'structures_upgd_inv'] = 1
             # costs of structure upgrade (if any) are added to structures costs
             structures[0] = ec['cost_of_structures_hvdc_unit'] * ec['nbr_structures'] \
-                if specs['structure_upgrade'] else structures[0]
+                if prj_option['structure_upgrade'] else structures[0]
             # costs of converters are also considered
             converters = ec['cost_of_converters'] * npv['inflation'] * npv['structures_upgd_inv']
             ss_transfo = npv['inflation'] * 0
@@ -502,7 +502,7 @@ def npv(conductors, ec, specs, include_losses=True, years=100, filter_type=False
             ss_transfo = npv['inflation'] * 0
             converters = npv['inflation'] * 0
 
-        if include_losses:
+        if consider_losses:
             losses = c.losses_at_peak_mwh_per_m.apply(
                 lambda r: (r + c['corona_losses_mwh_per_m'].iloc[0]) * npv['inflation']
                           * ec['cost_of_losses_dol_per_mwh'] * length_m)
@@ -517,26 +517,24 @@ def npv(conductors, ec, specs, include_losses=True, years=100, filter_type=False
         # get cumulative sum in millions
         prj = prj.cumsum(axis=1)/1e6
 
-        c['project'] = specs['option']
+        c['prj_option'] = prj_option['option']
         prj = c.join(prj)
         prj = prj.reset_index(drop=True).sort_values(by=[prj.columns[-1]])
 
         cost_st = structures * npv['cost_capital'] / 1e6
-        # cost_st = cost_st.cumsum()
-        # cost_st['project'] = specs['option']
-        cost_st = prj[['conductor', 'type', 'project']].join(cost_st.cumsum(axis=1))
+        cost_st = prj[['code', 'type', 'prj_option']].join(cost_st.cumsum(axis=1))
         cost_cd = (conductor_inv + conductor_inst + conductor_access) * npv['cost_capital'] / 1e6
-        cost_cd = prj[['conductor', 'type', 'project']].join(cost_cd.cumsum(axis=1))
+        cost_cd = prj[['code', 'type', 'prj_option']].join(cost_cd.cumsum(axis=1))
         losses = losses * npv['cost_capital'] / 1e6
-        losses = prj[['conductor', 'type', 'project']].join(losses.cumsum(axis=1))
+        losses = prj[['code', 'type', 'prj_option']].join(losses.cumsum(axis=1))
         congestion = congestion * npv['cost_capital'] / 1e6
-        congestion = prj[['conductor', 'type', 'project']].join(congestion.cumsum(axis=1))
+        congestion = prj[['code', 'type', 'prj_option']].join(congestion.cumsum(axis=1))
         ss_transfo = ss_transfo * npv['cost_capital'] / 1e6
         ss_transfo = ss_transfo.cumsum()
-        ss_transfo['project'] = specs['option']
+        ss_transfo['prj_option'] = prj_option['option']
         converters = converters * npv['cost_capital'] / 1e6
         converters = converters.cumsum()
-        converters['project'] = specs['option']
+        converters['prj_option'] = prj_option['option']
 
         if filter_type:
             df = pd.DataFrame(columns=prj.columns)
@@ -547,386 +545,9 @@ def npv(conductors, ec, specs, include_losses=True, years=100, filter_type=False
         cost_cd = cost_cd.loc[cost_cd.index.isin(prj.index)]
         losses = losses.loc[losses.index.isin(prj.index)]
 
-        return {'projects': prj, 'cost_st': pd.DataFrame(cost_st), 'cost_cd': cost_cd, 'losses': losses,
+        return {'total_prj_perf': prj, 'cost_st': pd.DataFrame(cost_st), 'cost_cd': cost_cd, 'losses': losses,
                 'cost_ss_tr': pd.DataFrame(ss_transfo), 'cost_cv': pd.DataFrame(converters), 'congestion': congestion}
     else:
-        return {'projects': pd.DataFrame(), 'cost_st': pd.DataFrame(), 'cost_cd': pd.DataFrame(), 'losses': pd.DataFrame(),
+        return {'total_prj_perf': pd.DataFrame(), 'cost_st': pd.DataFrame(), 'cost_cd': pd.DataFrame(), 'losses': pd.DataFrame(),
                 'cost_ss_tr': pd.DataFrame(), 'cost_cv': pd.DataFrame(), 'congestion': pd.DataFrame()}
 
-
-def npv_existing(cond, ec, data, support_str, environment, loading, benefit_params, year_ref,
-                 include_losses=True, years=100):
-
-    nbr_conds = 1 if 'nbr_conductors' not in support_str else support_str['nbr_conductors']
-
-    if support_str and 'line_angle' in support_str:
-        ec['cost_of_structures_unit'] = (support_str['str_tgt'] * support_str['str_tgt_cost']
-                                         + support_str['str_ra'] * support_str['str_ra_cost']
-                                         + support_str['str_nade'] * support_str['str_nade_cost']
-                                         + support_str['str_ade'] * support_str['str_ade_cost']) / support_str['nbr_structures']
-        ec['nbr_structures'] = support_str['nbr_structures']
-
-    current_a = data['power_mw'] / (data['voltage_kv'] * np.sqrt(3)) * 1e3 / ec['number_ckts'] / nbr_conds
-
-    cond['env_ampacity_a'] = ieee_738_steady_state_rating(conductor=cond.loc[0], conditions=environment)
-    cond['peak_current'] = current_a
-
-    I_E = cond.loc[0]['env_ampacity_a'] # current in one conductor per phase of the existing line
-    P_E = I_E * data['voltage_kv'] * np.sqrt(3) * data['nbr_ckts'] * nbr_conds * 1e-3
-
-    t_E = (data['power_mw'] - P_E) / data['power_mw']
-
-    x = ieee_738_steady_state_temperature(min(I_E, current_a), conductor=cond.loc[0], conditions=environment)
-    x = pd.DataFrame(x).T.rename(columns={0: 'temp_at_current_c',
-                                          1: 'res_at_current_ohm_per_m'})
-    cond = cond.reset_index(drop=True).join(x)
-    cond['sag_m'], cond['tension_n'], extra = cigre_324_sag(loading, conductor=cond.loc[0], span_m=data['span_m'])
-
-    c = cond.reset_index(drop=True)
-    desired_cols = ['conductor', 'type', 'dol_per_1000_ft', 'inst_dol_per_1000_ft', 'acess_dol_per_1000_ft',
-           'env_ampacity_a', 'peak_current', 'temp_at_current_c', 'max_temperature_c', 'sag_m',
-           'inception_voltage_kv', 'tension_n', 'structure_type', 'total_force']
-    existing_cols = c.columns.intersection(desired_cols)
-    c = c[existing_cols].copy()
-
-    npv = pd.DataFrame(columns=['year'])
-    npv['year'] = list(range(years))
-    npv['inflation'] = npv.year.apply(lambda x: (1+ec['inflation'])**x)
-
-    npv[['structures_inv', 'conductors_inv']] = 0
-    npv.loc[npv.year.isin(range(ec['structures_life'], years, ec['structures_lifetime'])), 'structures_inv'] = 1
-    npv.loc[npv.year.isin(range(ec['conductors_life'], years, ec['conductors_lifetime'])), 'conductors_inv'] = 1
-    npv['cost_capital'] = npv['year'].apply(lambda x: 1/(1+ec['wacc'])**x)
-
-    length_kft = ec['length_miles'] * 5.28
-    conductor_inv = c.dol_per_1000_ft.apply(lambda r: r * npv['inflation'] * npv['conductors_inv']) \
-                                                        * length_kft * ec['number_ckts'] * 3 * nbr_conds
-    conductor_inst = c.inst_dol_per_1000_ft.apply(lambda r: r * npv['inflation'] * npv['conductors_inv']) \
-                                                        * length_kft * ec['number_ckts'] * 3 * nbr_conds
-    conductor_access = c.acess_dol_per_1000_ft.apply(lambda  r: r * npv['inflation'] * npv['conductors_inv']) \
-                                                        * length_kft * ec['number_ckts'] * 3 * nbr_conds
-
-    length_m = ec['length_miles'] * 1609.34
-    structures = c.dol_per_1000_ft.apply(
-            lambda r: npv['inflation'] * ec['cost_of_structures_unit'] * npv['structures_inv'] * ec['nbr_structures'])
-
-    # losses and congestion costs
-    loss_factor = 0.3 * data['load_factor'] + 0.7 * data['load_factor'] ** 2  # coeffs set to 0.15 and 0.85 in case of distribution
-    if (data['power_mw'] - P_E) > 0:
-        # loss factor at the congested line
-        load_factor_1 = (1 + t_E) / 2
-        loss_factor_1 = 0.3 * load_factor_1 + 0.7 * load_factor_1 ** 2
-
-        # line resistance and loss factor at the neighboring line which takes on the congestion power from existing line
-        R = 8.63 * 1e-5 # ACSR DRAKE at 75 deg. Cel
-
-        c['losses_at_peak_mwh_per_m'] = (I_E**2 * cond['res_at_current_ohm_per_m'] * loss_factor_1 + \
-                                            (current_a - I_E)**2 * R * loss_factor) \
-                                        * ec['number_ckts'] * 3 * nbr_conds * 8760 * 1e-6
-        congestion = npv['inflation'] * (data['power_mw'] - P_E) * t_E / 2 * ec['cost_congestion'] * 8760
-    else:
-        c['losses_at_peak_mwh_per_m'] = cond['res_at_current_ohm_per_m'] * current_a ** 2 \
-                                             * loss_factor * ec['number_ckts'] * 3 * nbr_conds * 8760 * 1e-6
-        congestion = npv['inflation'] * 0
-
-    if data['consider_corona']:
-        environment['DC'] = False
-        c['inception_voltage_kv'], c['voltage_gradient_kv_cm'] = corona(cond['diameter_mm'] / 2 * 0.1, support_str, environment)
-
-        # Geometrical mean distanche (GMD) between phases, in centimeter
-        gmd = pow(support_str['dist_a_b_m'] * support_str['dist_b_c_m'] * support_str['dist_a_c_m'], 1 / 3) * 1e2
-        # Air correction factor
-        delta = 293 / (273 + environment['ambient_temperature_c']) * np.exp(-0.00012 * environment['elevation_m'])
-        c['corona_losses_mwh_per_m'] = \
-            241 / delta * (60 + 25) * np.sqrt(cond['diameter_mm'] / 2 * 0.1 / gmd) \
-                * pow((max(data['voltage_kv'] - c['inception_voltage_kv'].iloc[0], 0)) / np.sqrt(3), 2) * 1e-5 \
-                    * ec['number_ckts'] * 3 * nbr_conds * loss_factor * 8760 * 1e-6
-    else:
-        c['corona_losses_mwh_per_m'] = 0
-
-    if include_losses:
-        losses = c.losses_at_peak_mwh_per_m.apply(lambda r: (r + c['corona_losses_mwh_per_m'].iloc[0]) * npv['inflation']
-                                                            * ec['cost_of_losses_dol_per_mwh'] * length_m)
-    else:
-        losses = c.losses_at_peak_mwh_per_m.apply(lambda r: r * npv['inflation'] * 0)
-
-    prj = (structures + conductor_inv + conductor_inst + conductor_access + losses + congestion) * npv['cost_capital']
-
-    # get cumulative sum in millions
-    prj = prj.cumsum(axis=1) / 1e6
-    prj['project'] = 'Existing'
-    prj = c.join(prj)
-    prj['type'] = 'Existing'
-    prj['conductor'] = 'Conductor'
-
-    cost_st = structures * npv['cost_capital'] / 1e6
-    cost_st = prj[['conductor', 'type', 'project']].join(cost_st.cumsum(axis=1))
-    cost_cd = (conductor_inv + conductor_inst + conductor_access) * npv['cost_capital'] / 1e6
-    cost_cd = prj[['conductor', 'type', 'project']].join(cost_cd.cumsum(axis=1))
-    losses = losses * npv['cost_capital'] / 1e6
-    losses = prj[['conductor', 'type', 'project']].join(losses.cumsum(axis=1))
-    congestion = congestion * npv['cost_capital'] / 1e6
-    congestion = pd.DataFrame({0: congestion}).T
-    congestion = prj[['conductor', 'type', 'project']].join(congestion.cumsum(axis=1))
-
-    cond['project'] = 'Existing'
-    benefit = benefits(cond, data, benefit_params, year_ref, data['voltage_kv'])['benefits']
-
-    return {'projects': prj, 'cost_st': pd.DataFrame(cost_st), 'cost_cd': cost_cd,
-            'losses': losses, 'congestion': congestion, 'benefits': benefit}
-
-
-def benefits(conductors, data, benefit_params, year_ref, voltage):
-    if not conductors.empty:
-        benefit_params['delta_capacity_mw'] = (benefit_params['load_ratio'] - 1) * data['power_mw']
-        conductors['delta_ampacity_mw'] = conductors['env_ampacity_a'] * voltage * 1e-3 \
-                                                            * np.sqrt(3) * data['nbr_ckts'] - data['power_mw']
-        benefits = pd.merge(benefit_params, conductors, how='cross')
-
-        benefits['res_integration_gwh'] = benefits.apply(lambda r:
-             min(r['delta_ampacity_mw'], max(r['delta_capacity_mw'], 0)) * r['load_factor'] * 8760 * 1e-3 * \
-                (r['res_fraction'] - benefits.loc[benefits.year == year_ref].iloc[0]['res_fraction']) / 100,
-             axis=1)
-        benefits['co2_emissions_ton'] = benefits.apply(lambda r:
-             min(r['delta_ampacity_mw'], max(r['delta_capacity_mw'], 0)) * r['load_factor'] * 8760 * 1e-3 * \
-                (r['load_co2e_kg_per_mwh'] - benefits.loc[benefits.year == year_ref].iloc[0]['load_co2e_kg_per_mwh']) / 100,
-             axis=1)
-
-        return {'benefits': benefits}
-
-    else:
-        return {'benefits': pd.DataFrame()}
-
-
-import sys
-sys.path.append('./plsxml_')
-from plsxml_ import PLSXML
-
-def get_unit_conversion():
-    return pd.read_csv('unit_conversion.csv',
-                       index_col='Quantity', encoding='latin-1')
-
-def file_to_project(file_location):
-    data_dict = {
-        'power_mw': 250.0,
-        'nbr_ckts': 1,
-        'load_factor': 0.63,
-    }
-    # Imports from TVA's new templates
-
-    # if import_prj_data is not None:
-    tables = ['cable_data_report',
-              'combined_bill_of_material_of_new_items_for_structure',
-              'construction_staking_report',
-              'stringing_chart_summary'
-              ]
-    # tables = ['cable_data_report',
-    #           'circuit_and_phase_definitions_and_labels',
-    #           'combined_bill_of_material_of_new_items_for_structure',
-    #           'construction_staking_report',
-    #           'detailed_pole_loading_data',
-    #           'overturning_moment_summary_for_all_load_cases',
-    #           'overturning_moments_for_user_input_concentrated_loads',
-    #           'pole_steel_properties',
-    #           'relative_attachment_labels_for',
-    #           'sag_tension_report_for_all_sections',
-    #           'section_geometry_data',
-    #           'section_sagging_data',
-    #           'stringing_chart_summary'
-    #           ]
-
-    # xml = PLSXML(import_prj_data.name, tables=tables)
-    print(file_location)
-    xml = PLSXML(file_location, tables=tables)
-
-    general_data = xml['stringing_chart_summary']
-
-    general_data = general_data.loc[(general_data['temp_deg F'] == 70)].drop_duplicates(
-        subset=['span_from_str', 'span_to_str', 'temp_deg F'],
-        keep='first'
-    )
-
-    staking_table = xml['construction_staking_report']
-    staking_table = staking_table.loc[staking_table['stake_description'] == 'Structure Hub']
-
-    data_dict.update({
-        'voltage_kv': general_data['sec_voltage_kV'].max(),
-        'length_km': general_data['span_length_ft'].sum() * 3.048 * 1e-4,
-        'avg_span_m': general_data['span_length_ft'].mean() * 0.3048,
-        'span_m': general_data['span_length_ft'].max() * 0.3048,
-        'nbr_structures': len(general_data['span_from_str']),
-        'max_sag_m': general_data['mid_span_sag_ft'].max() * 0.3048,
-        'str_height_m': (staking_table['structure_height_or_pole_length_ft'] - staking_table[
-            'actual_embedded_depth_ft']).max() * 0.3048,
-        'elevation_m': staking_table['z_elevation_ft'].mean() * 0.3048,
-        'latitude': staking_table['latitude_deg'].mean(),
-        'longitude': staking_table['longitude_deg'].mean(),
-        'latitude1': staking_table['latitude_deg'].max(),
-        'longitude1': staking_table['longitude_deg'].max()
-    })
-
-    conds_table = xml['cable_data_report'][
-        ['description',
-         'cable_name',
-         'stock_number',
-         'cross_section_area_in^2',
-         'outside_diameter_in',
-         'unit_weight_lbs/ft',
-         'ultimate_tension_lbs',
-         'temp_1_deg F',
-         'temp_2_deg F',
-         'dc_temp_deg F',
-         'resistance_1_Ohm/mile',
-         'resistance_2_Ohm/mile',
-         'dc_resistance_Ohm/mile',
-         'outer_mod_of_elast_psi/100',
-         'outer_thermal_expansion_coeff_/100 deg',
-         'emissivity_coeff',
-         'solar_absorption_coeff'
-         ]
-    ]
-    data_dict.update({
-        'emissivity': conds_table['emissivity_coeff'].iloc[0],
-        'solar_absorptivity': conds_table['solar_absorption_coeff'].iloc[0]
-    })
-
-    conds_cost_table = xml['combined_bill_of_material_of_new_items_for_structure'][
-        ['stock_number', 'material_unit_cost']].drop_duplicates()
-    conds_table = pd.merge(conds_table, conds_cost_table, how='left', on='stock_number').fillna(0)
-
-    units = get_unit_conversion()
-    non_numeric_cols = ['description', 'cable_name', 'stock_number', 'emissivity_coeff', 'solar_absorption_coeff']
-    unit_conversion_factors = pd.Series(
-        [645.16,
-         25.4,
-         1 / units.loc['n_lbs']['to_Imperial'] * 1 / units.loc['m_ft']['to_Imperial'],
-         1 / units.loc['n_lbs']['to_Imperial'] * 1e-3,
-         5 / 9,
-         5 / 9,
-         5 / 9,
-         1 / 1609.34,
-         1 / 1609.34,
-         1 / 1609.34,
-         6894.76 * 1e-7,
-         1e-2 * 1.8,
-         1e3],
-        index=[elem for elem in conds_table.columns if elem not in non_numeric_cols]
-    )
-
-    conversion_table = conds_table.loc[:, ~conds_table.columns.isin(non_numeric_cols)].copy()
-    conversion_table[
-        ['temp_1_deg F', 'temp_2_deg F', 'dc_temp_deg F']] -= 32  # prepare conversion from deg F to deg C
-    conversion_table = conversion_table.mul(unit_conversion_factors)
-    conds_table = conds_table[['description', 'cable_name']].join(conversion_table)
-
-    conds_table = conds_table.rename(columns={
-        'description': 'type',
-        'cable_name': 'conductor',
-        'cross_section_area_in^2': 'area_mm2',
-        'outside_diameter_in': 'diameter_mm',
-        'unit_weight_lbs/ft': 'weight_n_per_m',
-        'ultimate_tension_lbs': 'conductor_rts_kn',
-        'temp_1_deg F': 'temp_low_c',
-        'temp_2_deg F': 'temp_high_c',
-        'dc_temp_deg F': 'temp_dc_c',
-        'dc_resistance_Ohm/mile': 'res_dc_ohm_per_m',
-        'resistance_1_Ohm/mile': 'res_low_ohm_per_m',
-        'resistance_2_Ohm/mile': 'res_high_ohm_per_m',
-        'outer_mod_of_elast_psi/100': 'ElasticModulus_GPa',
-        'outer_thermal_expansion_coeff_/100 deg': 'CoeffThermalExpan_per_Cel',
-        'material_unit_cost': 'dol_per_1000_ft'
-    })
-    conds_table['max_temperature_c'] = conds_table['temp_high_c'] + 25
-    conds_table[['inst_dol_per_1000_ft', 'acess_dol_per_1000_ft', 'str_costs_dol']] = 0
-
-    # data_dict['conductors'] = conds_table
-
-    data = pd.DataFrame(data_dict, index=[0])
-
-    return {'data': data, 'conductors': conds_table}
-
-
-from shapely.geometry import Point
-import geopandas as gpd
-
-def get_iso_rto():
-    return gpd.read_file('input_data_raw/Independent_System_Operator.geojson')
-
-def iso_rto_zone(zones, point_coords):
-    # Define the point you want to check
-    point = Point(point_coords)
-
-    zones = zones[zones.geometry.type == 'MultiPolygon']
-    matches = list(zones[zones.contains(point)]['NAME_abbr'])
-
-    # Report results
-    if not matches:
-        print(f"The point {point_coords} is not inside any multipolygon.")
-    else:
-        print(f"The point is contained in multipolygons with indices: {matches}")
-
-    return matches
-
-def part1_fetch_congestion_cost(ln):
-    zones = get_iso_rto()
-
-    zones['geometry'] = zones['geometry'].buffer(0)
-    zones['NAME_abbr'] = ['MISO', 'SPP', 'PJM', 'ERCOT', 'CAISO', 'ISONE', 'NYISO']
-
-    fr_zones = iso_rto_zone(zones, (ln['long_fr'], ln['lat_fr']))
-    to_zones = iso_rto_zone(zones, (ln['long_to'], ln['lat_to']))
-
-    inter_zone = {tuple(sorted((x, y))) for x in fr_zones for y in to_zones if x != y}
-    inter_zone_labels = {f'{z[0]}--{z[1]}': z for z in inter_zone}
-
-    list_zones = ["Non-ISO"] + list(set(fr_zones + to_zones)) + list(inter_zone_labels.keys())
-
-    return {'list_zones': list_zones, 'inter_zone_labels': inter_zone_labels}
-
-
-from scipy.spatial import KDTree
-def congestion_cost_iso_rto(df, ln):
-    # Find link entries having one cood (x1,y1) closest to starting point of the line
-    coordinates = df[['y1', 'x1']].to_numpy()
-    tree = KDTree(coordinates)
-
-    lat_fr = ln['lat_fr']
-    long_fr = ln['long_fr']
-    fr_point = np.array([lat_fr, long_fr])
-
-    distance, index = tree.query(fr_point)
-
-    closest_location = df.iloc[index]
-    temp = dict(closest_location[['x1', 'y1']])
-    temp1 = df.loc[(df.x1 == temp['x1']) & (df.y1 == temp['y1'])]
-
-    # Among the resulting links, select the link with the closest other end (x2,y2) to the ending point of the line
-    tree1 = KDTree(temp1[['x2', 'y2']].to_numpy())
-
-    lat_to = ln['lat_to']
-    long_to = ln['long_to']
-    to_point = np.array([lat_to, long_to])
-
-    distance1, index = tree1.query(to_point)
-
-    closest_location1 = temp1.iloc[index]
-
-    from geopy.distance import geodesic
-    # Calculate distances
-    distance = geodesic((closest_location['y1'], closest_location['x1']), (lat_fr, long_fr)).km
-    distance1 = geodesic((lat_to, long_to), (closest_location1['y2'], closest_location1['x2'])).km
-
-    return closest_location1['mean_abs_price_diff'] if distance <= 50 and distance1 <= 50 else 1.0
-
-def part2_fetch_congestion_cost(zone, ln):
-    if not isinstance(zone, str):
-        df = pd.read_csv(f'input_data_raw/mean_price_diff_interRegional_2019-2023_in_$2023_SJ_20250715.csv')
-        mask = ((df['from_zone'] == zone[0]) & (df['to_zone'] == zone[1])) | \
-               ((df['from_zone'] == zone[1]) & (df['to_zone'] == zone[0]))
-        congestion_cost = df.loc[mask, 'abs_mean_price_diff'].values[0] if mask.any() else 10
-    else:
-        congestion_cost = congestion_cost_iso_rto(pd.read_csv(
-            f"input_data_raw/multi_year_ave_{zone}_2019_2023_in_$2023_SJ_20250122.csv"),
-            ln) if zone != 'Non-ISO' and (20 <= ln['length_km'] <= 80) else 1.0
-
-    return {'congestion_cost': congestion_cost if congestion_cost != None else 1.0}
