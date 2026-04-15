@@ -20,5 +20,7 @@ amp = my_line._ieee_738_steady_state_rating()
 sag = my_line.calculate_sag(loading_conditions=loading, current_a=1500,
                             initial_tension_percentage=0.5)
 
+my_line.is_feasible(ampacity= , sag=)
+
 print(amp)
 print(sag)
