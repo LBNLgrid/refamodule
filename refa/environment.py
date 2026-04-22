@@ -3,7 +3,6 @@ import datetime as dt
 
 
 class Environment(BaseModel):
-    """Env‑tab – weather & geographic data."""
     date: dt.date = Field(default_factory=dt.date.today)
     latitude: float = Field(..., ge=-90, le=90)
     elevation_m: float = Field(..., ge=0)

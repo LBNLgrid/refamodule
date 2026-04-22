@@ -3,7 +3,6 @@ from typing import Literal, Optional, List, Dict
 import pandas as pd
 
 from line import Line
-from methods import npv
 
 
 class Economics(BaseModel):

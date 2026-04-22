@@ -1,26 +1,53 @@
-from .line_structure import LineStructure
+from .line_design import LineDesign
 from .conductor import Conductor
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 import pandas as pd
 import numpy as np
 
 
 class Line(BaseModel):
-    structure: LineStructure
+    line_design: LineDesign
     conductor: Conductor
+
+    @model_validator(mode="after")
+    def _update_parameters(self):
+        # ensure unique instances of objects
+        self.line_design = self.line_design.model_copy(deep=True)
+        self.conductor = self.conductor.model_copy(deep=True)
+        return self
 
     def __getattr__(self, name):
         conductor = object.__getattribute__(self, "conductor")
-        structure = object.__getattribute__(self, "structure")
+        design = object.__getattribute__(self, "line_design")
         if hasattr(conductor, name):
             return getattr(conductor, name)
-        if hasattr(structure, name):
-            return getattr(structure, name)
+        if hasattr(design, name):
+            return getattr(design, name)
         raise AttributeError(f"{type(self).__name__!s} has no attribute {name!r}")
+    
+    def __setattr__(self, name, value):
+        # If it's a defined field of LineDesign, use standard Pydantic setting
+        if name in type(self).model_fields:
+            super().__setattr__(name, value)
+            return
 
-    #######
-    # Ampacity Calculation
-    #######
+        # If the line_design object has this attribute, set it there
+        design = getattr(self, "line_design", None)
+        env = getattr(self, "environment", None)
+        if (design and hasattr(design, name)) and not hasattr(env, name):
+            setattr(design, name, value)
+            return
+
+        # If the environment object has this attribute, set it there
+        if env and hasattr(env, name):
+            setattr(env, name, value)
+            return
+       
+        # Fallback to default behavior
+        super().__setattr__(name, value)
+
+    # ----- Internal calculation methods
+
     def _solar_heat_gain(self):
 
         #  ### solar heat gain ###
@@ -76,7 +103,7 @@ class Line(BaseModel):
         return q_s
 
 
-    def _current_at_temperature(self, t_test, q_s, k_angle, is_dc=False):
+    def _current_at_temperature(self, t_test, q_s, k_angle, is_hvdc=False):
 
         # conductor inputs
         diameter = self.diameter_mm / 1e3
@@ -119,11 +146,11 @@ class Line(BaseModel):
         q_r = 17.8 * diameter * emissivity \
               * (((t_test + 273) / 100) ** 4 - ((t_a + 273) / 100) ** 4)
 
-        if not is_dc:
+        if not is_hvdc:
             r_tc = ((res_high - res_low) / (t_high - t_low)) * (t_test - t_low) + res_low
         else:
             r_tc = self.res_dc_ohm_per_m * (
-                    1 + self.temp_coeff_resistivity * (t_test - self.temp_dc_c)
+                    1 + 0.0039 * (t_test - self.temp_dc_c) # assuming a typical temperature coefficient of resistivity 0.0039
             )
 
         x = (q_c + q_r - q_s) / r_tc
@@ -135,7 +162,7 @@ class Line(BaseModel):
         return r_tc, i
 
 
-    def _ieee_738_steady_state_rating(self, is_dc=False):
+    def _ieee_738_steady_state_rating(self, is_hvdc=False):
 
         wind_angle = self.wind_angle
         t_c = self.max_temperature_c
@@ -148,11 +175,12 @@ class Line(BaseModel):
                   + 0.194 * np.cos(np.radians(2 * wind_angle)) \
                   + 0.368 * np.sin(np.radians(2 * wind_angle))
 
-        r_tc, i = self._current_at_temperature(t_c, q_s, k_angle, is_dc=is_dc)
+        r_tc, i = self._current_at_temperature(t_c, q_s, k_angle, is_hvdc=is_hvdc)
 
         return i
 
-    def _ieee_738_steady_state_temperature(self, current_a, is_dc=False):
+
+    def _ieee_738_steady_state_temperature(self, current_a, is_hvdc=False):
 
         # Calculate initial(steady - state) conductor temperature
         # from the steady-state load current, using a binary search
@@ -180,9 +208,8 @@ class Line(BaseModel):
 
             t_test = (tc_max + tc_min) / 2
 
-            r_tc, i_ss_result = np.real(
-                self._current_at_temperature(t_test, q_s, k_angle,  is_dc=is_dc)
-            )
+            r_tc, i_ss_result = \
+                self._current_at_temperature(t_test, q_s, k_angle,  is_hvdc=is_hvdc)
 
             if i_ss_result == current_a:
                 break
@@ -194,70 +221,284 @@ class Line(BaseModel):
 
         return t_test, r_tc
 
-    def _cigre_324_sag(self, loading_conditions, initial_tension_percentage, temp_at_current_c):
+
+    def _cigre_324_sag(self, initial_tension_percentage, initial_temperature_c, temp_at_current_c, loading_conditions=None):
 
         diameter = self.diameter_mm / 1e3
-        A = self.area_mm2 / 1e6
-        W0 = self.weight_n_per_m
+        area = self.area_mm2 / 1e6
+        initial_weight = self.weight_n_per_m
         alpha = self.coeff_thermal_expan_per_cel
-        E = self.elastic_modulus_gpa * 1e9
-        S = self.span_m
-        H0 = initial_tension_percentage * self.conductor_rts_kn * 1e3
-        T0 = loading_conditions.initial_temperature_c
+        elastic_modulus = self.elastic_modulus_gpa * 1e9
+        span = self.span_m
+        initial_tension = initial_tension_percentage * self.conductor_rts_kn * 1e3
+        initial_temp = initial_temperature_c
 
-        T1 = temp_at_current_c
+        temp_at_current = temp_at_current_c
 
-        ice_density = loading_conditions.ice_density_kg_per_m3
-        Ice_Ld = loading_conditions.ice_thickness_m
-        Wind_Ld = loading_conditions.pressure_pa
-        Additive_Ld = loading_conditions.additive_loading_n_per_m
+        ice_density = 0 if loading_conditions is None else loading_conditions.ice_density_kg_per_m3
+        ice_loading = 0 if loading_conditions is None else loading_conditions.ice_thickness_m
+        wind_loading = 0 if loading_conditions is None else loading_conditions.pressure_pa
+        additive_loading = 0 if loading_conditions is None else loading_conditions.additive_loading_n_per_m
+        
+        # calculate initial sag and length (without loading)
+        initial_sag = initial_tension / initial_weight * (np.cosh(initial_weight * span / 2 / initial_tension) - 1)  
+        initial_length = span + 8 * pow(initial_sag, 2) / 3 / span  # deduce initial length
 
-        sag0 = H0 / W0 * (np.cosh(W0 * S / 2 / H0) - 1)  # calculate initial sag (without loading)
-        L0 = S + 8 * pow(sag0, 2) / 3 / S  # deduce initial length
+        # calculate new weight with loading conditions
+        ice_weight = ice_density * np.pi * (
+                    pow(diameter + 2 * ice_loading, 2) - pow(diameter, 2)) / 4 * 9.81  # ice density*ice volume*g (N/m)
+        wind_weight = wind_loading * (diameter + 2 * ice_loading)
+        new_weight = np.sqrt(pow(initial_weight + ice_weight, 2) + pow(wind_weight, 2)) + additive_loading
 
-        W_ice = ice_density * np.pi * (
-                    pow(diameter + 2 * Ice_Ld, 2) - pow(diameter, 2)) / 4 * 9.81  # ice density*ice volume*g (N/m)
-        W_wind = Wind_Ld * (diameter + 2 * Ice_Ld)
-        W1 = np.sqrt(pow(W0 + W_ice, 2) + pow(W_wind, 2)) + Additive_Ld
+        # reference length removes the mechanical elongation caused by the initial applied load
+        reference_length = initial_length * (1 - initial_tension / elastic_modulus / area)
+        
+        # estimate of new length and sag based on temp. difference
+        new_length = reference_length * (1 + alpha * (temp_at_current - initial_temp))  
+        new_sag = np.sqrt(3 * span * abs(new_length - span) / 8)
 
-        Lref = L0 * (1 - H0 / E / A)
-        L1 = Lref * (1 + alpha * (T1 - T0))  # estimate of new length based on temp. difference
-
-        sag1 = np.sqrt(3 * S * abs(L1 - S) / 8)
-
-        sag1_temp = 0
-
-        H1_min = 0
-        H1_max = 500000
-        while abs(sag1 - sag1_temp) > 0.001:
-            H1 = (H1_min + H1_max) / 2
-            H1_temp = H1
-            sag1_temp = sag1
-            Li = L1 * (1 + H1 / E / A)
-            sag1 = np.sqrt(3 * S * abs(Li - S) / 8)
-            H1 = W1 * pow(S, 2) / 8 / sag1
-            if H1 > H1_temp:
-                H1_min = H1_temp
+        sag_holder = 0
+        tension_min = 0
+        tension_max = 500000
+        # iteratively calculate new sag and tension until convergence (sag difference < 0.001 m)
+        while abs(new_sag - sag_holder) > 0.001:
+            new_tension = (tension_min + tension_max) / 2
+            tension_holder = new_tension
+            sag_holder = new_sag
+            intermediate_length = new_length * (1 + new_tension / elastic_modulus / area)
+            new_sag = np.sqrt(3 * span * abs(intermediate_length - span) / 8)
+            new_tension = new_weight * pow(span, 2) / 8 / new_sag
+            if new_tension > tension_holder:
+                tension_min = tension_holder
             else:
-                H1_max = H1_temp
+                tension_max = tension_holder
 
-        return sag1, H1, {'W0': W0, 'W1': W1, 'H0': H0, 'H1': H1,
-                          'W_ice': W_ice, 'W_wind': W_wind, 'T1': T1}
+        return new_sag
 
-    def calculate_sag(self, loading_conditions, initial_tension_percentage,
-                       current_a=None, temp_at_current_c=None, is_dc=False):
+
+    # ----- Main calculation methods -----
+
+    def get_peak_current(self, power_mw, is_hvdc=False):
+        return power_mw / (self.voltage_kv * np.sqrt(3) 
+                    * self.nbr_circuits * self.nbr_conds_per_bundle * 1e-3) if not is_hvdc \
+                else power_mw / (self.voltage_kv * 
+                        self.nbr_circuits * self.nbr_bundles * self.nbr_conds_per_bundle * 1e-3) 
+             
+
+    def calculate_temperature_and_resistance_at_current(self, environment, current_a, is_hvdc=False):
+  
+        ampacity = self.calculate_ampacity(environment, is_hvdc=is_hvdc)
+        
+        temp_at_current_c, res_at_current_ohm_per_m = self._ieee_738_steady_state_temperature(
+                current_a=min(current_a, ampacity), is_hvdc=is_hvdc
+        )
+
+        return temp_at_current_c, res_at_current_ohm_per_m
+   
+   
+    def calculate_ampacity(self, environment, is_hvdc=False):
+
+        self.line_design.environment = environment
+        ampacity = self._ieee_738_steady_state_rating(is_hvdc=is_hvdc)
+
+        return ampacity
+
+
+    def calculate_sag(self, initial_tension_percentage,  initial_temperature_c=10,
+                       current_a=None, temp_at_current_c=None, loading_conditions=None, is_hvdc=False):
 
         if temp_at_current_c is not None:
             pass
         elif current_a is not None:
-            temp = self._ieee_738_steady_state_temperature(current_a, is_dc=is_dc)
+            temp = self._ieee_738_steady_state_temperature(current_a, is_hvdc=is_hvdc)
             temp_at_current_c = temp[0]
+        elif loading_conditions is not None:
+            temp_at_current_c = loading_conditions.wind_ice_temperature_c
         else:
-            raise ValueError("Either temp_at_current_c or current_a "
-                             "must be provided for sag calculations")
+            raise ValueError("Either temp_at_current_c, current_a, or loading_conditions "
+                             "must be provided for sag calculations.")
+        
+        sag = self._cigre_324_sag(
+            initial_tension_percentage=initial_tension_percentage, 
+            initial_temperature_c=initial_temperature_c, 
+            temp_at_current_c=temp_at_current_c, 
+            loading_conditions=loading_conditions
+        )
+                                                  
+        return sag
+    
 
-        sag, tension, extra = self._cigre_324_sag(
-            loading_conditions, initial_tension_percentage, temp_at_current_c
+    def calculate_corona_discharge(self, environment, structure_config, is_hvdc=False):
+            
+        # Air correction factor
+        delta = 293 / (273 + environment.ambient_temperature_c) * np.exp(-0.00012 * environment.elevation_m)
+        radius = self.diameter_mm / 2 * 0.1
+
+        if not is_hvdc:
+            # Geometrical mean distance (GMD) between phases, in centimeter
+            gmd = pow(structure_config.distance_a_b_m * structure_config.distance_b_c_m * structure_config.distance_a_c_m, 1 / 3) * 1e2
+            d = radius * np.log(gmd / radius)
+            inception_voltage = np.sqrt(3) * 29.8 / np.sqrt(2) * structure_config.weather_correction_factor * structure_config.rugosity_coefficient * delta * \
+                    self.nbr_conds_per_bundle * d
+        else:
+            d = radius * np.log(structure_config.distance_a_b_m * 1e2 / radius)
+            inception_voltage = 30 * structure_config.weather_correction_factor * structure_config.rugosity_coefficient * delta * \
+                                self.nbr_conds_per_bundle * (1 + 0.301 / np.sqrt(delta * radius)) * d
+        
+        voltage_gradient_kv_per_cm = inception_voltage / d
+
+        return inception_voltage, voltage_gradient_kv_per_cm
+    
+
+    # Evaluate losses and congestion  
+
+    def calculate_resistive_line_losses(self, current_a, load_factor, is_hvdc=False):
+        
+        nbr_conds = self.nbr_conds_per_bundle * self.nbr_bundles * self.nbr_circuits
+        power_mw = current_a * self.voltage_kv * np.sqrt(3) * self.nbr_circuits * self.nbr_conds_per_bundle * 1e-3 if not is_hvdc \
+                else current_a * self.voltage_kv * self.nbr_conds_per_bundle * 1e-3
+
+        I_E = self._ieee_738_steady_state_rating(is_hvdc=is_hvdc) # current in one conductor per phase/pole of the existing line
+        P_E = I_E * self.voltage_kv * np.sqrt(3) * self.nbr_circuits * nbr_conds * 1e-3 if not is_hvdc \
+                else I_E * self.voltage_kv * nbr_conds * 1e-3
+        
+        t_E = (power_mw - P_E) / power_mw
+        loss_factor = 0.3 * load_factor + 0.7 * load_factor ** 2  # coeffs set to 0.15 and 0.85 in case of distribution
+
+        res_at_current_ohm_per_m = self._ieee_738_steady_state_temperature(current_a=current_a, is_hvdc=is_hvdc)[1]
+        if (power_mw - P_E) > 0:
+            # loss factor at the congested line
+            load_factor_1 = (1 + t_E) / 2
+            loss_factor_1 = 0.3 * load_factor_1 + 0.7 * load_factor_1 ** 2
+
+            # line resistance and loss factor at the neighboring line which takes on the congestion power from existing line
+            R = 8.63 * 1e-5  # ACSR DRAKE at 75 deg. Cel
+
+            losses_at_peak_mwh_per_m = (res_at_current_ohm_per_m * I_E**2 * loss_factor_1 + \
+                                                R *(current_a - I_E)**2 * loss_factor) \
+                                            * nbr_conds * 8760 * 1e-6
+        else:
+            losses_at_peak_mwh_per_m = res_at_current_ohm_per_m * current_a ** 2 \
+                                                    * loss_factor * nbr_conds * 8760 * 1e-6
+ 
+        return losses_at_peak_mwh_per_m
+
+
+    def calculate_corona_discharge_losses(self, environment, structure_config, load_factor, is_hvdc=False):
+        loss_factor = 0.3 * load_factor + 0.7 * load_factor ** 2  # coeffs set to 0.15 and 0.85 in case of distribution
+        delta = 293 / (273 + environment.ambient_temperature_c) * np.exp(
+            -0.00012 * environment.elevation_m) # Air correction factor
+        inception_voltage_kv, voltage_gradient_kv_per_cm = \
+                            self.calculate_corona_discharge(environment, structure_config, is_hvdc=is_hvdc)
+        
+        if inception_voltage_kv < self.voltage_kv:
+            if not is_hvdc:
+                gmd = pow(structure_config.distance_a_b_m * 
+                          structure_config.distance_b_c_m * structure_config.distance_a_c_m,
+                        1 / 3) * 1e2
+                corona_losses_mwh_per_m = \
+                    (241 / delta * (60 + 25) * np.sqrt(self.diameter_mm / 2 * 0.1 / gmd) *
+                    pow((max(self.voltage_kv - inception_voltage_kv, 0)) / np.sqrt(3), 2) * 1e-5 *
+                    self.nbr_circuits * self.nbr_bundles * self.nbr_conds_per_bundle * loss_factor * 8760 * 1e-6)
+            else:
+                corona_losses_mwh_per_m = \
+                    pow(10, (11 + 40 * np.log10(voltage_gradient_kv_per_cm / 25) +
+                            20 * np.log10(self.diameter_mm / 2 * 0.1 / 3.05) +
+                            15 * np.log10(self.nbr_conds_per_bundle / 3) -
+                            10 * np.log10(structure_config.structure_height_m * 
+                                          structure_config.distance_pos_neg_poles_m / 15 / 15)) / 10) * \
+                    self.nbr_circuits * self.nbr_bundles * self.nbr_conds_per_bundle * loss_factor * 8760 * 1e-6
+
+            return corona_losses_mwh_per_m
+        
+        else:
+            return 0
+
+
+    def calculate_congestion(self, current_a, is_hvdc=False):
+            
+        nbr_conds = self.nbr_conds_per_bundle * self.nbr_bundles * self.nbr_circuits
+        power_mw = current_a * self.voltage_kv * np.sqrt(3) * self.nbr_circuits * self.nbr_conds_per_bundle * 1e-3 if not is_hvdc \
+                else current_a * self.voltage_kv * nbr_conds * 1e-3
+        
+        I_E = self._ieee_738_steady_state_rating(is_hvdc=is_hvdc) # current in one conductor per phase of the existing line
+        P_E = I_E * self.voltage_kv * np.sqrt(3) * self.nbr_circuits * self.nbr_conds_per_bundle * 1e-3 if not is_hvdc \
+                else I_E * self.voltage_kv * nbr_conds * 1e-3
+        
+        t_E = (power_mw - P_E) / power_mw
+        if (power_mw - P_E) > 0:
+            congestion_mw = (power_mw - P_E) * t_E / 2
+        else:
+            congestion_mw = 0
+
+        return congestion_mw
+
+
+    # overall technical performance
+
+    def calculate_overall_technical_performance(self, current_a, environment, initial_tension_percentage,
+                                                initial_temperature_c=10, loading_conditions=None, 
+                                                load_factor=None, structure_config=None, is_hvdc=False):
+
+        result = {}
+        result['ampacity_a'] = self.calculate_ampacity(environment, is_hvdc=False)
+        
+        result['sag_m'] = self.calculate_sag(
+            initial_tension_percentage=initial_tension_percentage,
+            initial_temperature_c=initial_temperature_c,
+            temp_at_current_c=self._ieee_738_steady_state_temperature(current_a, is_hvdc=is_hvdc)[0],
+            loading_conditions=loading_conditions
         )
 
-        return sag
+        result['congestion_mw'] = self.calculate_congestion(current_a, is_hvdc=is_hvdc)
+        
+        if load_factor is not None:
+            result['resistive_losses_mwh_per_m'] = self.calculate_resistive_line_losses(current_a, load_factor)      
+
+        if structure_config is not None:
+            result['corona_inception_voltage_kv'], result['corona_voltage_gradient_kv_per_cm'] = \
+                        self.calculate_corona_discharge(environment, structure_config, is_hvdc=is_hvdc)
+            result['corona_losses_mwh_per_m'] = self.calculate_corona_discharge_losses(
+                                    environment, structure_config, load_factor, is_hvdc=is_hvdc) 
+               
+        return result
+
+    
+    def is_feasible(self, environment, peak_current, max_sag=None, 
+                    initial_tension_percentage=None, initial_temperature_c=10, 
+                    loading_conditions=None, structure_config=None, is_hvdc=False):
+        amp_ok = True
+        sag_ok = True
+        corona_ok = True
+        message = ""
+        self.environment = environment
+        if peak_current is not None:
+            ampacity = self._ieee_738_steady_state_rating(is_hvdc=is_hvdc)
+            print(f"Calculated ampacity under default environment is → {ampacity} Amps")
+            amp_ok = True if ampacity > peak_current and ampacity < peak_current*3 else False
+            message += f"Ampacity {ampacity} Amps is not sufficient for peak current {peak_current} Amps. " if not amp_ok else ""
+            
+        if max_sag is not None:
+            if initial_tension_percentage is None:
+                raise ValueError(
+                    "initial_tension_percentage must be provided "
+                    "when a max_sag limit is defined."
+                )
+            sag = self._cigre_324_sag(
+                initial_tension_percentage=initial_tension_percentage, 
+                initial_temperature_c=initial_temperature_c, 
+                temp_at_current_c=self._ieee_738_steady_state_temperature(peak_current, is_hvdc=is_hvdc)[0], 
+                loading_conditions=loading_conditions
+            )
+            sag_ok = True if sag < max_sag else False
+            message += f"Sag {sag} meters exceeds the limit {max_sag} meters. " if not sag_ok else ""
+
+        if structure_config is not None:
+            corona_inception_voltage, _ = self.calculate_corona_discharge(
+                                            environment, structure_config, is_hvdc=is_hvdc)     
+            corona_ok = True if  self.voltage_kv < corona_inception_voltage else False
+            message += f"Corona inception voltage {corona_inception_voltage} kV is below the line voltage. " if not corona_ok else ""
+
+        return amp_ok and sag_ok and corona_ok, message
+
+

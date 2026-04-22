@@ -3,20 +3,27 @@ from pydantic import BaseModel, Field, model_validator
 from .environment import Environment
 
 
-class LineStructure(BaseModel):
+class LineDesign(BaseModel):
     environment: Environment
+    voltage_kv: float = Field(..., ge=60)
     nbr_circuits: int = Field(..., ge=1, le=3)
+    nbr_bundles: int = Field(..., ge=2, le=3) # number of phases in ac, number of poles in dc
+    nbr_conds_per_bundle: int = Field(..., ge=1) # number of conductors per phase in ac, number of conductors per pole in dc
     length_km: float = Field(..., gt=0)
     avg_span_m: float = Field(..., gt=0)
     span_m: float = Field(..., gt=0)
-    max_sag_m: float = Field(..., gt=0)
     nbr_structures: int | None = Field(default=None, ge=1)
-
+    
+    
     @model_validator(mode="after")
-    def set_nbr_structures(self):
+    def _update_parameters(self):
+        # ensure unique instances of objects
+        self.environment = self.environment.model_copy(deep=True)
+        # set nbr_structures
         if self.nbr_structures is None:
             self.nbr_structures = math.ceil(self.length_km * 1000 / self.avg_span_m) + 1
         return self
+
 
     def __getattr__(self, name):
         env = object.__getattribute__(self, "environment")
@@ -28,5 +35,6 @@ class LineStructure(BaseModel):
         from .conductor import Conductor
         from .line import Line
         if isinstance(other, Conductor):
-            return Line(structure=self, conductor=other)
+            return Line(line_design=self.model_copy(deep=True), 
+                        conductor=other.model_copy(deep=True))
         return NotImplemented

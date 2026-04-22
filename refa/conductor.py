@@ -25,9 +25,11 @@ class Conductor(BaseModel):
     emissivity: float = Field(..., gt=0)
     solar_absorptivity: float = Field(..., gt=0)
 
+
     def __add__(self, other):
-        from .line_structure import LineStructure
+        from .line_design import LineDesign
         from .line import Line
-        if isinstance(other, LineStructure):
-            return Line(structure=other, conductor=self)
+        if isinstance(other, LineDesign):
+            return Line(line_design=other.model_copy(deep=True), 
+                        conductor=self.model_copy(deep=True))
         return NotImplemented
