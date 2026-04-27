@@ -8,7 +8,7 @@ def default_economics() -> Economics:
         inflation=0.02,
         cost_of_losses_dol_per_mwh=40,
         cost_of_congestion_dol_per_mwh=1,
-        cost_of_structures_unit=100000,
+        cost_of_structures_dol_per_unit=100000,
         tgt_structure_cost_dol=0.0,
         ra_structure_cost_dol=0.0,
         nade_structure_cost_dol=0.0,

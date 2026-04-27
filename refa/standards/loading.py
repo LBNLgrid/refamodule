@@ -3,7 +3,6 @@ from ..loading import Loading
 
 def nesc_250b_heavy() -> Loading:
     return Loading(
-        initial_temperature_c=-5,
         wind_ice_temperature_c=-5,
         pressure_pa=700,
         ice_thickness_m=0.025,
@@ -14,7 +13,6 @@ def nesc_250b_heavy() -> Loading:
 
 def nesc_250b_medium() -> Loading:
     return Loading(
-        initial_temperature_c=-5,
         wind_ice_temperature_c=-5,
         pressure_pa=400,
         ice_thickness_m=0.013,
@@ -25,7 +23,6 @@ def nesc_250b_medium() -> Loading:
 
 def nesc_250b_light() -> Loading:
     return Loading(
-        initial_temperature_c=0,
         wind_ice_temperature_c=0,
         pressure_pa=200,
         ice_thickness_m=0.006,
@@ -36,7 +33,6 @@ def nesc_250b_light() -> Loading:
 
 def nesc_250b_warmislands_low() -> Loading:
     return Loading(
-        initial_temperature_c=5,
         wind_ice_temperature_c=5,
         pressure_pa=200,
         ice_thickness_m=0.006,
@@ -47,7 +43,6 @@ def nesc_250b_warmislands_low() -> Loading:
 
 def nesc_250b_warmislands_high() -> Loading:
     return Loading(
-        initial_temperature_c=5,
         wind_ice_temperature_c=5,
         pressure_pa=400,
         ice_thickness_m=0.013,

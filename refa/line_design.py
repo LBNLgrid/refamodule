@@ -5,14 +5,15 @@ from .environment import Environment
 
 class LineDesign(BaseModel):
     environment: Environment
-    voltage_kv: float = Field(..., ge=60)
     nbr_circuits: int = Field(..., ge=1, le=3)
     nbr_bundles: int = Field(..., ge=2, le=3) # number of phases in ac, number of poles in dc
     nbr_conds_per_bundle: int = Field(..., ge=1) # number of conductors per phase in ac, number of conductors per pole in dc
     length_km: float = Field(..., gt=0)
     avg_span_m: float = Field(..., gt=0)
-    span_m: float = Field(..., gt=0)
+    max_span_m: float = Field(..., gt=0)
+    
     nbr_structures: int | None = Field(default=None, ge=1)
+    max_sag_m: float = None
     
     
     @model_validator(mode="after")

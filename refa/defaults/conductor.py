@@ -28,11 +28,35 @@ def default_conductor() -> Conductor:
         solar_absorptivity=0.5,
     )
 
+# ----- Conductors from csv file
 
-def load_conductors_from_csv(csv_path: str) -> Dict[str, Callable[[], Conductor]]:
-    """Dynamically load conductor functions from CSV."""
+class ConductorDict(dict):
+    """Dictionary that allows dot notation access to conductor functions.
+    
+    Usage:
+        conductors = ConductorDict()
+        conductors['acsr_795_0_drake'] = acsr_795_0_drake
+        # Access as: conductors.acsr_795_0_drake()
+    """
+    def __getattr__(self, name):
+        try:
+            value = self[name]
+            return value
+        except KeyError:
+            raise AttributeError(f"No conductor named '{name}'")
+    
+    def __setattr__(self, name, value):
+        self[name] = value
+
+
+def load_conductors_from_csv(csv_path: str) -> ConductorDict:
+    """Dynamically load conductor functions from CSV.
+    
+    Returns a ConductorRegistry that allows dot notation access.
+    Usage: conductors.acsr_795_0_drake()
+    """
     df = pd.read_csv(csv_path)
-    conductors = {}
+    conductors = ConductorDict()
     
     for _, row in df.iterrows():
         func_name = row['code'].lower().replace('.', '_').replace(' ', '_')
@@ -40,37 +64,39 @@ def load_conductors_from_csv(csv_path: str) -> Dict[str, Callable[[], Conductor]
         
         # Create closure to capture row data
         def make_conductor(data):
-            return Conductor(
-                type=data['type'],
-                code=data['code'],
-                diameter_mm=float(data['diameter_mm']),
-                area_mm2=float(data['area_mm2']),
-                weight_n_per_m=float(data['weight_n_per_m']),
-                conductor_rts_kn=float(data['conductor_rts_kn']),
-                dol_per_1000_ft=float(data['dol_per_1000_ft']),
-                inst_dol_per_1000_ft=float(data['inst_dol_per_1000_ft']),
-                accessories_dol_per_1000_ft=float(data['accessories_dol_per_1000_ft']),
-                str_costs_dol=float(data['str_costs_dol']),
-                temp_dc_c=float(data['temp_dc_c']),
-                temp_low_c=float(data['temp_low_c']),
-                temp_high_c=float(data['temp_high_c']),
-                max_temperature_c=float(data['max_temperature_c']),
-                res_dc_ohm_per_m=float(data['res_dc_ohm_per_m']),
-                res_low_ohm_per_m=float(data['res_low_ohm_per_m']),
-                res_high_ohm_per_m=float(data['res_high_ohm_per_m']),
-                elastic_modulus_gpa=float(data['elastic_modulus_gpa']),
-                coeff_thermal_expan_per_cel=float(data['coeff_thermal_expan_per_cel']),
-                emissivity=float(data['emissivity']),
-                solar_absorptivity=float(data['solar_absorptivity'])
-            )
+            def conductor_func():
+                return Conductor(
+                    type=data['type'],
+                    code=data['code'],
+                    diameter_mm=float(data['diameter_mm']),
+                    area_mm2=float(data['area_mm2']),
+                    weight_n_per_m=float(data['weight_n_per_m']),
+                    conductor_rts_kn=float(data['conductor_rts_kn']),
+                    dol_per_1000_ft=float(data['dol_per_1000_ft']),
+                    inst_dol_per_1000_ft=float(data['inst_dol_per_1000_ft']),
+                    accessories_dol_per_1000_ft=float(data['accessories_dol_per_1000_ft']),
+                    str_costs_dol=float(data['str_costs_dol']),
+                    temp_dc_c=float(data['temp_dc_c']),
+                    temp_low_c=float(data['temp_low_c']),
+                    temp_high_c=float(data['temp_high_c']),
+                    max_temperature_c=float(data['max_temperature_c']),
+                    res_dc_ohm_per_m=float(data['res_dc_ohm_per_m']),
+                    res_low_ohm_per_m=float(data['res_low_ohm_per_m']),
+                    res_high_ohm_per_m=float(data['res_high_ohm_per_m']),
+                    elastic_modulus_gpa=float(data['elastic_modulus_gpa']),
+                    coeff_thermal_expan_per_cel=float(data['coeff_thermal_expan_per_cel']),
+                    emissivity=float(data['emissivity']),
+                    solar_absorptivity=float(data['solar_absorptivity'])
+                )
+            return conductor_func
         
         conductors[f'{cond_type}_{func_name}'] = make_conductor(row)
     
-    # Then access like: conductors.acsr_795_0_drake()
     return conductors
 
 
 # ----- Database of conductors
+
 def acsr_266_8_waxwing() -> Conductor:
     return Conductor(
         type='ACSR',

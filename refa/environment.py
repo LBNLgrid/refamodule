@@ -12,3 +12,7 @@ class Environment(BaseModel):
     hour: int = Field(..., ge=0, le=24)
     atmosphere: dict = Field(...)
     ambient_temperature_c: float = Field(...)
+    
+    weather_correction_factor: float = Field(1.0, gt=0, description="Considered as 0.8 for rainy conditions.")
+    rugosity_coefficient: float = Field(0.82, gt=0, description="1 for polished conductors, 0.92-0.98 for dirty conductors, and 0.8-0.87 for stranded conductors.")
+    

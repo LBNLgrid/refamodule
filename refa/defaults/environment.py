@@ -12,7 +12,9 @@ def default_clear_environment() -> Environment:
         cw_angle_direction_rel_to_north=0,
         hour=12,
         ambient_temperature_c=25.0,
-        atmosphere= _clear_atmosphere()
+        atmosphere= _clear_atmosphere(),
+        weather_correction_factor=1.0, 
+        rugosity_coefficient=0.82
     )
 
 def default_industrial_environment() -> Environment:
@@ -25,7 +27,9 @@ def default_industrial_environment() -> Environment:
         cw_angle_direction_rel_to_north=0,
         hour=12,
         ambient_temperature_c=25.0,
-        atmosphere= _industrial_atmosphere()
+        atmosphere= _industrial_atmosphere(),
+        weather_correction_factor=1.0,
+        rugosity_coefficient=0.82
     )
 
 
