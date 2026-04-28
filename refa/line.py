@@ -770,7 +770,7 @@ class Line(BaseModel):
             'voltage_kv': ('>', 0, '<', 1000), 'power_mw': ('>', 0, '<', 10000),
             'initial_tension_percentage': ('>=', 0.1, '<=', 0.6),
             'initial_temperature_c': ('>', 0, '<', '75')})
-    def is_sag_feasible(self, max_sag_m, initial_tension_percentage, 
+    def is_sag_feasible(self, max_sag_m, initial_tension_percentage=0.2, 
                     current_a=None, voltage_kv=None, power_mw=None, 
                     initial_temperature_c=10, loading_conditions=None, is_hvdc=False):
         

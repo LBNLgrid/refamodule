@@ -293,16 +293,20 @@ class ProjectEssentials(BaseModel):
             line_list = [line for line in line_list 
                          if line.is_sag_feasible(
                             current_a=line.get_current(self.power_mw, self.voltage_kv),
-                            max_sag_m=line.max_sag_m
+                            max_sag_m=line.max_sag_m if line.max_sag_m is not None else 100
                          )[0]
                         ]
         if self.select_corona_feasible:
-            line_list = [line for line in line_list 
-                         if line.is_corona_feasible(
-                            voltage_kv=self.voltage_kv,
-                            structure_config=self.structure_config
-                         )[0]
-                        ]
+            if self.structure_config is not None:
+                line_list = [line for line in line_list 
+                            if line.is_corona_feasible(
+                                voltage_kv=self.voltage_kv,
+                                structure_config=self.structure_config
+                            )[0]
+                            ]
+            else:
+                print("Set structure_config to check corona feasibility.")
+                pass
         
         if line_list:
             lines = self._format_line_data_for_cost_calc(line_list)
