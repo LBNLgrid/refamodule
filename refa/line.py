@@ -803,6 +803,8 @@ class Line(BaseModel):
             )
             sag_ok = True if sag < max_sag_m else False
             message += f"Sag {sag} meters exceeds the limit {max_sag_m} meters. " if not sag_ok else ""
+        else:
+            print("To consier sag feasibility, please make sure max_sag is provided in the line design.")
 
         return sag_ok, message
 
@@ -812,9 +814,12 @@ class Line(BaseModel):
         
         corona_ok = True
         message = ""
-        corona_inception_voltage = self.corona_inception_voltage(structure_config, is_hvdc=is_hvdc)     
-        corona_ok = True if  voltage_kv < corona_inception_voltage else False
-        message += f"Corona inception voltage {corona_inception_voltage} kV is below the line voltage. " if not corona_ok else ""
+        if structure_config is not None:
+            corona_inception_voltage = self.corona_inception_voltage(structure_config, is_hvdc=is_hvdc)     
+            corona_ok = True if  voltage_kv < corona_inception_voltage else False
+            message += f"Corona inception voltage {corona_inception_voltage} kV is below the line voltage. " if not corona_ok else ""
+        else:
+            print("To consider corona feasibility, please make sure structure_config is provided.")
 
         return corona_ok, message
 
