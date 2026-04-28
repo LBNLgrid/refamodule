@@ -1,14 +1,21 @@
-from pydantic import BaseModel, Field, model_validator
-from typing import Literal, Optional, List, Dict, Union
-import pandas as pd
-import numpy as np
-
 from .conductor import Conductor
 from .line_design import LineDesign
 from .line import Line
 from .economics import Economics
 from .structure_config import StructureConfig
-
+from pydantic import BaseModel, Field, model_validator
+from typing import Optional, List, Callable, Dict
+import pandas as pd
+import numpy as np
+from inspect import signature
+from operator import gt, ge, lt, le
+# Map operator strings to Python operator functions
+OPERATORS = {
+    '>': gt,    # strictly greater than
+    '>=': ge,   # greater than or equal
+    '<': lt,    # strictly less than
+    '<=': le,   # less than or equal
+}
 
 class ProjectEssentials(BaseModel):
     # required parameters
@@ -26,7 +33,10 @@ class ProjectEssentials(BaseModel):
     structure_config: StructureConfig = None
     structure_costs_specific_to_conductor: bool = False
     filter_output: bool = False
-
+    
+    select_ampacity_feasible: bool = True
+    select_sag_feasible: bool = True
+    select_corona_feasible: bool = True
 
     @model_validator(mode="before")
     def _construct(cls, data):
@@ -72,7 +82,6 @@ class ProjectEssentials(BaseModel):
             self.line_design = self.line_design.model_copy(deep=True)
         return self
 
-
     # ----- Access Economics and LineDesign parameters directly from a project
     def __getattr__(self, name):
         # Try economics first
@@ -86,7 +95,6 @@ class ProjectEssentials(BaseModel):
             return getattr(design, name)
         
         raise AttributeError(f"{type(self).__name__!r} has no attribute {name!r}")
-
 
     def __setattr__(self, name, value):
         # If it's a defined field of Project, use standard Pydantic setting
@@ -121,6 +129,42 @@ class ProjectEssentials(BaseModel):
         super().__setattr__(name, value)
 
 
+    # ----- validation decorator ensuring method args fall in correct value ranges.
+    
+    def _validate_args(arg_ranges: Dict[str, tuple]) -> Callable:
+        """
+        Flexible decorator supporting different operators per parameter.
+        Usage example:
+        @validate_args({'load_factor': ('>=', 0, '<=', 1), 'voltage_kv': ('>', 0)})
+        """
+        def decorator(func: Callable) -> Callable:
+            sig = signature(func)        
+            def wrapper(*args, **kwargs):
+                bound_args = sig.bind(*args, **kwargs)
+                for arg_name, constraints in arg_ranges.items():
+                    if arg_name in bound_args.arguments:
+                        value = bound_args.arguments[arg_name]
+                        # Skip validation if None
+                        if value is None:
+                            continue
+                        # Parse and validate constraints tuple
+                        i = 0
+                        while i < len(constraints):
+                            op_str = constraints[i]
+                            threshold = constraints[i + 1]
+                            if op_str not in OPERATORS:
+                                raise ValueError(f"Unknown operator: {op_str}")
+                            op_func = OPERATORS[op_str]
+                            if not op_func(value, threshold):
+                                raise ValueError(
+                                    f"{arg_name} must be {op_str} {threshold}, got {value}"
+                                )
+                            i += 2
+                return func(*args, **kwargs)
+            return wrapper
+        return decorator
+
+
     # ----- Internal calculation methods (called by the main calculation methods) -----    
     
     def _format_line_data_for_cost_calc(self, lines):
@@ -131,7 +175,7 @@ class ProjectEssentials(BaseModel):
         
         lines_df = lines_df.reset_index(drop=True)
         desired_cols = line_design.columns.to_list() + \
-            ['code', 'type', 'dol_per_1000_ft', 'inst_dol_per_1000_ft', 'str_costs_dol',
+            ['code', 'type', 'dol_per_1000_ft', 'inst_dol_per_1000_ft',
             'accessories_dol_per_1000_ft', 'max_temperature_c'] 
         valid_cols = lines_df.columns.intersection(desired_cols)
         lines_df = lines_df[valid_cols].copy()
@@ -139,7 +183,7 @@ class ProjectEssentials(BaseModel):
         return lines_df
        
 
-    def _npv(self, lines, time_horizon=100, structure_modification=False, is_hvdc=False):
+    def _npv(self, lines, time_horizon=100, is_hvdc=False):
 
         npv = pd.DataFrame(columns=['year'])
         npv['year'] = list(range(time_horizon))
@@ -175,29 +219,32 @@ class ProjectEssentials(BaseModel):
             )
         else:
             structures = lines.apply(
-                lambda r: r.conductor['str_costs_dol'] * npv['inflation'] * npv['structures_inv'],
+                lambda r: r['structure_cost_dol'] * npv['inflation'] * npv['structures_inv'],
                 axis=1
             )
 
         if is_hvdc:
             npv['structures_modif_inv'] = 0
+            # costs of substation and structure upgrades are currently added to upfront costs
             npv.at[0, 'structures_modif_inv'] = 1
-            # costs of structure upgrade (if any) are added to structures costs
-            print(structures)
-            structures[0] = self.cost_structures_modif_dol_per_unit * self.nbr_structures_modif \
-                if structure_modification else structures[0]
+
+            structures[0] = structures[0] + self.cost_structures_modif_dol \
+                if self.cost_structures_modif_dol is not None else structures[0]
+            
             # costs of converters are also considered
             converters = self.cost_converters_dol * npv['inflation'] * npv['structures_modif_inv']
             ss_transfo = npv['inflation'] * 0
         
-        elif structure_modification:
+        elif hasattr(self, 'cost_substations_upgrade_dol'):
             npv['structures_modif_inv'] = 0
-            npv.at[0, 'structures_modif_inv'] = 1
-            # costs of structure upgrade (if any) are added to structures costs
-            structures[0] = self.cost_structures_modif_dol_per_unit * self.nbr_structures_modif \
-                                    if structure_modification else structures[0]
-            # costs of substations and transformers modifications are also considered
-            ss_transfo = self.cost_substations_transfos_dol * npv['inflation'] * npv['structures_modif_inv']
+            # costs of substation and structure upgrades are currently added to upfront costs (no substation lifetime considered)
+            npv.at[0, 'structures_modif_inv'] = 1 
+
+            structures[0] = structures[0] + self.cost_structures_modif_dol \
+                    if self.cost_structures_modif_dol is not None else structures[0]
+
+            # costs of substations and transformers modifications
+            ss_transfo = self.cost_substations_upgrade_dol * npv['inflation'] * npv['structures_modif_inv']
             converters = npv['inflation'] * 0
 
         else:
@@ -232,40 +279,36 @@ class ProjectEssentials(BaseModel):
 
     # ----- Main calculation methods -----
 
-    def calculate_total_npv(self, time_horizon, load_factor=None, select_feasible=True):
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100)})
+    def total_costs(self, time_horizon, report_all_years=False):
         
-        if select_feasible:
-            line_list = [line for line in self.line_list 
-                         if line.is_feasible(
+        line_list = self.line_list
+        if self.select_ampacity_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_ampacity_feasible(
+                            current_a=line.get_current(self.power_mw, self.voltage_kv)
+                         )[0]
+                        ]
+        if self.select_sag_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_sag_feasible(
                             current_a=line.get_current(self.power_mw, self.voltage_kv),
+                            max_sag_m=line.max_sag_m
+                         )[0]
+                        ]
+        if self.select_corona_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_corona_feasible(
                             voltage_kv=self.voltage_kv,
-                            max_sag_m=line.max_sag_m,
                             structure_config=self.structure_config
                          )[0]
                         ]
-        else: line_list = self.line_list
         
         if line_list:
             lines = self._format_line_data_for_cost_calc(line_list)
 
-            if load_factor is not None:
-                lines['losses_at_peak_mwh_per_m'] = [
-                    line.calculate_resistive_line_losses(
-                        voltage_kv=self.voltage_kv,
-                        current_a=line.get_current(self.power_mw, self.voltage_kv),
-                        load_factor=load_factor
-                    ) for line in line_list
-                ]
-                lines['corona_losses_mwh_per_m'] = [
-                    line.calculate_corona_discharge_losses(
-                        voltage_kv=self.voltage_kv, 
-                        structure_config=self.structure_config, 
-                        load_factor=load_factor
-                    ) for line in line_list 
-                ] if self.structure_config is not None else 0
-
             lines['congestion_mw'] = [
-                line.calculate_congestion(
+                line.congestion(
                     voltage_kv=self.voltage_kv,
                     current_a=line.get_current(self.power_mw, self.voltage_kv),
                 ) for line in line_list
@@ -277,24 +320,107 @@ class ProjectEssentials(BaseModel):
             )
 
             npv['conductor'] = npv['type'] + ' ' + npv['code']
-            npv = npv.rename(columns={time_horizon - 1: 'npv_total_project_costs_mill_dol'})
-            
-            return npv[['prj_name', 'conductor', 'npv_total_project_costs_mill_dol']]
+            if not report_all_years:
+                npv = npv.rename(columns={time_horizon - 1: 'npv_total_project_costs_mill_dol'})
+                return npv[['prj_name', 'conductor', 'npv_total_project_costs_mill_dol']].to_dict(orient='records')
+            else:
+                print("Cost results in millions of dollars.")
+                return npv[['prj_name', 'conductor'] + list(range(time_horizon))].to_dict(orient='records')
         else:
-            return pd.DataFrame()
+            return {}
 
-    def calculate_structure_costs(self, time_horizon, select_feasible=True):
+
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100), 'load_factor': ('>=', 0, '<=', 1)})
+    def total_costs_including_losses(self, time_horizon, load_factor, report_all_years=False):
         
-        if select_feasible:
-            line_list = [line for line in self.line_list 
-                         if line.is_feasible(
+        line_list = self.line_list
+        if self.select_ampacity_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_ampacity_feasible(
+                            current_a=line.get_current(self.power_mw, self.voltage_kv)
+                         )[0]
+                        ]
+        if self.select_sag_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_sag_feasible(
                             current_a=line.get_current(self.power_mw, self.voltage_kv),
+                            max_sag_m=line.max_sag_m
+                         )[0]
+                        ]
+        if self.select_corona_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_corona_feasible(
                             voltage_kv=self.voltage_kv,
-                            max_sag_m=line.max_sag_m,
                             structure_config=self.structure_config
                          )[0]
                         ]
-        else: line_list = self.line_list
+        
+        if line_list:
+            lines = self._format_line_data_for_cost_calc(line_list)
+
+            if load_factor is not None:
+                lines['losses_at_peak_mwh_per_m'] = [
+                    line.resistive_line_losses_considering_congestion(
+                        voltage_kv=self.voltage_kv,
+                        current_a=line.get_current(self.power_mw, self.voltage_kv),
+                        load_factor=load_factor
+                    ) for line in line_list
+                ]
+                lines['corona_losses_mwh_per_m'] = [
+                    line.corona_discharge_losses(
+                        voltage_kv=self.voltage_kv, 
+                        structure_config=self.structure_config, 
+                        load_factor=load_factor
+                    ) for line in line_list 
+                ] if self.structure_config is not None else 0
+
+            lines['congestion_mw'] = [
+                line.congestion(
+                    voltage_kv=self.voltage_kv,
+                    current_a=line.get_current(self.power_mw, self.voltage_kv),
+                ) for line in line_list
+            ]  
+
+            npv = self._npv(
+                lines=lines,
+                time_horizon=time_horizon
+            )
+
+            npv['conductor'] = npv['type'] + ' ' + npv['code']
+            if not report_all_years:
+                npv = npv.rename(columns={time_horizon - 1: 'npv_total_project_costs_mill_dol'})
+                return npv[['prj_name', 'conductor', 'npv_total_project_costs_mill_dol']].to_dict(orient='records')
+            else:
+                print("Cost results in millions of dollars.")
+                return npv[['prj_name', 'conductor'] + list(range(time_horizon))].to_dict(orient='records')
+        else:
+            return {}
+
+
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100)})
+    def structure_costs(self, time_horizon, report_all_years=False):
+        
+        line_list = self.line_list
+        if self.select_ampacity_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_ampacity_feasible(
+                            current_a=line.get_current(self.power_mw, self.voltage_kv)
+                         )[0]
+                        ]
+        if self.select_sag_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_sag_feasible(
+                            current_a=line.get_current(self.power_mw, self.voltage_kv),
+                            max_sag_m=line.max_sag_m
+                         )[0]
+                        ]
+        if self.select_corona_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_corona_feasible(
+                            voltage_kv=self.voltage_kv,
+                            structure_config=self.structure_config
+                         )[0]
+                        ]
 
         if line_list:
             lines = self._format_line_data_for_cost_calc(line_list)
@@ -314,34 +440,54 @@ class ProjectEssentials(BaseModel):
                 )
             else:
                 structures = lines.apply(
-                    lambda r: r.conductor['str_costs_dol'] * npv['inflation'] * npv['structures_inv'],
+                    lambda r: r['structure_cost_dol'] * npv['inflation'] * npv['structures_inv'],
                     axis=1
                 )
+
+            # In case of Votage Upgrade and Reconductoring, some structures may need modifications.
+            # These costs (if any) are added to structures upfront costs
+            if hasattr(self, 'cost_structures_modif_dol'):
+                structures[0] += self.cost_structures_modif_dol
 
             lines['prj_name'] = self.prj_name
 
             cost_st = structures * npv['cost_capital'] / 1e6
             cost_st = lines.join(cost_st.cumsum(axis=1))
             cost_st['conductor'] = cost_st['type'] + ' ' + cost_st['code']
-            cost_st = cost_st.rename(columns={time_horizon - 1: 'npv_total_structure_costs_mill_dol'})
-            
-            return cost_st[['prj_name', 'conductor', 'npv_total_structure_costs_mill_dol']]
+            if not report_all_years:
+                cost_st = cost_st.rename(columns={time_horizon - 1: 'npv_total_structure_costs_mill_dol'})
+                return cost_st[['prj_name', 'conductor', 'npv_total_structure_costs_mill_dol']].to_dict(orient='records')
+            else:
+                print("Cost results in millions of dollars.")
+                return cost_st[['prj_name', 'conductor'] + list(range(time_horizon))].to_dict(orient='records')
         else:
-            return pd.DataFrame()
+            return {}
     
     
-    def calculate_conductor_costs(self, time_horizon, select_feasible=True):
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100)})
+    def conductor_costs(self, time_horizon, report_all_years=False):
         
-        if select_feasible:
-            line_list = [line for line in self.line_list 
-                         if line.is_feasible(
+        line_list = self.line_list
+        if self.select_ampacity_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_ampacity_feasible(
+                            current_a=line.get_current(self.power_mw, self.voltage_kv)
+                         )[0]
+                        ]
+        if self.select_sag_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_sag_feasible(
                             current_a=line.get_current(self.power_mw, self.voltage_kv),
+                            max_sag_m=line.max_sag_m
+                         )[0]
+                        ]
+        if self.select_corona_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_corona_feasible(
                             voltage_kv=self.voltage_kv,
-                            max_sag_m=line.max_sag_m,
                             structure_config=self.structure_config
                          )[0]
                         ]
-        else: line_list = self.line_list
         
         if line_list:
 
@@ -376,38 +522,53 @@ class ProjectEssentials(BaseModel):
             cost_cd = (conductor_inv + conductor_inst + conductor_access) * npv['cost_capital'] / 1e6
             cost_cd = lines.join(cost_cd.cumsum(axis=1))
             cost_cd['conductor'] = cost_cd['type'] + ' ' + cost_cd['code']
-            cost_cd = cost_cd.rename(columns={time_horizon - 1: 'npv_total_conductor_costs_mill_dol'})
-            
-            return cost_cd[['prj_name', 'conductor', 'npv_total_conductor_costs_mill_dol']]
+            if not report_all_years:
+                cost_cd = cost_cd.rename(columns={time_horizon - 1: 'npv_total_conductor_costs_mill_dol'})
+                return cost_cd[['prj_name', 'conductor', 'npv_total_conductor_costs_mill_dol']].to_dict(orient='records')
+            else:
+                print("Cost results in millions of dollars.")
+                return cost_cd[['prj_name', 'conductor'] + list(range(time_horizon))].to_dict(orient='records')
         else:
-            return pd.DataFrame()
+            return {}
 
 
-    def calculate_losses_costs(self, time_horizon, load_factor, select_feasible=True):
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100), 'load_factor': ('>=', 0, '<=', 1)})
+    def losses_costs(self, time_horizon, load_factor, report_all_years=False):
         
-        if select_feasible:
-            line_list = [line for line in self.line_list 
-                         if line.is_feasible(
+        line_list = self.line_list
+        if self.select_ampacity_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_ampacity_feasible(
+                            current_a=line.get_current(self.power_mw, self.voltage_kv)
+                         )[0]
+                        ]
+        if self.select_sag_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_sag_feasible(
                             current_a=line.get_current(self.power_mw, self.voltage_kv),
+                            max_sag_m=line.max_sag_m
+                         )[0]
+                        ]
+        if self.select_corona_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_corona_feasible(
                             voltage_kv=self.voltage_kv,
-                            max_sag_m=line.max_sag_m,
                             structure_config=self.structure_config
                          )[0]
                         ]
-        else: line_list = self.line_list
 
         if line_list:
             lines = self._format_line_data_for_cost_calc(line_list)
 
             lines['losses_at_peak_mwh_per_m'] = [
-                line.calculate_resistive_line_losses(
+                line.resistive_line_losses_considering_congestion(
                         voltage_kv=self.voltage_kv,
                         current_a=line.get_current(self.power_mw, self.voltage_kv),
                         load_factor=load_factor
                     ) for line in line_list
             ]
             lines['corona_losses_mwh_per_m'] = [
-                line.calculate_corona_discharge_losses(
+                line.corona_discharge_losses(
                         voltage_kv=self.voltage_kv,
                         structure_config=self.structure_config, 
                         load_factor=load_factor
@@ -430,19 +591,23 @@ class ProjectEssentials(BaseModel):
             losses = losses * npv['cost_capital'] / 1e6
             losses = lines[['code', 'type', 'prj_name']].join(losses.cumsum(axis=1))
             losses['conductor'] = losses['type'] + ' ' + losses['code']
-            losses = losses.rename(columns={time_horizon - 1: 'npv_total_losses_costs_mill_dol'})
-            
-            return losses[['prj_name', 'conductor', 'npv_total_losses_costs_mill_dol']]
+            if not report_all_years:
+                losses = losses.rename(columns={time_horizon - 1: 'npv_total_losses_costs_mill_dol'})
+                return losses[['prj_name', 'conductor', 'npv_total_losses_costs_mill_dol']].to_dict(orient='records')
+            else:
+                print("Cost results in millions of dollars.")
+                return losses[['prj_name', 'conductor'] + list(range(time_horizon))].to_dict(orient='records')
         else:
-            return pd.DataFrame()
+            return {}
 
     
-    def calculate_congestion_costs(self, time_horizon):
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100)})
+    def congestion_costs(self, time_horizon, report_all_years=False):
 
         lines = self._format_line_data_for_cost_calc(self.line_list)
 
         lines['congestion_mw'] = [
-            line.calculate_congestion(
+            line.congestion(
                 voltage_kv=self.voltage_kv,
                 current_a=line.get_current(self.power_mw, self.voltage_kv),
             ) for line in self.line_list
@@ -462,9 +627,12 @@ class ProjectEssentials(BaseModel):
         congestion = congestion * npv['cost_capital'] / 1e6
         congestion = lines[['code', 'type', 'prj_name']].join(congestion.cumsum(axis=1))
         congestion['conductor'] = congestion['type'] + ' ' + congestion['code']
-        congestion = congestion.rename(columns={time_horizon - 1: 'npv_total_congestion_costs_mill_dol'})
-        
-        return congestion[['prj_name', 'conductor', 'npv_total_congestion_costs_mill_dol']]
+        if not report_all_years:
+            congestion = congestion.rename(columns={time_horizon - 1: 'npv_total_congestion_costs_mill_dol'})
+            return congestion[['prj_name', 'conductor', 'npv_total_congestion_costs_mill_dol']].to_dict(orient='records')
+        else:
+            print("Cost results in millions of dollars.")
+            return congestion[['prj_name', 'conductor'] + list(range(time_horizon))].to_dict(orient='records')
 
 
     def check_feasible_lines(self):
@@ -472,7 +640,7 @@ class ProjectEssentials(BaseModel):
         result = []
         for line in self.line_list:
             result.append([
-                    line.is_feasible(
+                    line._is_feasible(
                         power_mw=self.power_mw, 
                         voltage_kv=self.voltage_kv,
                         max_sag_m=line.max_span_m,
@@ -513,125 +681,16 @@ class VoltageUpgrade(ProjectEssentials):
             description="Year at which structure replacement is planned, corresponding to structures_remaining_life.")
     conductor_remaining_life: int = Field(..., ge=0, 
             description="Year at which conductor replacement is planned, corresponding to conductors_remaining_life.")
-    
+    cost_substations_upgrade_dol: float = Field(..., ge=0)
     
     prj_name: str = "VoltageUpgrade"
 
-    structure_modification: bool = False
-    nbr_structures_modif: float = Field(0, ge=0)
-    cost_structures_modif_dol_per_unit: float = Field(50000, ge=0)
-    cost_substations_transfos_dol: float = Field(0, ge=0)
+    # Aggregated cost for the case where some structures need to be modified due to the voltage upgrade
+    cost_structures_modif_dol: float = Field(None, ge=0)
     
     # ----- Main calculation methods -----
 
-    def calculate_total_npv(self, time_horizon, load_factor=None, select_feasible=True):
-        
-        if select_feasible:
-            line_list = [line for line in self.line_list 
-                         if line.is_feasible(
-                            current_a=line.get_current(self.power_mw, self.voltage_kv),
-                            voltage_kv=self.voltage_kv,
-                            max_sag_m=line.max_sag_m,
-                            structure_config=self.structure_config
-                         )[0]
-                        ]
-        else: line_list = self.line_list
-        
-        if line_list:
-            lines = self._format_line_data_for_cost_calc(line_list)
-
-            if load_factor is not None:
-                lines['losses_at_peak_mwh_per_m'] = [
-                    line.calculate_resistive_line_losses(
-                        voltage_kv=self.voltage_kv,
-                        current_a=line.get_current(self.power_mw, self.voltage_kv),
-                        load_factor=load_factor
-                    ) for line in line_list
-                ]
-                lines['corona_losses_mwh_per_m'] = [
-                    line.calculate_corona_discharge_losses(
-                        voltage_kv=self.voltage_kv, 
-                        structure_config=self.structure_config, 
-                        load_factor=load_factor
-                    ) for line in line_list 
-                ] if self.structure_config is not None else 0
-
-            lines['congestion_mw'] = [
-                line.calculate_congestion(
-                    voltage_kv=self.voltage_kv,
-                    current_a=line.get_current(self.power_mw, self.voltage_kv),
-                ) for line in line_list
-            ]  
-
-            npv = self._npv(
-                lines=lines,
-                time_horizon=time_horizon,
-                structure_modification=self.structure_modification
-            )
-            npv['conductor'] = npv['type'] + ' ' + npv['code']
-            npv = npv.rename(columns={time_horizon - 1: 'npv_total_project_costs_mill_dol'})
-            
-            return npv[['prj_name', 'conductor', 'npv_total_project_costs_mill_dol']]
-        else:
-            return pd.DataFrame()
-
-
-    def calculate_structure_costs(self, time_horizon, select_feasible=True):
-        
-        if select_feasible:
-            line_list = [line for line in self.line_list 
-                         if line.is_feasible(
-                            current_a=line.get_current(self.power_mw, self.voltage_kv),
-                            voltage_kv=self.voltage_kv,
-                            max_sag_m=line.max_sag_m,
-                            structure_config=self.structure_config
-                         )[0]
-                        ]
-        else: line_list = self.line_list
-
-        if line_list:
-            lines = self._format_line_data_for_cost_calc(line_list)
-
-            npv = pd.DataFrame(columns=['year'])
-            npv['year'] = list(range(time_horizon))
-            npv['inflation'] = npv.year.apply(lambda x: (1 + self.inflation)**x)
-
-            npv[['structures_inv', 'conductors_inv']] = 0
-            npv.loc[npv.year.isin(range(self.structure_remaining_life, time_horizon, self.structures_lifetime)), 'structures_inv'] = 1
-            npv['cost_capital'] = npv.year.apply(lambda x: 1 / (1 + self.wacc)**x)
-
-            if not self.structure_costs_specific_to_conductor:
-                structures = lines.apply(
-                    lambda r: self.cost_of_structures_dol_per_unit * r['nbr_structures'] * npv['inflation'] * npv['structures_inv'],
-                    axis=1
-                )
-            else:
-                structures = lines.apply(
-                    lambda r: r.conductor['str_costs_dol'] * npv['inflation'] * npv['structures_inv'],
-                    axis=1
-                )
-            
-            # In case of Votage Upgrade and Reconductoring, some structures may need modifications.
-            # These costs (if any) are added to structures costs
-            if self.structure_modification:
-                npv['structures_modif_inv'] = 0
-                npv.at[0, 'structures_modif_inv'] = 1
-                structures[0] = self.cost_structures_modif_dol_per_unit * self.nbr_structures_modif \
-                                        if self.structure_modification else structures[0]
-            
-            lines['prj_name'] = self.prj_name
-
-            cost_st = structures * npv['cost_capital'] / 1e6
-            cost_st = lines.join(cost_st.cumsum(axis=1))
-            cost_st['conductor'] = cost_st['type'] + ' ' + cost_st['code']
-            cost_st = cost_st.rename(columns={time_horizon - 1: 'npv_total_structure_costs_mill_dol'})
-            
-            return cost_st[['prj_name', 'conductor', 'npv_total_structure_costs_mill_dol']]
-        else:
-            return pd.DataFrame()
-
-
-    def calculate_substation_trasformer_costs(self, time_horizon):
+    def substations_upgrade_costs(self, time_horizon):
         
         npv = pd.DataFrame(columns=['year'])
         npv['year'] = list(range(time_horizon))
@@ -640,9 +699,10 @@ class VoltageUpgrade(ProjectEssentials):
         npv['cost_capital'] = npv['year'].apply(lambda x: 1 / (1 + self.wacc)**x)
 
         npv['structures_modif_inv'] = 0
+        # costs of substation upgrades are currently added to upfront costs (no substation lifetime considered)
         npv.at[0, 'structures_modif_inv'] = 1
         
-        ss_transfo = (self.cost_substations_transfos_dol * npv['inflation'] * npv['structures_modif_inv']         
+        ss_transfo = (self.cost_substations_upgrade_dol * npv['inflation'] * npv['structures_modif_inv']         
                     * npv['cost_capital'] / 1e6).cumsum()
         
         ss_transfo = pd.DataFrame([ss_transfo.values], columns=npv['year'].values)
@@ -651,7 +711,7 @@ class VoltageUpgrade(ProjectEssentials):
             columns={time_horizon - 1: 'npv_total_substation_transformer_costs_mill_dol'}
         )
         
-        return ss_transfo[['prj_name', 'npv_total_substation_transformer_costs_mill_dol']]
+        return ss_transfo[['prj_name', 'npv_total_substation_transformer_costs_mill_dol']].to_dict(orient='records')
 
 
 class HVDC(ProjectEssentials):
@@ -659,14 +719,13 @@ class HVDC(ProjectEssentials):
             description="Year at which conductor replacement is planned, corresponding to conductors_remaining_life.")
     structure_remaining_life: int = Field(..., ge=0, 
             description="Year at which structure replacement is planned, corresponding to structures_remaining_life.")
-    nbr_dc_poles_per_circuit: int = Field(..., ge=1, le=3)   
+    nbr_dc_poles_per_circuit: int = Field(..., ge=1, le=3)
+    cost_converters_dol: float = Field(..., ge=0)   
     
     prj_name: str = "HVDC"
 
-    structure_modification: bool = False
-    nbr_structures_modif: float = Field(0, ge=0)
-    cost_structure_modif_dol_per_unit: float = Field(50000, ge=0)
-    cost_converters_dol: float = Field(0, ge=0)
+    # Aggregated cost for the case where some structures need to be modified
+    cost_structures_modif_dol: float = Field(None, ge=0)
     
     @model_validator(mode="after")
     def _update_parameters(self):
@@ -674,45 +733,77 @@ class HVDC(ProjectEssentials):
             line.line_design.nbr_bundles = self.nbr_dc_poles_per_circuit
         return self
 
+    # ----- validation decorator ensuring method args fall in correct value ranges.
+    
+    def _validate_args(arg_ranges: Dict[str, tuple]) -> Callable:
+        """
+        Flexible decorator supporting different operators per parameter.
+        Usage example:
+        @validate_args({'load_factor': ('>=', 0, '<=', 1), 'voltage_kv': ('>', 0)})
+        """
+        def decorator(func: Callable) -> Callable:
+            sig = signature(func)        
+            def wrapper(*args, **kwargs):
+                bound_args = sig.bind(*args, **kwargs)
+                for arg_name, constraints in arg_ranges.items():
+                    if arg_name in bound_args.arguments:
+                        value = bound_args.arguments[arg_name]
+                        # Skip validation if None
+                        if value is None:
+                            continue
+                        # Parse and validate constraints tuple
+                        i = 0
+                        while i < len(constraints):
+                            op_str = constraints[i]
+                            threshold = constraints[i + 1]
+                            if op_str not in OPERATORS:
+                                raise ValueError(f"Unknown operator: {op_str}")
+                            op_func = OPERATORS[op_str]
+                            if not op_func(value, threshold):
+                                raise ValueError(
+                                    f"{arg_name} must be {op_str} {threshold}, got {value}"
+                                )
+                            i += 2
+                return func(*args, **kwargs)
+            return wrapper
+        return decorator
+
+
     # ----- Main calculation methods -----
 
-    def calculate_total_npv(self, time_horizon, load_factor=None, select_feasible=True): 
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100)})
+    def total_costs(self, time_horizon, report_all_years=False): 
         
-        if select_feasible:
-            line_list = [line for line in self.line_list 
-                         if line.is_feasible(
+        line_list = self.line_list
+        if self.select_ampacity_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_ampacity_feasible(
                             current_a=line.get_current(self.power_mw, self.voltage_kv, is_hvdc=True),
-                            voltage_kv=self.voltage_kv,
+                            is_hvdc=True
+                         )[0]
+                        ]
+        if self.select_sag_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_sag_feasible(
+                            current_a=line.get_current(self.power_mw, self.voltage_kv, is_hvdc=True),
                             max_sag_m=line.max_sag_m,
+                            is_hvdc=True
+                         )[0]
+                        ]
+        if self.select_corona_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_corona_feasible(
+                            voltage_kv=self.voltage_kv,
                             structure_config=self.structure_config,
                             is_hvdc=True
                          )[0]
                         ]
-        else: line_list = self.line_list
 
         if line_list:
             lines = self._format_line_data_for_cost_calc(line_list)
 
-            if load_factor is not None:
-                lines['losses_at_peak_mwh_per_m'] = [
-                    line.calculate_resistive_line_losses(
-                        voltage_kv=self.voltage_kv,
-                        current_a=line.get_current(self.power_mw, self.voltage_kv, is_hvdc=True),
-                        load_factor=load_factor,
-                        is_hvdc=True
-                    ) for line in line_list
-                ]
-                lines['corona_losses_mwh_per_m'] = [
-                    line.calculate_corona_discharge_losses(
-                        voltage_kv=self.voltage_kv, 
-                        structure_config=self.structure_config, 
-                        load_factor=load_factor,
-                        is_hvdc=True
-                    ) for line in line_list 
-                ] if self.structure_config is not None else 0
-
             lines['congestion_mw'] = [
-                line.calculate_congestion(
+                line.congestion(
                     voltage_kv=self.voltage_kv,
                     current_a=line.get_current(self.power_mw, self.voltage_kv, is_hvdc=True),
                     is_hvdc=True
@@ -722,30 +813,121 @@ class HVDC(ProjectEssentials):
             npv = self._npv(
                 lines=lines,
                 time_horizon=time_horizon,
-                structure_modification=self.structure_modification, 
                 is_hvdc=True
             )
             npv['conductor'] = npv['type'] + ' ' + npv['code']
-            npv = npv.rename(columns={time_horizon - 1: 'npv_total_project_costs_mill_dol'})
-            
-            return npv[['prj_name', 'conductor', 'npv_total_project_costs_mill_dol']]
+
+            if not report_all_years:
+                npv = npv.rename(columns={time_horizon - 1: 'npv_total_project_costs_mill_dol'})
+                return npv[['prj_name', 'conductor', 'npv_total_project_costs_mill_dol']].to_dict(orient='records')
+            else:
+                print("Cost results in millions of dollars.")
+                return npv[['prj_name', 'conductor'] + list(range(time_horizon))].to_dict(orient='records')
         else:
-            return pd.DataFrame()
+            return {}
 
 
-    def calculate_structure_costs(self, time_horizon, select_feasible=True):
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100), 'load_factor': ('>=', 0, '<=', 1)})
+    def total_costs_including_losses(self, time_horizon, load_factor, report_all_years=False): 
         
-        if select_feasible:
-            line_list = [line for line in self.line_list 
-                         if line.is_feasible(
+        line_list = self.line_list
+        if self.select_ampacity_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_ampacity_feasible(
                             current_a=line.get_current(self.power_mw, self.voltage_kv, is_hvdc=True),
-                            voltage_kv=self.voltage_kv,
+                            is_hvdc=True
+                         )[0]
+                        ]
+        if self.select_sag_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_sag_feasible(
+                            current_a=line.get_current(self.power_mw, self.voltage_kv, is_hvdc=True),
                             max_sag_m=line.max_sag_m,
+                            is_hvdc=True
+                         )[0]
+                        ]
+        if self.select_corona_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_corona_feasible(
+                            voltage_kv=self.voltage_kv,
                             structure_config=self.structure_config,
                             is_hvdc=True
                          )[0]
                         ]
-        else: line_list = self.line_list
+
+        if line_list:
+            lines = self._format_line_data_for_cost_calc(line_list)
+
+            if load_factor is not None:
+                lines['losses_at_peak_mwh_per_m'] = [
+                    line.resistive_line_losses_considering_congestion(
+                        voltage_kv=self.voltage_kv,
+                        current_a=line.get_current(self.power_mw, self.voltage_kv, is_hvdc=True),
+                        load_factor=load_factor,
+                        is_hvdc=True
+                    ) for line in line_list
+                ]
+                lines['corona_losses_mwh_per_m'] = [
+                    line.corona_discharge_losses(
+                        voltage_kv=self.voltage_kv, 
+                        structure_config=self.structure_config, 
+                        load_factor=load_factor,
+                        is_hvdc=True
+                    ) for line in line_list 
+                ] if self.structure_config is not None else 0
+
+            lines['congestion_mw'] = [
+                line.congestion(
+                    voltage_kv=self.voltage_kv,
+                    current_a=line.get_current(self.power_mw, self.voltage_kv, is_hvdc=True),
+                    is_hvdc=True
+                ) for line in line_list
+            ]  
+            
+            npv = self._npv(
+                lines=lines,
+                time_horizon=time_horizon,
+                is_hvdc=True
+            )
+            npv['conductor'] = npv['type'] + ' ' + npv['code']
+
+            if not report_all_years:
+                npv = npv.rename(columns={time_horizon - 1: 'npv_total_project_costs_mill_dol'})
+                return npv[['prj_name', 'conductor', 'npv_total_project_costs_mill_dol']].to_dict(orient='records')
+            else:
+                print("Cost results in millions of dollars.")
+                return npv[['prj_name', 'conductor'] + list(range(time_horizon))].to_dict(orient='records')
+        else:
+            return {}
+
+
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100)})
+    def structure_costs(self, time_horizon, report_all_years=False):
+        
+        line_list = self.line_list
+        if self.select_ampacity_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_ampacity_feasible(
+                            current_a=line.get_current(self.power_mw, self.voltage_kv, is_hvdc=True),
+                            is_hvdc=True
+                         )[0]
+                        ]
+        if self.select_sag_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_sag_feasible(
+                            current_a=line.get_current(self.power_mw, self.voltage_kv, is_hvdc=True),
+                            max_sag_m=line.max_sag_m,
+                            is_hvdc=True
+                         )[0]
+                        ]
+        if self.select_corona_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_corona_feasible(
+                            voltage_kv=self.voltage_kv,
+                            structure_config=self.structure_config,
+                            is_hvdc=True
+                         )[0]
+                        ]
         
         if line_list:
             lines = self._format_line_data_for_cost_calc(line_list)
@@ -765,49 +947,64 @@ class HVDC(ProjectEssentials):
                 )
             else:
                 structures = lines.apply(
-                    lambda r: r.conductor['str_costs_dol'] * npv['inflation'] * npv['structures_inv'],
+                    lambda r: r['structure_cost_dol'] * npv['inflation'] * npv['structures_inv'],
                     axis=1
                 )
 
-            # In case of Votage Upgrade and Reconductoring, some structures may need modifications.
+            # In case of HVDC and Reconductoring, some structures may need modifications.
             # These costs (if any) are added to structures costs
-            if self.structure_modification:
-                npv['structures_modif_inv'] = 0
-                npv.at[0, 'structures_modif_inv'] = 1
-                structures[0] = self.cost_structures_modif_dol_per_unit * self.nbr_structures_modif \
-                    if self.structure_modification else structures[0]
+            if self.cost_structures_modif_dol is not None:
+                structures[0] += self.cost_structures_modif_dol
             
             lines['prj_name'] = self.prj_name
 
             cost_st = structures * npv['cost_capital'] / 1e6
             cost_st = lines.join(cost_st.cumsum(axis=1))
             cost_st['conductor'] = cost_st['type'] + ' ' + cost_st['code']
-            cost_st = cost_st.rename(columns={time_horizon - 1: 'npv_total_structure_costs_mill_dol'})
-            
-            return cost_st[['prj_name', 'conductor', 'npv_total_structure_costs_mill_dol']]
+
+            if not report_all_years:
+                cost_st = cost_st.rename(columns={time_horizon - 1: 'npv_total_structure_costs_mill_dol'})
+                return cost_st[['prj_name', 'conductor', 'npv_total_structure_costs_mill_dol']].to_dict(orient='records')
+            else:
+                print("Cost results in millions of dollars.")
+                return cost_st[['prj_name', 'conductor'] + list(range(time_horizon))].to_dict(orient='records')
         else:
-            return pd.DataFrame()
+            return {}
 
 
-    def calculate_losses_costs(self, time_horizon, load_factor, select_feasible=True):
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100), 'load_factor': ('>=', 0, '<=', 1)})
+    def losses_costs(self, time_horizon, load_factor, report_all_years=False):
         
-        if select_feasible:
-            line_list = [line for line in self.line_list 
-                         if line.is_feasible(
+        line_list = self.line_list
+        if self.select_ampacity_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_ampacity_feasible(
                             current_a=line.get_current(self.power_mw, self.voltage_kv, is_hvdc=True),
-                            voltage_kv=self.voltage_kv,
+                            is_hvdc=True
+                         )[0]
+                        ]
+        if self.select_sag_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_sag_feasible(
+                            current_a=line.get_current(self.power_mw, self.voltage_kv, is_hvdc=True),
                             max_sag_m=line.max_sag_m,
+                            is_hvdc=True
+                         )[0]
+                        ]
+        if self.select_corona_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_corona_feasible(
+                            voltage_kv=self.voltage_kv,
                             structure_config=self.structure_config,
                             is_hvdc=True
                          )[0]
                         ]
-        else: line_list = self.line_list
 
         if line_list:
             lines = self._format_line_data_for_cost_calc(line_list)
 
             lines['losses_at_peak_mwh_per_m'] = [
-                line.calculate_resistive_line_losses(
+                line.resistive_line_losses_considering_congestion(
                     voltage_kv=self.voltage_kv,
                     current_a=line.get_current(self.power_mw, self.voltage_kv, is_hvdc=True),
                     load_factor=load_factor,
@@ -815,7 +1012,7 @@ class HVDC(ProjectEssentials):
                 ) for line in line_list
             ]
             lines['corona_losses_mwh_per_m'] = [
-                line.calculate_corona_discharge_losses(
+                line.corona_discharge_losses(
                     voltage_kv=self.voltage_kv, 
                     structure_config=self.structure_config, 
                     load_factor=load_factor,
@@ -839,19 +1036,24 @@ class HVDC(ProjectEssentials):
             losses = losses * npv['cost_capital'] / 1e6
             losses = lines[['code', 'type', 'prj_name']].join(losses.cumsum(axis=1))
             losses['conductor'] = losses['type'] + ' ' + losses['code']
-            losses = losses.rename(columns={time_horizon - 1: 'npv_total_losses_costs_mill_dol'})
-            
-            return losses[['prj_name', 'conductor', 'npv_total_losses_costs_mill_dol']]
+
+            if not report_all_years:
+                losses = losses.rename(columns={time_horizon - 1: 'npv_total_losses_costs_mill_dol'})
+                return losses[['prj_name', 'conductor', 'npv_total_losses_costs_mill_dol']].to_dict(orient='records')
+            else:
+                print("Cost results in millions of dollars.")
+                return losses[['prj_name', 'conductor'] + list(range(time_horizon))].to_dict(orient='records')
         else:
-            return pd.DataFrame()
+            return {}
 
 
-    def calculate_congestion_costs(self, time_horizon):
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100)})
+    def congestion_costs(self, time_horizon, report_all_years=False):
 
         lines = self._format_line_data_for_cost_calc(self.line_list)
 
         lines['congestion_mw'] = [
-            line.calculate_congestion(
+            line.congestion(
                 voltage_kv=self.voltage_kv,
                 current_a=line.get_current(self.power_mw, self.voltage_kv, is_hvdc=True),
                 is_hvdc=True
@@ -872,12 +1074,17 @@ class HVDC(ProjectEssentials):
         congestion = congestion * npv['cost_capital'] / 1e6
         congestion = lines[['code', 'type', 'prj_name']].join(congestion.cumsum(axis=1))
         congestion['conductor'] = congestion['type'] + ' ' + congestion['code']
-        congestion = congestion.rename(columns={time_horizon - 1: 'npv_total_congestion_costs_mill_dol'})
-        
-        return congestion[['prj_name', 'conductor', 'npv_total_congestion_costs_mill_dol']]
+
+        if not report_all_years:
+            congestion = congestion.rename(columns={time_horizon - 1: 'npv_total_congestion_costs_mill_dol'})
+            return congestion[['prj_name', 'conductor', 'npv_total_congestion_costs_mill_dol']].to_dict(orient='records')
+        else:
+            print("Cost results in millions of dollars.")
+            return congestion[['prj_name', 'conductor'] + list(range(time_horizon))].to_dict(orient='records')
 
 
-    def calculate_converter_costs(self, time_horizon):
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100)})
+    def converter_costs(self, time_horizon):
 
         npv = pd.DataFrame(columns=['year'])
         npv['year'] = list(range(time_horizon))
@@ -885,6 +1092,7 @@ class HVDC(ProjectEssentials):
         npv['cost_capital'] = npv['year'].apply(lambda x: 1 / (1 + self.wacc)**x)
 
         npv['structures_modif_inv'] = 0
+        # costs of converters are currently added to upfront costs (no converter lifetime considered)
         npv.at[0, 'structures_modif_inv'] = 1
 
         converters = (self.cost_converters_dol * npv['inflation'] * npv['structures_modif_inv']
@@ -896,74 +1104,131 @@ class HVDC(ProjectEssentials):
             columns={time_horizon - 1: 'npv_total_converters_costs_mill_dol'}
         )
 
-        return converters[['prj_name', 'npv_total_converters_costs_mill_dol']]
+        return converters[['prj_name', 'npv_total_converters_costs_mill_dol']].to_dict(orient='records')
 
 
 class Analysis(BaseModel):
     project_list: List[ProjectEssentials]
 
-    def compare_project_total_costs(self, time_horizon, load_factor=None, select_feasible=True):
-        """Calculate and compare total NPV for all projects in the analysis."""
-        
-        comparison = pd.DataFrame()
-        for project in self.project_list:
-            result = project.calculate_total_npv(
-                time_horizon=time_horizon, 
-                load_factor=load_factor, 
-                select_feasible=select_feasible
-            )
-            comparison = pd.concat([comparison, result])
-
-        return comparison.reset_index(drop=True)
+    # ----- validation decorator ensuring method args fall in correct value ranges.
     
+    def _validate_args(arg_ranges: Dict[str, tuple]) -> Callable:
+        """
+        Flexible decorator supporting different operators per parameter.
+        Usage example:
+        @validate_args({'load_factor': ('>=', 0, '<=', 1), 'voltage_kv': ('>', 0)})
+        """
+        def decorator(func: Callable) -> Callable:
+            sig = signature(func)        
+            def wrapper(*args, **kwargs):
+                bound_args = sig.bind(*args, **kwargs)
+                for arg_name, constraints in arg_ranges.items():
+                    if arg_name in bound_args.arguments:
+                        value = bound_args.arguments[arg_name]
+                        # Skip validation if None
+                        if value is None:
+                            continue
+                        # Parse and validate constraints tuple
+                        i = 0
+                        while i < len(constraints):
+                            op_str = constraints[i]
+                            threshold = constraints[i + 1]
+                            if op_str not in OPERATORS:
+                                raise ValueError(f"Unknown operator: {op_str}")
+                            op_func = OPERATORS[op_str]
+                            if not op_func(value, threshold):
+                                raise ValueError(
+                                    f"{arg_name} must be {op_str} {threshold}, got {value}"
+                                )
+                            i += 2
+                return func(*args, **kwargs)
+            return wrapper
+        return decorator
 
-    def compare_project_structure_costs(self, time_horizon, select_feasible=True):
-        
-        comparison = pd.DataFrame()
+    
+    # ----- Main calculation methods -----
+
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100)})
+    def total_costs_of_projects(self, time_horizon, report_all_years=False):
+        """Calculate and compare total costs for all projects in the analysis."""
+        comparison = {}
         for project in self.project_list:
-            result = project.calculate_structure_costs(
+            result = project.total_costs(
                 time_horizon=time_horizon,
-                select_feasible=select_feasible
+                report_all_years=report_all_years
             )
-            comparison = pd.concat([comparison, result])
+            comparison.update({project.prj_name: result})
 
-        return comparison.reset_index(drop=True)
+        return comparison
     
 
-    def compare_project_conductor_costs(self, time_horizon, select_feasible=True):
-        
-        comparison = pd.DataFrame()
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100), 'load_factor': ('>=', 0, '<=', 1)})
+    def total_costs_of_projects_including_losses(self, time_horizon, load_factor=None, report_all_years=False):
+        """Calculate and compare total costs for all projects in the analysis."""
+        comparison = {}
         for project in self.project_list:
-            result = project.calculate_conductor_costs(
-                time_horizon=time_horizon,
-                select_feasible=select_feasible
-            )
-            comparison = pd.concat([comparison, result])
-
-        return comparison.reset_index(drop=True)
-    
-
-    def compare_project_losses_costs(self, time_horizon, load_factor, select_feasible=True):
-        
-        comparison = pd.DataFrame()
-        for project in self.project_list:
-            result = project.calculate_losses_costs(
+            result = project.total_costs_including_losses(
                 time_horizon=time_horizon, 
-                load_factor=load_factor, 
-                select_feasible=select_feasible
+                load_factor=load_factor,
+                report_all_years=report_all_years
             )
-            comparison = pd.concat([comparison, result])
+            comparison.update({project.prj_name: result})
 
-        return comparison.reset_index(drop=True)
+        return comparison
     
 
-    def compare_project_congestion_costs(self, time_horizon):
-
-        comparison = pd.DataFrame()
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100)})
+    def structure_costs_of_projects(self, time_horizon, report_all_years=False):
+        
+        comparison = {}
         for project in self.project_list:
-            result = project.calculate_congestion_costs(
-                time_horizon=time_horizon
+            result = project.structure_costs(
+                time_horizon=time_horizon,
+                report_all_years=report_all_years
             )
-            comparison = pd.concat([comparison, result])
+            comparison.update({project.prj_name: result})
 
-        return comparison.reset_index(drop=True)
+        return comparison
+    
+
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100)})
+    def conductor_costs_of_projects(self, time_horizon, report_all_years=False):
+        
+        comparison = {}
+        for project in self.project_list:
+            result = project.conductor_costs(
+                time_horizon=time_horizon,
+                report_all_years=report_all_years
+            )
+            comparison.update({project.prj_name: result})
+
+        return comparison
+    
+
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100), 'load_factor': ('>=', 0, '<=', 1)})
+    def losses_costs_of_projects(self, time_horizon, load_factor, report_all_years=False):
+        
+        comparison = {}
+        for project in self.project_list:
+            result = project.losses_costs(
+                time_horizon=time_horizon, 
+                load_factor=load_factor,
+                report_all_years=report_all_years
+            )
+            comparison.update({project.prj_name: result})
+
+        return comparison
+    
+
+    @_validate_args({'time_horizon': ('>', 0, '<=', 100)})
+    def congestion_costs_of_projects(self, time_horizon, report_all_years=False):
+
+        comparison = {}
+        for project in self.project_list:
+            result = project.congestion_costs(
+                time_horizon=time_horizon,
+                report_all_years=report_all_years
+            )
+            comparison.update({project.prj_name: result})
+
+        return comparison

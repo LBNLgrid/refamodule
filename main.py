@@ -64,7 +64,8 @@ prj3 = VoltageUpgrade(
     power_mw=400,
     voltage_kv=345, 
     structure_remaining_life=0, 
-    conductor_remaining_life=0, 
+    conductor_remaining_life=0,
+    cost_substations_upgrade_dol=2000000 
 )
 prj4 = HVDC(
     line_list=[ln1, ln2], 
@@ -72,12 +73,13 @@ prj4 = HVDC(
     power_mw=400,
     voltage_kv=500, 
     structure_remaining_life=0, 
-    conductor_remaining_life=0, 
+    conductor_remaining_life=0,
+    cost_converters_dol=3000000, 
     nbr_dc_poles_per_circuit=2,
     structure_config=my_structure_config_dc
 )
 
-print(prj1.calculate_total_npv(70))
+print(prj1.total_npv(70))
 
 refa = Analysis(project_list=[prj1, prj2, prj3, prj4, prj0])
 comparison = refa.compare_project_total_costs(time_horizon=70, load_factor=0.6)

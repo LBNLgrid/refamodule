@@ -14,7 +14,6 @@ def default_conductor() -> Conductor:
         dol_per_1000_ft=1252.0,
         inst_dol_per_1000_ft=1804.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -75,7 +74,6 @@ def load_conductors_from_csv(csv_path: str) -> ConductorDict:
                     dol_per_1000_ft=float(data['dol_per_1000_ft']),
                     inst_dol_per_1000_ft=float(data['inst_dol_per_1000_ft']),
                     accessories_dol_per_1000_ft=float(data['accessories_dol_per_1000_ft']),
-                    str_costs_dol=float(data['str_costs_dol']),
                     temp_dc_c=float(data['temp_dc_c']),
                     temp_low_c=float(data['temp_low_c']),
                     temp_high_c=float(data['temp_high_c']),
@@ -108,7 +106,6 @@ def acsr_266_8_waxwing() -> Conductor:
         dol_per_1000_ft=609.0,
         inst_dol_per_1000_ft=828.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -133,7 +130,6 @@ def acsr_266_8_partridge() -> Conductor:
         dol_per_1000_ft=735.0,
         inst_dol_per_1000_ft=1027.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -158,7 +154,6 @@ def acsr_336_4_merlin() -> Conductor:
         dol_per_1000_ft=650.0,
         inst_dol_per_1000_ft=942.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -183,7 +178,7 @@ def acsr_336_4_linnet() -> Conductor:
         dol_per_1000_ft=749.0,
         inst_dol_per_1000_ft=1106.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -208,7 +203,7 @@ def acsr_336_4_oriole() -> Conductor:
         dol_per_1000_ft=934.0,
         inst_dol_per_1000_ft=1302.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -233,7 +228,7 @@ def acsr_397_5_chickadee() -> Conductor:
         dol_per_1000_ft=802.0,
         inst_dol_per_1000_ft=1130.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -258,7 +253,7 @@ def acsr_397_5_ibis() -> Conductor:
         dol_per_1000_ft=963.0,
         inst_dol_per_1000_ft=1366.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -283,7 +278,7 @@ def acsr_397_5_lark() -> Conductor:
         dol_per_1000_ft=951.0,
         inst_dol_per_1000_ft=1430.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -308,7 +303,7 @@ def acsr_477_0_pelican() -> Conductor:
         dol_per_1000_ft=940.0,
         inst_dol_per_1000_ft=1353.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -333,7 +328,7 @@ def acsr_477_0_flicker() -> Conductor:
         dol_per_1000_ft=902.0,
         inst_dol_per_1000_ft=1357.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -358,7 +353,7 @@ def acsr_477_0_hawk() -> Conductor:
         dol_per_1000_ft=1123.0,
         inst_dol_per_1000_ft=1594.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -383,7 +378,7 @@ def acsr_477_0_hen() -> Conductor:
         dol_per_1000_ft=1251.0,
         inst_dol_per_1000_ft=1741.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -408,7 +403,7 @@ def acsr_556_5_osprey() -> Conductor:
         dol_per_1000_ft=1128.0,
         inst_dol_per_1000_ft=1559.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -433,7 +428,7 @@ def acsr_556_5_parakeet() -> Conductor:
         dol_per_1000_ft=1324.0,
         inst_dol_per_1000_ft=1818.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -458,7 +453,7 @@ def acsr_556_5_dove() -> Conductor:
         dol_per_1000_ft=1252.0,
         inst_dol_per_1000_ft=1804.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -483,7 +478,7 @@ def acsr_636_0_kingbird() -> Conductor:
         dol_per_1000_ft=1090.0,
         inst_dol_per_1000_ft=1624.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -508,7 +503,7 @@ def acsr_636_0_rook() -> Conductor:
         dol_per_1000_ft=1236.0,
         inst_dol_per_1000_ft=1861.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -533,7 +528,7 @@ def acsr_636_0_grosbeak() -> Conductor:
         dol_per_1000_ft=1416.0,
         inst_dol_per_1000_ft=2031.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -558,7 +553,7 @@ def acsr_666_6_flamingo() -> Conductor:
         dol_per_1000_ft=1460.0,
         inst_dol_per_1000_ft=2146.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -583,7 +578,7 @@ def acsr_795_0_tern() -> Conductor:
         dol_per_1000_ft=1366.0,
         inst_dol_per_1000_ft=2048.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -608,7 +603,7 @@ def acsr_795_0_cuckoo() -> Conductor:
         dol_per_1000_ft=1521.0,
         inst_dol_per_1000_ft=2291.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -633,7 +628,7 @@ def acsr_795_0_drake() -> Conductor:
         dol_per_1000_ft=1711.0,
         inst_dol_per_1000_ft=2359.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -658,7 +653,7 @@ def acsr_900_0_canary() -> Conductor:
         dol_per_1000_ft=1937.0,
         inst_dol_per_1000_ft=2632.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -683,7 +678,7 @@ def acsr_954_0_rail() -> Conductor:
         dol_per_1000_ft=1805.0,
         inst_dol_per_1000_ft=2502.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -708,7 +703,7 @@ def acsr_954_0_cardinal() -> Conductor:
         dol_per_1000_ft=1977.0,
         inst_dol_per_1000_ft=2757.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -733,7 +728,7 @@ def acsr_1033_5_ortolan() -> Conductor:
         dol_per_1000_ft=1979.0,
         inst_dol_per_1000_ft=3026.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -758,7 +753,7 @@ def acsr_1033_5_curlew() -> Conductor:
         dol_per_1000_ft=2182.0,
         inst_dol_per_1000_ft=2926.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -783,7 +778,7 @@ def acsr_1113_0_bluejay() -> Conductor:
         dol_per_1000_ft=2103.0,
         inst_dol_per_1000_ft=3231.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -808,7 +803,7 @@ def acsr_1192_5_bunting() -> Conductor:
         dol_per_1000_ft=1961.0,
         inst_dol_per_1000_ft=2850.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -833,7 +828,7 @@ def acsr_1272_0_bittern() -> Conductor:
         dol_per_1000_ft=2272.0,
         inst_dol_per_1000_ft=3176.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -858,7 +853,7 @@ def acsr_1272_0_pheasant() -> Conductor:
         dol_per_1000_ft=2483.0,
         inst_dol_per_1000_ft=3567.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -883,7 +878,7 @@ def acsr_1351_5_dipper() -> Conductor:
         dol_per_1000_ft=2457.0,
         inst_dol_per_1000_ft=3719.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -908,7 +903,7 @@ def acsr_1351_5_martin() -> Conductor:
         dol_per_1000_ft=3045.0,
         inst_dol_per_1000_ft=3929.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -933,7 +928,7 @@ def acsr_1431_0_bobolink() -> Conductor:
         dol_per_1000_ft=2785.0,
         inst_dol_per_1000_ft=4034.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -958,7 +953,7 @@ def acsr_1590_0_lapwing() -> Conductor:
         dol_per_1000_ft=2872.0,
         inst_dol_per_1000_ft=4059.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -983,7 +978,7 @@ def acsr_1590_0_falcon() -> Conductor:
         dol_per_1000_ft=3390.0,
         inst_dol_per_1000_ft=4664.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1008,7 +1003,7 @@ def acss_266_8_partridge() -> Conductor:
         dol_per_1000_ft=760.0,
         inst_dol_per_1000_ft=1027.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1033,7 +1028,7 @@ def acss_336_4_linnet() -> Conductor:
         dol_per_1000_ft=867.0,
         inst_dol_per_1000_ft=1106.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1058,7 +1053,7 @@ def acss_336_4_oriole() -> Conductor:
         dol_per_1000_ft=962.0,
         inst_dol_per_1000_ft=1302.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1083,7 +1078,7 @@ def acss_397_5_ibis() -> Conductor:
         dol_per_1000_ft=1028.0,
         inst_dol_per_1000_ft=1366.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1108,7 +1103,7 @@ def acss_397_5_lark() -> Conductor:
         dol_per_1000_ft=1141.0,
         inst_dol_per_1000_ft=1430.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1133,7 +1128,7 @@ def acss_477_0_flicker() -> Conductor:
         dol_per_1000_ft=1081.0,
         inst_dol_per_1000_ft=1357.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1158,7 +1153,7 @@ def acss_477_0_hawk() -> Conductor:
         dol_per_1000_ft=1200.0,
         inst_dol_per_1000_ft=1594.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1183,7 +1178,7 @@ def acss_477_0_hen() -> Conductor:
         dol_per_1000_ft=1283.0,
         inst_dol_per_1000_ft=1741.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1208,7 +1203,7 @@ def acss_556_5_parakeet() -> Conductor:
         dol_per_1000_ft=1318.0,
         inst_dol_per_1000_ft=1818.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1233,7 +1228,7 @@ def acss_556_5_dove() -> Conductor:
         dol_per_1000_ft=1378.0,
         inst_dol_per_1000_ft=1804.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1258,7 +1253,7 @@ def acss_636_0_grosbeak() -> Conductor:
         dol_per_1000_ft=1545.0,
         inst_dol_per_1000_ft=2031.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1283,7 +1278,7 @@ def acss_666_6_flamingo() -> Conductor:
         dol_per_1000_ft=1711.0,
         inst_dol_per_1000_ft=2146.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1308,7 +1303,7 @@ def acss_795_0_tern() -> Conductor:
         dol_per_1000_ft=1627.0,
         inst_dol_per_1000_ft=2048.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1333,7 +1328,7 @@ def acss_795_0_cuckoo() -> Conductor:
         dol_per_1000_ft=1830.0,
         inst_dol_per_1000_ft=2291.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1358,7 +1353,7 @@ def acss_795_0_drake() -> Conductor:
         dol_per_1000_ft=1721.0,
         inst_dol_per_1000_ft=2359.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1383,7 +1378,7 @@ def acss_900_0_canary() -> Conductor:
         dol_per_1000_ft=1888.0,
         inst_dol_per_1000_ft=2632.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1408,7 +1403,7 @@ def acss_954_0_rail() -> Conductor:
         dol_per_1000_ft=1836.0,
         inst_dol_per_1000_ft=2502.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1433,7 +1428,7 @@ def acss_954_0_cardinal() -> Conductor:
         dol_per_1000_ft=2036.0,
         inst_dol_per_1000_ft=2757.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1458,7 +1453,7 @@ def acss_1033_5_ortolan() -> Conductor:
         dol_per_1000_ft=2447.0,
         inst_dol_per_1000_ft=3026.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1483,7 +1478,7 @@ def acss_1033_5_curlew() -> Conductor:
         dol_per_1000_ft=2067.0,
         inst_dol_per_1000_ft=2926.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1508,7 +1503,7 @@ def acss_1113_0_bluejay() -> Conductor:
         dol_per_1000_ft=2626.0,
         inst_dol_per_1000_ft=3231.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1533,7 +1528,7 @@ def acss_1192_5_bunting() -> Conductor:
         dol_per_1000_ft=2198.0,
         inst_dol_per_1000_ft=2850.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1558,7 +1553,7 @@ def acss_1272_0_bittern() -> Conductor:
         dol_per_1000_ft=2352.0,
         inst_dol_per_1000_ft=3176.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1583,7 +1578,7 @@ def acss_1272_0_pheasant() -> Conductor:
         dol_per_1000_ft=2719.0,
         inst_dol_per_1000_ft=3567.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1608,7 +1603,7 @@ def acss_1351_5_dipper() -> Conductor:
         dol_per_1000_ft=2982.0,
         inst_dol_per_1000_ft=3719.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1633,7 +1628,7 @@ def acss_1351_5_martin() -> Conductor:
         dol_per_1000_ft=2649.0,
         inst_dol_per_1000_ft=3929.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1658,7 +1653,7 @@ def acss_1431_0_bobolink() -> Conductor:
         dol_per_1000_ft=3100.0,
         inst_dol_per_1000_ft=4034.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1683,7 +1678,7 @@ def acss_1590_0_lapwing() -> Conductor:
         dol_per_1000_ft=3042.0,
         inst_dol_per_1000_ft=4059.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1708,7 +1703,7 @@ def acss_1590_0_falcon() -> Conductor:
         dol_per_1000_ft=3393.0,
         inst_dol_per_1000_ft=4664.0,
         accessories_dol_per_1000_ft=263.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -1733,7 +1728,7 @@ def accc_297_helsinki() -> Conductor:
         dol_per_1000_ft=1837.5,
         inst_dol_per_1000_ft=2567.5,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -1758,7 +1753,7 @@ def accc_434_copenhagen() -> Conductor:
         dol_per_1000_ft=2005.0,
         inst_dol_per_1000_ft=2825.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -1783,7 +1778,7 @@ def accc_467_glasgow() -> Conductor:
         dol_per_1000_ft=2407.5,
         inst_dol_per_1000_ft=3415.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -1808,7 +1803,7 @@ def accc_540_casablanca() -> Conductor:
         dol_per_1000_ft=2255.0,
         inst_dol_per_1000_ft=3392.5,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -1833,7 +1828,7 @@ def accc_619_oslo() -> Conductor:
         dol_per_1000_ft=3310.0,
         inst_dol_per_1000_ft=4545.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -1858,7 +1853,7 @@ def accc_623_lisbon() -> Conductor:
         dol_per_1000_ft=3310.0,
         inst_dol_per_1000_ft=4545.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -1883,7 +1878,7 @@ def accc_725_amsterdam() -> Conductor:
         dol_per_1000_ft=3090.0,
         inst_dol_per_1000_ft=4652.5,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -1908,7 +1903,7 @@ def accc_832_brussels() -> Conductor:
         dol_per_1000_ft=3415.0,
         inst_dol_per_1000_ft=5120.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -1933,7 +1928,7 @@ def accc_1002_warsaw() -> Conductor:
         dol_per_1000_ft=4842.5,
         inst_dol_per_1000_ft=6580.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -1958,7 +1953,7 @@ def accc_1035_dublin() -> Conductor:
         dol_per_1000_ft=4512.5,
         inst_dol_per_1000_ft=6255.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -1983,7 +1978,7 @@ def accc_1078_hamburg() -> Conductor:
         dol_per_1000_ft=4942.5,
         inst_dol_per_1000_ft=6892.5,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -2008,7 +2003,7 @@ def accc_1120_milan() -> Conductor:
         dol_per_1000_ft=4947.5,
         inst_dol_per_1000_ft=7565.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -2033,7 +2028,7 @@ def accc_1169_rome() -> Conductor:
         dol_per_1000_ft=5455.0,
         inst_dol_per_1000_ft=7315.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -2058,7 +2053,7 @@ def accc_1242_vienna() -> Conductor:
         dol_per_1000_ft=4902.5,
         inst_dol_per_1000_ft=7125.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -2083,7 +2078,7 @@ def accc_1319_budapest() -> Conductor:
         dol_per_1000_ft=4902.5,
         inst_dol_per_1000_ft=7125.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -2108,7 +2103,7 @@ def accc_1363_prague() -> Conductor:
         dol_per_1000_ft=5680.0,
         inst_dol_per_1000_ft=7940.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -2133,7 +2128,7 @@ def accc_1447_munich() -> Conductor:
         dol_per_1000_ft=6142.5,
         inst_dol_per_1000_ft=9297.5,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -2158,7 +2153,7 @@ def accc_1498_london() -> Conductor:
         dol_per_1000_ft=7612.5,
         inst_dol_per_1000_ft=9822.5,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -2183,7 +2178,7 @@ def accc_1606_paris() -> Conductor:
         dol_per_1000_ft=6962.5,
         inst_dol_per_1000_ft=10085.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -2208,7 +2203,7 @@ def accc_1865_antwerp() -> Conductor:
         dol_per_1000_ft=8475.0,
         inst_dol_per_1000_ft=11660.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -2233,7 +2228,7 @@ def accc_1999_madrid() -> Conductor:
         dol_per_1000_ft=8475.0,
         inst_dol_per_1000_ft=11660.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=200.0,
@@ -2258,7 +2253,7 @@ def aecc_2715_sanford() -> Conductor:
         dol_per_1000_ft=10170.0,
         inst_dol_per_1000_ft=13992.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2283,7 +2278,7 @@ def aecc_2609_killdeer() -> Conductor:
         dol_per_1000_ft=10170.0,
         inst_dol_per_1000_ft=13992.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2308,7 +2303,7 @@ def aecc_2117_blanca() -> Conductor:
         dol_per_1000_ft=10170.0,
         inst_dol_per_1000_ft=13992.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2333,7 +2328,7 @@ def aecc_2093_williamson() -> Conductor:
         dol_per_1000_ft=10170.0,
         inst_dol_per_1000_ft=13992.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2358,7 +2353,7 @@ def aecc_2074_helvellyn() -> Conductor:
         dol_per_1000_ft=10170.0,
         inst_dol_per_1000_ft=13992.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2383,7 +2378,7 @@ def aecc_1608_bersfort() -> Conductor:
         dol_per_1000_ft=10170.0,
         inst_dol_per_1000_ft=13992.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2408,7 +2403,7 @@ def aecc_1494_altar() -> Conductor:
         dol_per_1000_ft=8616.0,
         inst_dol_per_1000_ft=12177.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2433,7 +2428,7 @@ def aecc_1360_sierra() -> Conductor:
         dol_per_1000_ft=8355.0,
         inst_dol_per_1000_ft=12102.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2458,7 +2453,7 @@ def aecc_1099_ruddy() -> Conductor:
         dol_per_1000_ft=5883.0,
         inst_dol_per_1000_ft=8550.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2483,7 +2478,7 @@ def aecc_1094_pennell() -> Conductor:
         dol_per_1000_ft=5883.0,
         inst_dol_per_1000_ft=8550.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2508,7 +2503,7 @@ def aecc_1039_fishers() -> Conductor:
         dol_per_1000_ft=6309.0,
         inst_dol_per_1000_ft=9693.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2533,7 +2528,7 @@ def aecc_1027_gould() -> Conductor:
         dol_per_1000_ft=6309.0,
         inst_dol_per_1000_ft=9693.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2558,7 +2553,7 @@ def aecc_979_fernow() -> Conductor:
         dol_per_1000_ft=5937.0,
         inst_dol_per_1000_ft=9078.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2583,7 +2578,7 @@ def aecc_817_tern() -> Conductor:
         dol_per_1000_ft=5811.0,
         inst_dol_per_1000_ft=7896.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2608,7 +2603,7 @@ def aecc_738_martin() -> Conductor:
         dol_per_1000_ft=4248.0,
         inst_dol_per_1000_ft=6093.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2633,7 +2628,7 @@ def aecc_632_hawk() -> Conductor:
         dol_per_1000_ft=5883.0,
         inst_dol_per_1000_ft=8550.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=75.0,
@@ -2658,7 +2653,7 @@ def accr_300_ostrich() -> Conductor:
         dol_per_1000_ft=5200.0,
         inst_dol_per_1000_ft=7536.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=210.0,
@@ -2683,7 +2678,7 @@ def accr_336_linnet() -> Conductor:
         dol_per_1000_ft=5992.0,
         inst_dol_per_1000_ft=8848.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=210.0,
@@ -2708,7 +2703,7 @@ def accr_397_ibis() -> Conductor:
         dol_per_1000_ft=7704.0,
         inst_dol_per_1000_ft=10928.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=210.0,
@@ -2733,7 +2728,7 @@ def accr_477_hawk() -> Conductor:
         dol_per_1000_ft=7216.0,
         inst_dol_per_1000_ft=10856.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=210.0,
@@ -2758,7 +2753,7 @@ def accr_557_dove() -> Conductor:
         dol_per_1000_ft=8720.0,
         inst_dol_per_1000_ft=12992.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=210.0,
@@ -2783,7 +2778,7 @@ def accr_636_grosbeak() -> Conductor:
         dol_per_1000_ft=11680.0,
         inst_dol_per_1000_ft=17168.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=210.0,
@@ -2808,7 +2803,7 @@ def accr_795_drake() -> Conductor:
         dol_per_1000_ft=13688.0,
         inst_dol_per_1000_ft=18872.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=210.0,
@@ -2833,7 +2828,7 @@ def accr_954_cardinal() -> Conductor:
         dol_per_1000_ft=15816.0,
         inst_dol_per_1000_ft=22056.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=210.0,
@@ -2858,7 +2853,7 @@ def accr_1033_curlew() -> Conductor:
         dol_per_1000_ft=17456.0,
         inst_dol_per_1000_ft=23408.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=210.0,
@@ -2883,7 +2878,7 @@ def accr_1112_finch() -> Conductor:
         dol_per_1000_ft=15688.0,
         inst_dol_per_1000_ft=22800.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=210.0,
@@ -2908,7 +2903,7 @@ def accr_1272_pheasant() -> Conductor:
         dol_per_1000_ft=19864.0,
         inst_dol_per_1000_ft=28536.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=210.0,
@@ -2933,7 +2928,7 @@ def accr_1351_martin() -> Conductor:
         dol_per_1000_ft=24360.0,
         inst_dol_per_1000_ft=31432.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=210.0,
@@ -2958,7 +2953,7 @@ def accr_1590_falcon() -> Conductor:
         dol_per_1000_ft=27120.0,
         inst_dol_per_1000_ft=37312.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=210.0,
@@ -2983,7 +2978,7 @@ def accs_266_8_shenandoah() -> Conductor:
         dol_per_1000_ft=3675.0,
         inst_dol_per_1000_ft=5135.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3008,7 +3003,7 @@ def accs_325_0_olympic() -> Conductor:
         dol_per_1000_ft=3745.0,
         inst_dol_per_1000_ft=5530.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3033,7 +3028,7 @@ def accs_336_4_wrangell() -> Conductor:
         dol_per_1000_ft=3745.0,
         inst_dol_per_1000_ft=5530.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3058,7 +3053,7 @@ def accs_336_4_badlands() -> Conductor:
         dol_per_1000_ft=4670.0,
         inst_dol_per_1000_ft=6510.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3083,7 +3078,7 @@ def accs_397_5_andes() -> Conductor:
         dol_per_1000_ft=4815.0,
         inst_dol_per_1000_ft=6830.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3108,7 +3103,7 @@ def accs_397_5_joshua_tree() -> Conductor:
         dol_per_1000_ft=4815.0,
         inst_dol_per_1000_ft=6830.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3133,7 +3128,7 @@ def accs_397_5_sequoia() -> Conductor:
         dol_per_1000_ft=4755.0,
         inst_dol_per_1000_ft=7150.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3158,7 +3153,7 @@ def accs_477_0_rogers() -> Conductor:
         dol_per_1000_ft=4510.0,
         inst_dol_per_1000_ft=6785.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3183,7 +3178,7 @@ def accs_477_0_yosemite() -> Conductor:
         dol_per_1000_ft=5615.0,
         inst_dol_per_1000_ft=7970.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3208,7 +3203,7 @@ def accs_477_0_capitol_reef() -> Conductor:
         dol_per_1000_ft=6255.0,
         inst_dol_per_1000_ft=8705.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3233,7 +3228,7 @@ def accs_636_0_tortugas() -> Conductor:
         dol_per_1000_ft=6180.0,
         inst_dol_per_1000_ft=9305.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3258,7 +3253,7 @@ def accs_636_0_yellowstone() -> Conductor:
         dol_per_1000_ft=6180.0,
         inst_dol_per_1000_ft=9305.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3283,7 +3278,7 @@ def accs_636_0_glacier() -> Conductor:
         dol_per_1000_ft=7080.0,
         inst_dol_per_1000_ft=10155.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3308,7 +3303,7 @@ def accs_636_0_carlsbad() -> Conductor:
         dol_per_1000_ft=7300.0,
         inst_dol_per_1000_ft=10730.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3333,7 +3328,7 @@ def accs_641_7_congaree() -> Conductor:
         dol_per_1000_ft=6180.0,
         inst_dol_per_1000_ft=9305.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3358,7 +3353,7 @@ def accs_714_0_vinson() -> Conductor:
         dol_per_1000_ft=7300.0,
         inst_dol_per_1000_ft=10730.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3383,7 +3378,7 @@ def accs_795_0_kilimanjaro() -> Conductor:
         dol_per_1000_ft=6830.0,
         inst_dol_per_1000_ft=10240.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3408,7 +3403,7 @@ def accs_795_0_alps() -> Conductor:
         dol_per_1000_ft=6830.0,
         inst_dol_per_1000_ft=10240.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3433,7 +3428,7 @@ def accs_795_0_wind_cave() -> Conductor:
         dol_per_1000_ft=7605.0,
         inst_dol_per_1000_ft=11455.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3458,7 +3453,7 @@ def accs_795_0_denali() -> Conductor:
         dol_per_1000_ft=8555.0,
         inst_dol_per_1000_ft=11795.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3483,7 +3478,7 @@ def accs_795_0_rocky() -> Conductor:
         dol_per_1000_ft=8555.0,
         inst_dol_per_1000_ft=11795.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3508,7 +3503,7 @@ def accs_954_0_crater_lake() -> Conductor:
         dol_per_1000_ft=9685.0,
         inst_dol_per_1000_ft=13160.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3533,7 +3528,7 @@ def accs_954_0_grand_canyon() -> Conductor:
         dol_per_1000_ft=9885.0,
         inst_dol_per_1000_ft=13785.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3558,7 +3553,7 @@ def accs_954_0_fuji() -> Conductor:
         dol_per_1000_ft=9885.0,
         inst_dol_per_1000_ft=13785.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3583,7 +3578,7 @@ def accs_954_0_jasper() -> Conductor:
         dol_per_1000_ft=9895.0,
         inst_dol_per_1000_ft=15130.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3608,7 +3603,7 @@ def accs_954_0_arches() -> Conductor:
         dol_per_1000_ft=10910.0,
         inst_dol_per_1000_ft=14630.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3633,7 +3628,7 @@ def accs_973_1_everglades() -> Conductor:
         dol_per_1000_ft=9895.0,
         inst_dol_per_1000_ft=15130.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3658,7 +3653,7 @@ def accs_1033_5_big_bend() -> Conductor:
         dol_per_1000_ft=9885.0,
         inst_dol_per_1000_ft=13785.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3683,7 +3678,7 @@ def accs_1033_5_lassen() -> Conductor:
         dol_per_1000_ft=9895.0,
         inst_dol_per_1000_ft=15130.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3708,7 +3703,7 @@ def accs_1033_5_tahoe() -> Conductor:
         dol_per_1000_ft=10910.0,
         inst_dol_per_1000_ft=14630.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3733,7 +3728,7 @@ def accs_1033_5_samoa() -> Conductor:
         dol_per_1000_ft=10910.0,
         inst_dol_per_1000_ft=14630.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3758,7 +3753,7 @@ def accs_1113_0_cook() -> Conductor:
         dol_per_1000_ft=10910.0,
         inst_dol_per_1000_ft=14630.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3783,7 +3778,7 @@ def accs_1113_0_blanc() -> Conductor:
         dol_per_1000_ft=10515.0,
         inst_dol_per_1000_ft=16155.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3808,7 +3803,7 @@ def accs_1113_0_niagara() -> Conductor:
         dol_per_1000_ft=10515.0,
         inst_dol_per_1000_ft=16155.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3833,7 +3828,7 @@ def accs_1113_0_gannett() -> Conductor:
         dol_per_1000_ft=9805.0,
         inst_dol_per_1000_ft=14250.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3858,7 +3853,7 @@ def accs_1192_5_washington() -> Conductor:
         dol_per_1000_ft=9805.0,
         inst_dol_per_1000_ft=14250.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3883,7 +3878,7 @@ def accs_1192_5_elbert() -> Conductor:
         dol_per_1000_ft=9805.0,
         inst_dol_per_1000_ft=14250.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3908,7 +3903,7 @@ def accs_1192_5_kings_canyon() -> Conductor:
         dol_per_1000_ft=9805.0,
         inst_dol_per_1000_ft=14250.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3933,7 +3928,7 @@ def accs_1192_5_acadia() -> Conductor:
         dol_per_1000_ft=11360.0,
         inst_dol_per_1000_ft=15880.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3958,7 +3953,7 @@ def accs_1233_6_redwood() -> Conductor:
         dol_per_1000_ft=11360.0,
         inst_dol_per_1000_ft=15880.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -3983,7 +3978,7 @@ def accs_1233_6_mesa_verde() -> Conductor:
         dol_per_1000_ft=11360.0,
         inst_dol_per_1000_ft=15880.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -4008,7 +4003,7 @@ def accs_1233_6_biscayne() -> Conductor:
         dol_per_1000_ft=11360.0,
         inst_dol_per_1000_ft=15880.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -4033,7 +4028,7 @@ def accs_1272_0_saguaro() -> Conductor:
         dol_per_1000_ft=11360.0,
         inst_dol_per_1000_ft=15880.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -4058,7 +4053,7 @@ def accs_1272_0_sierra_nevada() -> Conductor:
         dol_per_1000_ft=11360.0,
         inst_dol_per_1000_ft=15880.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -4083,7 +4078,7 @@ def accs_1272_0_eldorado() -> Conductor:
         dol_per_1000_ft=12415.0,
         inst_dol_per_1000_ft=17835.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -4108,7 +4103,7 @@ def accs_1272_0_voyageurs() -> Conductor:
         dol_per_1000_ft=12415.0,
         inst_dol_per_1000_ft=17835.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -4133,7 +4128,7 @@ def accs_1351_5_cascades() -> Conductor:
         dol_per_1000_ft=12285.0,
         inst_dol_per_1000_ft=18595.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -4158,7 +4153,7 @@ def accs_1351_5_banff() -> Conductor:
         dol_per_1000_ft=12285.0,
         inst_dol_per_1000_ft=18595.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -4183,7 +4178,7 @@ def accs_1351_5_elbrus() -> Conductor:
         dol_per_1000_ft=15225.0,
         inst_dol_per_1000_ft=19645.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -4208,7 +4203,7 @@ def accs_1590_0_bryce_canyon() -> Conductor:
         dol_per_1000_ft=14360.0,
         inst_dol_per_1000_ft=20295.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -4233,7 +4228,7 @@ def accs_1590_0_adirondack() -> Conductor:
         dol_per_1000_ft=16950.0,
         inst_dol_per_1000_ft=23320.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -4258,7 +4253,7 @@ def accs_1590_0_zion() -> Conductor:
         dol_per_1000_ft=16950.0,
         inst_dol_per_1000_ft=23320.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -4283,7 +4278,7 @@ def accs_1780_0_teton() -> Conductor:
         dol_per_1000_ft=16950.0,
         inst_dol_per_1000_ft=23320.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -4308,7 +4303,7 @@ def accs_1780_0_everest() -> Conductor:
         dol_per_1000_ft=16950.0,
         inst_dol_per_1000_ft=23320.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,
@@ -4333,7 +4328,7 @@ def accs_1780_0_katmai() -> Conductor:
         dol_per_1000_ft=16950.0,
         inst_dol_per_1000_ft=23320.0,
         accessories_dol_per_1000_ft=750.0,
-        str_costs_dol=0.0,
+        
         temp_dc_c=20.0,
         temp_low_c=25.0,
         temp_high_c=180.0,

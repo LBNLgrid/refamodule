@@ -12,7 +12,6 @@ class Conductor(BaseModel):
     dol_per_1000_ft: float = Field(..., ge=0)
     inst_dol_per_1000_ft: float = Field(..., ge=0)
     accessories_dol_per_1000_ft: float = Field(..., ge=0)
-    str_costs_dol: float = Field(..., ge=0)
     temp_dc_c: float = Field(..., ge=0)
     temp_low_c: float = Field(..., ge=0)
     temp_high_c: float = Field(..., ge=0)

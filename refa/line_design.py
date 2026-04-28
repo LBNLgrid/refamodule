@@ -14,7 +14,7 @@ class LineDesign(BaseModel):
     
     nbr_structures: int | None = Field(default=None, ge=1)
     max_sag_m: float = None
-    
+    structore_cost_dol: float = Field(0, ge=0)
     
     @model_validator(mode="after")
     def _update_parameters(self):
@@ -24,7 +24,6 @@ class LineDesign(BaseModel):
         if self.nbr_structures is None:
             self.nbr_structures = math.ceil(self.length_km * 1000 / self.avg_span_m) + 1
         return self
-
 
     def __getattr__(self, name):
         env = object.__getattribute__(self, "environment")
