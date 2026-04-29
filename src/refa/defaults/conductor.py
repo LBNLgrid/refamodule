@@ -1,6 +1,9 @@
 from ..conductor import Conductor
 import pandas as pd
+from pathlib import Path
 from typing import Callable, Dict
+
+_DATA_DIR = Path(__file__).parent.parent / "data"
 
 
 def default_conductor() -> Conductor:
@@ -91,6 +94,11 @@ def load_conductors_from_csv(csv_path: str) -> ConductorDict:
         conductors[f'{cond_type}_{func_name}'] = make_conductor(row)
     
     return conductors
+
+
+def load_bundled_conductors() -> ConductorDict:
+    """Load conductors from the bundled conductors.csv included with the package."""
+    return load_conductors_from_csv(str(_DATA_DIR / "conductors.csv"))
 
 
 # ----- Database of conductors

@@ -1,3 +1,4 @@
+from ._version import __version__
 from .environment import Environment
 from .structure_config import StructureConfig, StructureConfigAC, StructureConfigDC
 from .loading import Loading
