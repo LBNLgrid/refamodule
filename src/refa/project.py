@@ -176,9 +176,11 @@ class ProjectEssentials(BaseModel):
         lines_df = lines_df.reset_index(drop=True)
         desired_cols = line_design.columns.to_list() + \
             ['code', 'type', 'dol_per_1000_ft', 'inst_dol_per_1000_ft',
-            'accessories_dol_per_1000_ft', 'max_temperature_c'] 
+            'accessories_dol_per_1000_ft', 'max_temperature_c', 'str_costs_dol']
         valid_cols = lines_df.columns.intersection(desired_cols)
         lines_df = lines_df[valid_cols].copy()
+        if 'str_costs_dol' in lines_df.columns:
+            lines_df = lines_df.rename(columns={'str_costs_dol': 'structure_cost_dol'})
         
         return lines_df
        

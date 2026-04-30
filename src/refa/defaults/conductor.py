@@ -77,6 +77,7 @@ def load_conductors_from_csv(csv_path: str) -> ConductorDict:
                     dol_per_1000_ft=float(data['dol_per_1000_ft']),
                     inst_dol_per_1000_ft=float(data['inst_dol_per_1000_ft']),
                     accessories_dol_per_1000_ft=float(data['accessories_dol_per_1000_ft']),
+                    str_costs_dol=float(data['str_costs_dol']) if 'str_costs_dol' in data and pd.notna(data['str_costs_dol']) else 0.0,
                     temp_dc_c=float(data['temp_dc_c']),
                     temp_low_c=float(data['temp_low_c']),
                     temp_high_c=float(data['temp_high_c']),
