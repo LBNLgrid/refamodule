@@ -37,11 +37,17 @@ dev = [
     "pytest>=7.0",
     "pytest-cov",
 ]
+docs = [
+    "mkdocs>=1.6,<2.0",
+    "mkdocs-material>=9.5,<10.0",
+    "mkdocstrings[python]>=0.25",
+]
 
 [project.urls]
-Homepage = "https://github.com/ryin/refamodule"
-Repository = "https://github.com/ryin/refamodule"
-Issues = "https://github.com/ryin/refamodule/issues"
+Homepage = "https://lbnlgrid.github.io/refamodule"
+Repository = "https://github.com/LBNLgrid/refamodule"
+Issues = "https://github.com/LBNLgrid/refamodule/issues"
+Documentation = "https://lbnlgrid.github.io/refamodule"
 
 [tool.setuptools.dynamic]
 version = { attr = "refa._version.__version__" }
