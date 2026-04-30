@@ -121,7 +121,7 @@ def test_corona_discharge_losses_dc(line1, structure_config_dc):
 
 def test_congestion_from_current(line1):
     result = line1.congestion(current_a=1500, voltage_kv=230)
-    assert result == approx(1.3785, rel=1e-3)
+    assert result == approx(1.3745, rel=1e-3)
 
 
 def test_congestion_from_power(line1):

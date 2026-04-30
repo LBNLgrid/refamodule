@@ -1,3 +1,4 @@
+import datetime
 import pytest
 from refa import LineDesign, Conductor, Line
 from refa.defaults import (
@@ -11,10 +12,15 @@ from refa.defaults import (
 )
 from refa.standards import nesc_250b_heavy
 
+# Fixed date so solar-radiation-dependent calculations are stable across machines and days.
+_FIXED_DATE = datetime.date(2026, 4, 28)
+
 
 @pytest.fixture
 def environment():
-    return default_clear_environment()
+    env = default_clear_environment()
+    env.date = _FIXED_DATE
+    return env
 
 
 @pytest.fixture

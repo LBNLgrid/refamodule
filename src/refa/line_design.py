@@ -1,4 +1,5 @@
 import math
+from typing import Optional
 from pydantic import BaseModel, Field, model_validator
 from .environment import Environment
 
@@ -12,7 +13,7 @@ class LineDesign(BaseModel):
     avg_span_m: float = Field(..., gt=0)
     max_span_m: float = Field(..., gt=0)
     
-    nbr_structures: int | None = Field(default=None, ge=1)
+    nbr_structures: Optional[int] = Field(default=None, ge=1)
     max_sag_m: float = None
     structore_cost_dol: float = Field(0, ge=0)
     
