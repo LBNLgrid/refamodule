@@ -1,9 +1,9 @@
-from ..environment import Environment
+from ..environment import EnvironmentMetric, EnvironmentImperial
 import datetime as dt
 
 
-def default_clear_environment() -> Environment:
-    return Environment(
+def default_clear_environment():
+    return EnvironmentMetric(
         date=dt.date.today(),
         latitude=45.0,
         elevation_m=100.0,
@@ -17,8 +17,8 @@ def default_clear_environment() -> Environment:
         rugosity_coefficient=0.82
     )
 
-def default_industrial_environment() -> Environment:
-    return Environment(
+def default_industrial_environment():
+    return EnvironmentMetric(
         date=dt.date.today(),
         latitude=45.0,
         elevation_m=100.0,
@@ -28,6 +28,38 @@ def default_industrial_environment() -> Environment:
         hour=12,
         ambient_temperature_c=25.0,
         atmosphere= _industrial_atmosphere(),
+        weather_correction_factor=1.0,
+        rugosity_coefficient=0.82
+    )
+
+
+def default_clear_environment_imperial():
+    return EnvironmentImperial(
+        date=dt.date.today(),
+        latitude=45,
+        elevation_ft=328,
+        wind_speed_mph=2.24,
+        wind_angle=0,
+        cw_angle_direction_rel_to_north=0,
+        hour=12,
+        ambient_temperature_f=77,
+        atmosphere=_clear_atmosphere(),
+        weather_correction_factor=1.0,
+        rugosity_coefficient=0.82
+    )
+
+
+def default_industrial_environment_imperial():
+    return EnvironmentImperial(
+        date=dt.date.today(),
+        latitude=45,
+        elevation_ft=328,
+        wind_speed_mph=2.24,
+        wind_angle=0,
+        cw_angle_direction_rel_to_north=0,
+        hour=12,
+        ambient_temperature_f=77,
+        atmosphere=_industrial_atmosphere(),
         weather_correction_factor=1.0,
         rugosity_coefficient=0.82
     )
