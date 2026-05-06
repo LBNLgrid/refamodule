@@ -174,7 +174,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
             )
         else:
             structures = lines.apply(
-                lambda r: r['structure_cost_dol'] * npv['inflation'] * npv['structures_inv'],
+                lambda r: r['structure_cost_dol'] * r['nbr_structures'] * npv['inflation'] * npv['structures_inv'],
                 axis=1
             )
 
