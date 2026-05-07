@@ -209,7 +209,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
         if 'losses_at_peak_mwh_per_m' in lines:
             losses = lines.apply(
                 lambda r: (r['losses_at_peak_mwh_per_m'] + r['corona_losses_mwh_per_m']) * 
-                            npv['inflation'] * r['length_km'] * 1e3 * self.cost_of_losses_dol_per_mwh,
+                            npv['inflation'] * r['length_km'] * self.cost_of_losses_dol_per_mwh,
                 axis=1
             )
         else:
@@ -248,7 +248,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
             line_list = [line for line in line_list 
                          if line.is_sag_feasible(
                             current_a=line._current(self.power_mw, self.voltage_kv),
-                            max_sag_m=line.max_sag_m if line.max_sag_m is not None else 100
+                            max_sag_m=line.max_sag_m if line.max_sag_m is not None else 500
                          )[0]
                         ]
         if self.select_corona_feasible:
@@ -259,10 +259,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
                                 structure_config=self.structure_config
                             )[0]
                             ]
-            else:
-                print("Set structure_config to check corona feasibility.")
-                pass
-        
+                
         if line_list:
             lines = self._format_line_data_for_cost_calc(line_list)
 
@@ -303,7 +300,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
             line_list = [line for line in line_list 
                          if line.is_sag_feasible(
                             current_a=line._current(self.power_mw, self.voltage_kv),
-                            max_sag_m=line.max_sag_m
+                            max_sag_m=line.max_sag_m if line.max_sag_m is not None else 500
                          )[0]
                         ]
         if self.select_corona_feasible:
@@ -370,7 +367,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
             line_list = [line for line in line_list 
                          if line.is_sag_feasible(
                             current_a=line._current(self.power_mw, self.voltage_kv),
-                            max_sag_m=line.max_sag_m
+                            max_sag_m=line.max_sag_m if line.max_sag_m is not None else 500
                          )[0]
                         ]
         if self.select_corona_feasible:
@@ -437,7 +434,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
             line_list = [line for line in line_list 
                          if line.is_sag_feasible(
                             current_a=line._current(self.power_mw, self.voltage_kv),
-                            max_sag_m=line.max_sag_m
+                            max_sag_m=line.max_sag_m if line.max_sag_m is not None else 500
                          )[0]
                         ]
         if self.select_corona_feasible:
@@ -466,7 +463,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
                 axis=1
             )
             conductor_inst = lines.apply(
-                lambda r: r['inst_dol_per_km'] * npv['inflation'] * npv['conductors_inv'] * r['length_km'] *
+                lambda r: r['installation_dol_per_km'] * npv['inflation'] * npv['conductors_inv'] * r['length_km'] *
                     r['nbr_circuits'] * r['nbr_bundles'] * r['nbr_conds_per_bundle'],
                 axis=1
             )
@@ -505,7 +502,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
             line_list = [line for line in line_list 
                          if line.is_sag_feasible(
                             current_a=line._current(self.power_mw, self.voltage_kv),
-                            max_sag_m=line.max_sag_m
+                            max_sag_m=line.max_sag_m if line.max_sag_m is not None else 500
                          )[0]
                         ]
         if self.select_corona_feasible:
@@ -541,7 +538,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
 
             losses = lines.apply(
                 lambda r: (r['losses_at_peak_mwh_per_m'] + r['corona_losses_mwh_per_m']) *
-                    npv['inflation'] * self.cost_of_losses_dol_per_mwh * r['length_km'] * 1e3,
+                    npv['inflation'] * self.cost_of_losses_dol_per_mwh * r['length_km'],
                 axis=1
             )
 
@@ -603,7 +600,8 @@ class ProjectEssentials(BaseModel, ParameterAccess):
                         power_mw=self.power_mw, 
                         voltage_kv=self.voltage_kv,
                         max_sag_m=line.max_span_m,
-                        structure_config=self.structure_config
+                        structure_config=self.structure_config,
+                        is_hvdc=isinstance(self.structure_config, StructureConfigDCmetric)
                     )[0], line
                 ]
             )
@@ -649,12 +647,12 @@ class VoltageUpgrade(ProjectEssentials):
     structure_config: StructureConfigACmetric = None
 
     # Aggregated cost for the case where some structures need to be modified due to the voltage upgrade
-    cost_structures_modif_dol: float = Field(None, ge=0)
+    cost_structures_modif_dol: float = Field(0, ge=0)
     
     # ----- Main calculation methods -----
 
     @validate_args(time_horizon=param(">", 0, "<=", 100))
-    def substations_upgrade_costs(self, time_horizon):
+    def substations_upgrade_costs(self, time_horizon, report_all_years=False):
         
         npv = pd.DataFrame(columns=['year'])
         npv['year'] = list(range(time_horizon))
@@ -663,7 +661,8 @@ class VoltageUpgrade(ProjectEssentials):
         npv['cost_capital'] = npv['year'].apply(lambda x: 1 / (1 + self.wacc)**x)
 
         npv['structures_modif_inv'] = 0
-        # costs of substation upgrades are currently added to upfront costs (no substation lifetime considered)
+
+        ''' costs of substation upgrades are currently added to upfront costs (no substation lifetime considered) '''
         npv.at[0, 'structures_modif_inv'] = 1
         
         ss_transfo = (self.cost_substations_upgrade_dol * npv['inflation'] * npv['structures_modif_inv']         
@@ -671,11 +670,13 @@ class VoltageUpgrade(ProjectEssentials):
         
         ss_transfo = pd.DataFrame([ss_transfo.values], columns=npv['year'].values)
         ss_transfo['prj_name'] = self.prj_name
-        ss_transfo = ss_transfo.rename(
-            columns={time_horizon - 1: 'npv_total_substation_transformer_costs_mill_dol'}
-        )
-        
-        return ss_transfo[['prj_name', 'npv_total_substation_transformer_costs_mill_dol']].to_dict(orient='records')
+
+        if not report_all_years:
+            ss_transfo = ss_transfo.rename(columns={time_horizon - 1: 'npv_total_substation_transformer_costs_mill_dol'})
+            return ss_transfo[['prj_name', 'npv_total_substation_transformer_costs_mill_dol']].to_dict(orient='records')
+        else:
+            print("Cost results in millions of dollars.")
+            return ss_transfo[['prj_name'] + list(range(time_horizon))].to_dict(orient='records')
 
 
 class HVDC(ProjectEssentials):
@@ -690,7 +691,7 @@ class HVDC(ProjectEssentials):
     structure_config: StructureConfigDCmetric = None
 
     # Aggregated cost for the case where some structures need to be modified
-    cost_structures_modif_dol: float = Field(None, ge=0)
+    cost_structures_modif_dol: float = Field(0, ge=0)
     
     @model_validator(mode="after")
     def _update_parameters(self):
@@ -716,7 +717,7 @@ class HVDC(ProjectEssentials):
             line_list = [line for line in line_list 
                          if line.is_sag_feasible(
                             current_a=line._current(self.power_mw, self.voltage_kv, is_hvdc=True),
-                            max_sag_m=line.max_sag_m if line.max_sag_m is not None else 100,
+                            max_sag_m=line.max_sag_m if line.max_sag_m is not None else 500,
                             is_hvdc=True
                          )[0]
                         ]
@@ -772,7 +773,7 @@ class HVDC(ProjectEssentials):
             line_list = [line for line in line_list 
                          if line.is_sag_feasible(
                             current_a=line._current(self.power_mw, self.voltage_kv, is_hvdc=True),
-                            max_sag_m=line.max_sag_m,
+                            max_sag_m=line.max_sag_m if line.max_sag_m is not None else 500,
                             is_hvdc=True
                          )[0]
                         ]
@@ -846,7 +847,7 @@ class HVDC(ProjectEssentials):
             line_list = [line for line in line_list 
                          if line.is_sag_feasible(
                             current_a=line._current(self.power_mw, self.voltage_kv, is_hvdc=True),
-                            max_sag_m=line.max_sag_m,
+                            max_sag_m=line.max_sag_m if line.max_sag_m is not None else 500,
                             is_hvdc=True
                          )[0]
                         ]
@@ -902,6 +903,77 @@ class HVDC(ProjectEssentials):
             return {}
 
 
+    @validate_args(time_horizon=param(">", 0, "<=", 100))
+    def conductor_costs(self, time_horizon, report_all_years=False):
+        
+        line_list = self.line_list
+        if self.select_ampacity_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_ampacity_feasible(
+                            current_a=line._current(self.power_mw, self.voltage_kv, is_hvdc=True),
+                            is_hvdc=True
+                         )[0]
+                        ]
+        if self.select_sag_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_sag_feasible(
+                            current_a=line._current(self.power_mw, self.voltage_kv, is_hvdc=True),
+                            max_sag_m=line.max_sag_m if line.max_sag_m is not None else 500,
+                            is_hvdc=True
+                         )[0]
+                        ]
+        if self.select_corona_feasible:
+            line_list = [line for line in line_list 
+                         if line.is_corona_feasible(
+                            voltage_kv=self.voltage_kv,
+                            structure_config=self.structure_config,
+                            is_hvdc=True
+                         )[0]
+                        ]
+        
+        if line_list:
+
+            lines = self._format_line_data_for_cost_calc(line_list)
+
+            npv = pd.DataFrame(columns=['year'])
+            npv['year'] = list(range(time_horizon))
+            npv['inflation'] = npv.year.apply(lambda x: (1 + self.inflation)**x)
+
+            npv['conductors_inv'] = 0
+            npv.loc[npv.year.isin(range(self.conductor_remaining_life, time_horizon, self.conductors_lifetime)), 'conductors_inv'] = 1
+            npv['cost_capital'] = npv['year'].apply(lambda x: 1 / (1 + self.wacc)**x)
+
+            conductor_inv = lines.apply(
+                lambda r: r['cost_dol_per_km'] * npv['inflation'] * npv['conductors_inv'] *r['length_km'] *
+                    r['nbr_circuits'] * r['nbr_bundles'] * r['nbr_conds_per_bundle'],
+                axis=1
+            )
+            conductor_inst = lines.apply(
+                lambda r: r['installation_dol_per_km'] * npv['inflation'] * npv['conductors_inv'] * r['length_km'] *
+                    r['nbr_circuits'] * r['nbr_bundles'] * r['nbr_conds_per_bundle'],
+                axis=1
+            )
+            conductor_access = lines.apply(
+                lambda r: r['accessories_dol_per_km'] * npv['inflation'] * npv['conductors_inv'] * r['length_km'] *
+                    r['nbr_circuits'] * r['nbr_bundles'] * r['nbr_conds_per_bundle'],
+                axis=1
+            )
+
+            lines['prj_name'] = self.prj_name
+
+            cost_cd = (conductor_inv + conductor_inst + conductor_access) * npv['cost_capital'] / 1e6
+            cost_cd = lines.join(cost_cd.cumsum(axis=1))
+            cost_cd['conductor'] = cost_cd['type'] + ' ' + cost_cd['code']
+            if not report_all_years:
+                cost_cd = cost_cd.rename(columns={time_horizon - 1: 'npv_total_conductor_costs_mill_dol'})
+                return cost_cd[['prj_name', 'conductor', 'npv_total_conductor_costs_mill_dol']].to_dict(orient='records')
+            else:
+                print("Cost results in millions of dollars.")
+                return cost_cd[['prj_name', 'conductor'] + list(range(time_horizon))].to_dict(orient='records')
+        else:
+            return {}
+
+
     @validate_args(time_horizon=param(">", 0, "<=", 100), load_factor=param(">=", 0, "<=", 1))
     def losses_costs(self, time_horizon, load_factor, report_all_years=False):
         
@@ -917,7 +989,7 @@ class HVDC(ProjectEssentials):
             line_list = [line for line in line_list 
                          if line.is_sag_feasible(
                             current_a=line._current(self.power_mw, self.voltage_kv, is_hvdc=True),
-                            max_sag_m=line.max_sag_m,
+                            max_sag_m=line.max_sag_m if line.max_sag_m is not None else 500,
                             is_hvdc=True
                          )[0]
                         ]
@@ -957,7 +1029,7 @@ class HVDC(ProjectEssentials):
 
             losses = lines.apply(
                 lambda r: (r['losses_at_peak_mwh_per_m'] + r['corona_losses_mwh_per_m']) *
-                    npv['inflation'] * self.cost_of_losses_dol_per_mwh * r['length_km'] * 1e3,
+                    npv['inflation'] * self.cost_of_losses_dol_per_mwh * r['length_km'],
                 axis=1
             )
 
@@ -1014,7 +1086,7 @@ class HVDC(ProjectEssentials):
 
 
     @validate_args(time_horizon=param(">", 0, "<=", 100))
-    def converter_costs(self, time_horizon):
+    def converter_costs(self, time_horizon, report_all_years=False):
 
         npv = pd.DataFrame(columns=['year'])
         npv['year'] = list(range(time_horizon))
@@ -1022,7 +1094,8 @@ class HVDC(ProjectEssentials):
         npv['cost_capital'] = npv['year'].apply(lambda x: 1 / (1 + self.wacc)**x)
 
         npv['structures_modif_inv'] = 0
-        # costs of converters are currently added to upfront costs (no converter lifetime considered)
+        
+        ''' costs of converters are currently added to upfront costs (no converter lifetime considered) '''
         npv.at[0, 'structures_modif_inv'] = 1
 
         converters = (self.cost_converters_dol * npv['inflation'] * npv['structures_modif_inv']
@@ -1030,11 +1103,13 @@ class HVDC(ProjectEssentials):
         
         converters = pd.DataFrame([converters.values], columns=npv['year'].values)
         converters['prj_name'] = self.prj_name
-        converters = converters.rename(
-            columns={time_horizon - 1: 'npv_total_converters_costs_mill_dol'}
-        )
-
-        return converters[['prj_name', 'npv_total_converters_costs_mill_dol']].to_dict(orient='records')
+        
+        if not report_all_years:
+            converters = converters.rename(columns={time_horizon - 1: 'npv_total_converters_costs_mill_dol'})
+            return converters[['prj_name', 'npv_total_converters_costs_mill_dol']].to_dict(orient='records')
+        else:
+            print("Cost results in millions of dollars.")
+            return converters[['prj_name'] + list(range(time_horizon))].to_dict(orient='records')
 
 
 class Analysis(BaseModel):

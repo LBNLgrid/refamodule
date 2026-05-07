@@ -1,6 +1,7 @@
 from .system_parameters import validate_args, param, CF, LB, UnitSystem, ParameterAccess
 from .line_design import LineDesignMetric
 from .conductor import ConductorMetric
+from .structure_config import StructureConfigDCmetric
 from pydantic import BaseModel, model_validator
 from typing import Dict, Callable
 import pandas as pd
@@ -524,6 +525,10 @@ class Line(BaseModel, ParameterAccess):
 
 
     def corona_inception_voltage(self, structure_config, is_hvdc=False):
+        
+        if isinstance(structure_config, StructureConfigDCmetric) != is_hvdc:
+            raise ValueError("Make sure that StructureConfigAC is provided for AC line (keep default `is_hvdc=False`), "
+                             "and StructureConfigDC is provided for DC line (set `is_hvdc=True`).")
             
         # Air correction factor
         delta = 293 / (273 + self.ambient_temperature_c) * np.exp(-0.00012 * self.elevation_m)
@@ -544,6 +549,10 @@ class Line(BaseModel, ParameterAccess):
     
 
     def corona_voltage_gradient(self, structure_config, is_hvdc=False):
+        
+        if isinstance(structure_config, StructureConfigDCmetric) != is_hvdc:
+            raise ValueError("Make sure that StructureConfigAC is provided for AC line (keep default `is_hvdc=False`), "
+                             "and StructureConfigDC is provided for DC line (set `is_hvdc=True`).")
             
         # Air correction factor
         delta = 293 / (273 + self.ambient_temperature_c) * np.exp(-0.00012 * self.elevation_m)
@@ -634,6 +643,11 @@ class Line(BaseModel, ParameterAccess):
 
     @validate_args(load_factor=param(">=", 0, "<=", 1), voltage_kv=param(">", 0, "<", 1000))
     def corona_discharge_losses(self, voltage_kv, structure_config, load_factor, is_hvdc=False):
+
+        if isinstance(structure_config, StructureConfigDCmetric) != is_hvdc:
+            raise ValueError("Make sure that StructureConfigAC is provided for AC line (keep default `is_hvdc=False`), "
+                             "and StructureConfigDC is provided for DC line (set `is_hvdc=True`).")
+         
         loss_factor = 0.3 * load_factor + 0.7 * load_factor ** 2  # coeffs set to 0.15 and 0.85 in case of distribution
         delta = 293 / (273 + self.ambient_temperature_c) * np.exp(
             -0.00012 * self.elevation_m) # Air correction factor
@@ -661,12 +675,12 @@ class Line(BaseModel, ParameterAccess):
                     self.nbr_circuits * self.nbr_bundles * self.nbr_conds_per_bundle * loss_factor * 8760 * 1e-6
 
             if UnitSystem.is_metric():
-                return float(corona_losses_mwh_per_m), "MWh/m"
+                return float(corona_losses_mwh_per_m), LB.mwh_per_m
             else:
-                return float(corona_losses_mwh_per_m * CF.mile_to_m), "MWh/mile"
+                return float(corona_losses_mwh_per_m * CF.mile_to_m), LB.mwh_per_mile
 
         else:
-            return 0
+            return 0, ''
 
 
     @validate_args(current_a=param(">", 0), voltage_kv=param(">", 0, "<", 1000), power_mw=param(">", 0, "<", 10000))
@@ -728,6 +742,8 @@ class Line(BaseModel, ParameterAccess):
             )
             result['resistive_losses'] = \
                 resistive_losses if UnitSystem.is_metric() else (resistive_losses[0] * CF.mile_to_m, resistive_losses[1])
+        else:
+            print("load_factor required to calculate losses.")
 
         if voltage_kv is not None:
             result['congestion'] = self.congestion(voltage_kv, current_a=current_a, is_hvdc=is_hvdc)    
@@ -743,7 +759,7 @@ class Line(BaseModel, ParameterAccess):
                 result['corona_losses'] = \
                     corona_losses if UnitSystem.is_metric() else (corona_losses[0] * CF.mile_to_m, corona_losses[1])     
         else:
-            print("voltage_kv required to calculate losses and congestion.")
+            print("voltage_kv required to calculate congestion.")
                
         return result
 
@@ -810,7 +826,7 @@ class Line(BaseModel, ParameterAccess):
             else:
                 message += f"Sag {sag * CF.m_to_ft} ft exceeds the limit {max_sag_m * CF.m_to_ft} ft." if not sag_ok else ""
         else:
-            print("To consier sag feasibility, please make sure max_sag is provided in the line design.")
+            print("To consider sag feasibility, please make sure max_sag is provided in the line design.")
 
         return sag_ok, message
 
@@ -824,8 +840,8 @@ class Line(BaseModel, ParameterAccess):
             corona_inception_voltage = self.corona_inception_voltage(structure_config, is_hvdc=is_hvdc)[0]     
             corona_ok = True if  voltage_kv < corona_inception_voltage else False
             message += f"Corona inception voltage {corona_inception_voltage} kV is below the {voltage_kv} kV line voltage. " if not corona_ok else ""
-        else:
-            print("To consider corona feasibility, please make sure structure_config is provided.")
+        # else:
+        #     print("To consider corona feasibility, please make sure structure_config is provided.")
 
         return corona_ok, message
 
