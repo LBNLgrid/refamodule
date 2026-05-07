@@ -65,10 +65,14 @@ nav:
     - Conductor: user-guide/conductor.md
     - Line Design: user-guide/line-design.md
     - Line Calculations: user-guide/line.md
+    - Loading: user-guide/loading.md
     - Feasibility: user-guide/feasibility.md
     - Projects: user-guide/projects.md
     - Analysis: user-guide/analysis.md
     - Economics: user-guide/economics.md
+    - Unit System: user-guide/parameter-unit-system.md
+    - Parameter Access: user-guide/parameter-access.md
+    - Parameter Validation: user-guide/Parameter-validation-and-conversion.md
   - API Reference:
     - Line: api/line.md
     - Projects: api/projects.md

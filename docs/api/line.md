@@ -6,24 +6,22 @@
 
 ## LineDesign
 
-::: refa.line_design.LineDesign
+::: refa.line_design.LineDesignMetric
 
 ## Conductor
 
-::: refa.conductor.Conductor
+::: refa.conductor.ConductorMetric
 
 ## Environment
 
-::: refa.environment.Environment
+::: refa.environment.EnvironmentMetric
 
 ## Loading
 
-::: refa.loading.Loading
+::: refa.loading.LoadingMetric
 
 ## StructureConfig
 
-::: refa.structure_config.StructureConfig
+::: refa.structure_config.StructureConfigACmetric
 
-::: refa.structure_config.StructureConfigAC
-
-::: refa.structure_config.StructureConfigDC
+::: refa.structure_config.StructureConfigDCmetric
