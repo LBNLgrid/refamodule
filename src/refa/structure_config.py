@@ -1,20 +1,40 @@
 from pydantic import BaseModel, Field
-
-class StructureConfig(BaseModel):
-    structure_height_m: float = Field(..., gt=0, description="Used in Corona calculations. Height of a representative structure in meters.")
-    
-    nbr_tgt_structures: int = Field(0, ge=0, description="Number of tangent structures in the line.")
-    nbr_ra_structures: int = Field(0, ge=0, description="Number of running angle structures in the line.")
-    nbr_nade_structures: int = Field(0, ge=0, description="Number of non-angled deadend structures in the line.")
-    nbr_de_structures: int = Field(0, ge=0, description="Number of deadend structures in the line.")
+from .system_parameters import ParameterAccess, CF
 
 
-class StructureConfigAC(StructureConfig):
-    distance_a_b_m: float = Field(..., gt=0)
-    distance_a_c_m: float = Field(..., gt=0)
-    distance_b_c_m: float = Field(..., gt=0)
-    
+class StructureConfigACmetric(BaseModel, ParameterAccess):
+    structure_height_m: float = Field(..., gt=0, description="Height of a representative structure (m). Used in Corona calculations.")
+    distance_a_b_m: float = Field(..., gt=0, description="Distance between phase A and B (m)")
+    distance_a_c_m: float = Field(..., gt=0, description="Distance between phase A and C (m)")
+    distance_b_c_m: float = Field(..., gt=0, description="Distance between phase B and C (m)")
 
-class StructureConfigDC(StructureConfig):
-    distance_pos_neg_poles_m: float = Field(..., gt=0, description="Distance between positive and negative poles in case of HVDC (m)")
-    
+
+class StructureConfigACimperial:
+    def __new__(cls,
+                structure_height_ft: float = Field(..., gt=0),
+                distance_a_b_ft: float = Field(..., gt=0),
+                distance_a_c_ft: float = Field(..., gt=0),
+                distance_b_c_ft: float = Field(..., gt=0)) -> StructureConfigACmetric:
+        
+        return StructureConfigACmetric(
+            structure_height_m=structure_height_ft * CF.ft_to_m,
+            distance_a_b_m=distance_a_b_ft * CF.ft_to_m,
+            distance_a_c_m=distance_a_c_ft * CF.ft_to_m,
+            distance_b_c_m=distance_b_c_ft * CF.ft_to_m,
+        )
+
+
+class StructureConfigDCmetric(BaseModel, ParameterAccess):
+    structure_height_m: float = Field(..., gt=0, description="Height of a representative structure (m). Used in Corona calculations.")
+    distance_pos_neg_poles_m: float = Field(..., gt=0, description="Distance between positive and negative poles (m).")
+
+
+class StructureConfigDCimperial:
+    def __new__(cls,
+                structure_height_ft: float = Field(..., gt=0),
+                distance_pos_neg_poles_ft: float = Field(..., gt=0)) -> StructureConfigDCmetric:
+        
+        return StructureConfigDCmetric(
+            structure_height_m=structure_height_ft * CF.ft_to_m,
+            distance_pos_neg_poles_m=distance_pos_neg_poles_ft * CF.ft_to_m,
+        )

@@ -9,6 +9,7 @@ dist/
 build/
 .eggs/
 *.whl
+.github/
 
 # Virtual environments
 .venv/
@@ -28,6 +29,7 @@ env/
 .coverage
 htmlcov/
 .tox/
+main.py
 
 # IDEs
 .vscode/
