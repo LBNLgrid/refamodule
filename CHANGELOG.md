@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.1] - 2026-05-08
+
+### Changed
+- Update package author metadata to LBNLgrid
+
 ## [0.1.0] - 2026-05-01
 
 ### Added
