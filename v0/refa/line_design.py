@@ -24,6 +24,17 @@ class LineDesignMetric(BaseModel, ParameterAccess):
         # set nbr_structures
         if self.nbr_structures is None:
             self.nbr_structures = math.ceil(self.length_km * 1000 / self.avg_span_m) + 1
+
+        if self.avg_span_m > self.max_span_m:
+            raise ValueError(
+                f"avg_span must be <= max_span"
+            )
+        
+        if self.avg_span_m > self.length_km * 1e3:
+            raise ValueError(
+                f"span must be <= line length"
+            )
+        
         return self
 
     def __getattr__(self, name):

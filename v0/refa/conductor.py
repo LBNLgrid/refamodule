@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from .system_parameters import ParameterAccess, CF
 
 
@@ -30,6 +30,11 @@ class ConductorMetric(BaseModel, ParameterAccess):
             return Line(line_design=other.model_copy(deep=True), 
                         conductor=self.model_copy(deep=True))
         return NotImplemented
+    
+    @model_validator(mode="after")
+    def _update_parameters(self):
+        if self.temp_low_c >= self.temp_high_c:
+            raise ValueError("AC high temperature should be greater than AC low temperature")
 
 class ConductorImperial:
     """
