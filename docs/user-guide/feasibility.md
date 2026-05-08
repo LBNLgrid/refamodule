@@ -8,10 +8,10 @@ Each `Line` exposes three feasibility methods. All return a `(bool, str)` tuple 
 
 Checks that:
 
-1. The conductor has **sufficient capacity** — ampacity exceeds the target current.
-2. The conductor is **not grossly over-designed** — ampacity is less than 3× the target current.
+1. The conductor has **sufficient capacity** — ampacity exceeds the target peak current.
+2. The conductor is **not grossly over-designed** — ampacity is less than 3× the target peak current.
 
-Both conditions must hold for the check to pass. This dual-bound ensures that candidates that are heavily oversized for the target power level are also excluded.
+Both conditions must hold for the check to pass. This dual-bound ensures that candidates that are heavily oversized for the target power requirement are also excluded.
 
 ```python
 feasible, msg = line.is_ampacity_feasible(current_a=1300)

@@ -1,6 +1,6 @@
 # Projects
 
-A project wraps one or more `Line` objects with an `Economics` model and computes net-present-value costs over a specified time horizon.
+All project types inherit from `ProjectEssentials`, which wraps one or more `Line` objects with an `Economics` model and computes net-present-value costs over a specified time horizon.
 
 ---
 
@@ -11,8 +11,8 @@ All project types share these required fields:
 | Field | Type | Description |
 |---|---|---|
 | `power_mw` | `float` | Target power delivery (MW) |
-| `voltage_kv` | `float` | Operating voltage (kV, ≥60) |
-| `economics` | `Economics` | Financial assumptions |
+| `voltage_kv` | `float` | Operating voltage (kV, ≥0) |
+| `economics` | `Economics` | Economic and financial assumptions |
 
 And these optional fields:
 
@@ -53,7 +53,7 @@ And these optional fields:
 
 ## Rebuild
 
-Assumes all conductors and structures are replaced from scratch. Conductor and structure replacement cycles both start at year 0.
+Assumes all conductors and structures are replaced at the start of the time horizon. Conductor and structure replacement cycles both start at year 0.
 
 ```python
 from refa import Rebuild
@@ -170,15 +170,15 @@ existing = Existing(
 
 ## Cost Methods
 
-All project types expose the same set of cost methods:
+All project types expose this set of cost methods:
 
 | Method | Returns |
 |---|---|
 | `total_costs(time_horizon)` | Total capital cost NPV |
-| `total_costs_including_losses(time_horizon, load_factor)` | Total cost + loss cost NPV |
+| `total_costs_including_losses(time_horizon, load_factor)` | Total cost + losses cost NPV |
 | `conductor_costs(time_horizon)` | Conductor-only NPV |
 | `structure_costs(time_horizon)` | Structure-only NPV |
-| `losses_costs(time_horizon, load_factor)` | Energy loss cost NPV |
+| `losses_costs(time_horizon, load_factor)` | Line losses cost NPV |
 | `congestion_costs(time_horizon)` | Congestion cost NPV |
 
 All methods return a `list` of `dict`:
@@ -194,6 +194,14 @@ All methods return a `list` of `dict`:
 ]
 ```
 
+VoltageUpgrade project has an additional method:
+
+| `substation_upgrade_costs(time_horizon)` | Substation costs |
+
+HVDC project has an additional method:
+
+| `converter_costs(time_horizon)` | Converter costs |
+
 Pass `report_all_years=True` to receive the cumulative NPV at every year up to `time_horizon` rather than just the final value.
 
 ---
@@ -204,3 +212,4 @@ Pass `report_all_years=True` to receive the cumulative NPV at every year up to `
 
 - `0` → the asset is replaced immediately at year 0 (new capital outlay in year 1)
 - `25` → the asset continues for 25 years before the first replacement
+

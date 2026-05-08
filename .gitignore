@@ -30,6 +30,7 @@ env/
 htmlcov/
 .tox/
 main.py
+_master_v26-5-7/
 
 # IDEs
 .vscode/

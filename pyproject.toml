@@ -5,14 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "refa"
 dynamic = ["version"]
-description = "Transmission line analysis and optimization module for AC/DC power systems"
+description = "Techno-economic analysis of capacity upgrade projects in transmission overhead lines"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.9"
 authors = [
     { name = "ryin" },
 ]
-keywords = ["transmission line", "power systems", "ampacity", "sag", "corona", "HVDC", "conductor"]
+keywords = ["transmission capacity upgrade", "overhead lines", "reconductoring", "advanced conductors", "ampacity", "sag"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",

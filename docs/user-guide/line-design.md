@@ -1,21 +1,21 @@
 # Line Design
 
-`LineDesign` captures the geometry and circuit configuration of a transmission corridor — everything except which conductor is strung on it.
+`LineDesign` captures the characteristics and circuit configuration of a transmission corridor — excluding the conductor strung on it.
 
 ## Fields
 
 | Field | Type | Constraints | Description |
 |---|---|---|---|
-| `environment` | `Environment` | — | Meteorological conditions |
-| `nbr_circuits` | `int` | 1–3 | Number of circuits on the tower |
+| `environment` | `Environment` | — | Weather and geographical conditions |
+| `nbr_circuits` | `int` | 1–3 | Number of circuits in the line corridor |
 | `nbr_bundles` | `int` | 2–3 | Number of phases (AC) or poles (DC) |
 | `nbr_conds_per_bundle` | `int` | ≥1 | Conductors per phase or pole |
-| `length_km` | `float` | >0 | Total line length (km) |
-| `avg_span_m` | `float` | >0 | Average span between structures (m) |
-| `max_span_m` | `float` | >0 | Longest individual span (m) |
-| `nbr_structures` | `int` | ≥1, optional | Auto-calculated if not provided |
-| `max_sag_m` | `float` | optional | Maximum allowable sag (m) — required for sag feasibility checks |
-| `structore_cost_dol` | `float` | ≥0 | Per-structure cost override (default `0`) |
+| `length_km` | `float` | >0 | Total line length (km or mile) |
+| `avg_span_m` | `float` | >0 | Average span between structures (m or ft) |
+| `max_span_m` | `float` | >0 | Longest individual span (m or ft) |
+| `nbr_structures` | `int` | ≥1, optional | Auto-calculated from line length and average span |
+| `max_sag_m` | `float` | optional | Maximum allowable sag (m or ft) — required for sag feasibility checks |
+| `structure_cost_dol` | `float` | ≥0 | Structure cost specific to used conductor (default `0`) |
 
 ## Auto-calculated Fields
 
@@ -79,3 +79,13 @@ from refa.defaults import acsr_795_0_drake
 line = line_design + acsr_795_0_drake()
 # equivalent to: Line(line_design=line_design, conductor=acsr_795_0_drake())
 ```
+
+## LineDesignImperial
+
+In case of `imperial` unit system, the user can use the same constructor `LineDesign`, which will accept values in imperial units. These are converted to `metric` system with which all internal calculations are conducted.
+
+| metric name —> imperial name |
+| `length_km` —> `length_mile` |
+| `avg_span_m` —> `avg_span_ft` |
+| `max_span_m` —> `max_span_ft` |
+| `max_sag_m` —> `max_sag_ft` |

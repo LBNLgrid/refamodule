@@ -1,6 +1,6 @@
 # Line Calculations
 
-`Line` is the core calculation object. It combines a `LineDesign` and a `Conductor` and exposes all technical analysis methods.
+`Line` is a core calculation object. It combines a `LineDesign` and a `Conductor` and exposes all technical analysis methods.
 
 ## Construction
 
@@ -22,19 +22,20 @@ line = Line(line_design=ld, conductor=acss_795_0_cuckoo())
 
 ## Thermal Calculations (IEEE 738)
 
-REFA implements the IEEE 738 steady-state thermal balance to calculate conductor temperature and ampacity.
+REFA implements the IEEE 738 steady-state thermal balance to calculate conductor temperature, resistance, and ampacity.
 
 ### Ampacity
 
-Maximum current the conductor can carry without exceeding its rated temperature at the given environmental conditions.
+Maximum current the conductor can carry without exceeding its maximum (rated) temperature at the given environmental conditions. Updating the maximum temperature of the conductor will result in a different current rating (ampacity).
 
 ```python
 ampacity = line.ampacity_at_environment()
-# 1398 A  (ACSS 795 CUCKOO, clear sky, 25°C, 1 m/s wind, noon, 45°N)
+# 1398 A  
 ```
 
 ### Conductor Temperature
 
+Given the peak current in the line, the conductor temperature can be calculated using IEEE 738.
 ```python
 # From current
 temp = line.temperature_at_current(current_a=1400)           # 200 °C
@@ -51,16 +52,16 @@ res = line.resistance_at_current(power_mw=550, voltage_kv=345)
 ```
 
 !!! note "Current vs. power+voltage"
-    Most `Line` methods accept **either** `current_a` **or** the pair `(power_mw, voltage_kv)`, but not both. REFA converts power and voltage to current using:
+    Most `Line` methods accept **either** `current_a` **or** the pair `(power_mw, voltage_kv)`, but not both. REFA deduced current from power and voltage to current using:
 
     - AC (3-phase): `I = P / (√3 · V)`
-    - DC: `I = P / (2 · V)`
+    - DC: `I = P / (nbr_poles · V)`
 
 ---
 
 ## Sag Calculations (CIGRÉ 324)
 
-REFA implements the CIGRÉ 324 catenary sag-tension model. All sag methods require an `initial_tension_percentage` — the initial stringing tension as a fraction of the conductor's rated tensile strength.
+REFA implements the CIGRÉ 324 catenary sag-tension model. All sag methods require an `initial_tension_percentage` — the initial stringing tension as a fraction of the conductor's rated tensile strength (RTS).
 
 ### Sag at Steady-State Current
 
@@ -134,9 +135,9 @@ v_inc_dc = line.corona_inception_voltage(structure_config=config_dc, is_hvdc=Tru
 
 ### Resistive Losses
 
-Annual energy losses in MWh/m per year, accounting for a load factor.
+Annual line losses in MWh/m per year, accounting for a load factor.
 
-The loss factor is computed as: `LF = 0.3 × load_factor + 0.7 × load_factor²`
+The utilization factor of the line is computed as: `UF = 0.3 × load_factor + 0.7 × load_factor²`
 
 ```python
 # From current

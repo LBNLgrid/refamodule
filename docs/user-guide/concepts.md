@@ -5,27 +5,30 @@
 REFA is structured around a hierarchy of objects. Each layer adds more context until a full project analysis is possible.
 
 ```
-Environment  ──────────────────────────────────────────────┐
-                                                            │
-Conductor ──────────────┐                                   │
-                        ▼                                   ▼
-                       Line  ──► Project (Rebuild /    ──► Analysis
-LineDesign ────────────┘         Reconductoring /
-                                 VoltageUpgrade /
-Economics ─────────────────────► HVDC / Existing)
+Environment         OptionalObjects(Loading, StructureConfig)
+    │                   |           |
+    ▼                   ▼           |
+LineDesign ─────────────┐           |                       
+                        ▼           ▼                        
+                       Line  ──► Project (Rebuild /       ────────► Analysis
+                        ▲           ▲     Reconductoring /
+Conductor ──────────────┘           |     VoltageUpgrade /
+                                    |     HVDC / Existing)
+Economics ──────────────────────────┘     
 ```
 
-### Layer 1 — Environment & Conductor
+### Layer 1 — Input Objects 
 
-`Environment` and `Conductor` are the two independent inputs. They carry no coupling between them and can be defined in any order.
+`Environment` is an independent object holding attributes needed for all technical calculations. Some other necessary technical attributes are provided through objects (`Loading`, `StructureConfig`) or directly as attributes of hierarchically higher objects.
+Economic attributes are provided in `Economics` to feed any type of project creation.
 
-### Layer 2 — LineDesign
+### Layer 2 — LineDesign & Conductor
 
-`LineDesign` attaches an `Environment` to the geometric and circuit configuration of the corridor (length, spans, circuits, bundles). It is independent of which conductor will be strung.
+`LineDesign` appends an `Environment` to its other attributes defining the configuration of the corridor (length, spans, circuits, bundles). The `LineDesign` is independent of which `Conductor` will be strung.
 
 ### Layer 3 — Line
 
-`Line` pairs a `LineDesign` with a `Conductor`. All technical calculations (ampacity, sag, corona, losses) live here. You can build a `Line` with the constructor or with the `+` shorthand:
+`Line` pairs a `LineDesign` with a `Conductor`. All technical calculations (ampacity, sag, corona, losses, congestion) live here. You can build a `Line` with the constructor or with the `+` shorthand:
 
 ```python
 line = Line(line_design=ld, conductor=c)
@@ -35,19 +38,19 @@ line = c + ld          # same result
 
 ### Layer 4 — Project
 
-A project wraps one or more `Line` objects and an `Economics` object to produce net-present-value cost estimates. Five project types are available:
+A project wraps one or more `Line` objects and an `Economics` object to produce net-present-value of cost estimates. Five project types are available:
 
 | Class | Description |
 |---|---|
-| `Rebuild` | New conductors and new structures from scratch |
+| `Rebuild` | New conductors and new structures from the start |
 | `Reconductoring` | New conductors on existing structures |
-| `VoltageUpgrade` | Raise operating voltage; replace conductors and structures |
-| `HVDC` | Convert AC corridor to high-voltage DC |
+| `VoltageUpgrade` | Raise operating voltage; replace conductors and possibly structures |
+| `HVDC` | HVDC line; replace conductors and possibly structures |
 | `Existing` | Baseline — current line, no changes |
 
 Projects can be constructed in two ways:
 
-=== "From a LineDesign + conductor list"
+=== "From a single line design and a conductor list"
     ```python
     project = Rebuild(
         conductor_list=[drake(), cuckoo(), dublin()],
@@ -57,7 +60,7 @@ Projects can be constructed in two ways:
     )
     ```
 
-=== "From a list of Lines"
+=== "From a list of lines"
     ```python
     project = Reconductoring(
         line_list=[ld + drake(), ld + cuckoo()],

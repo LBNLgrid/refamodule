@@ -1,13 +1,13 @@
 # Environment
 
-The `Environment` class captures the meteorological and geographic conditions that affect conductor heat balance and corona calculations.
+The `Environment` class captures weather and geographic conditions that affect conductor heat balance, sag, and corona calculations.
 
 ## Fields
 
 | Field | Type | Default | Description |
 |---|---|---|---|
 | `date` | `date` | today | Reference date (affects solar angle and heat gain) |
-| `latitude` | `float` | — | Geographic latitude in degrees (–90 to 90) |
+| `latitude` | `float` | — | Geographic latitude in degrees (–90° to 90°) |
 | `elevation_m` | `float` | — | Site elevation above sea level (m) |
 | `wind_speed_m_per_s` | `float` | — | Wind speed (m/s) |
 | `wind_angle` | `int` | — | Angle between wind and conductor axis (0–90°) |
@@ -16,9 +16,9 @@ The `Environment` class captures the meteorological and geographic conditions th
 | `atmosphere` | `dict` | — | Polynomial coefficients (A–G) for solar heat flux |
 | `ambient_temperature_c` | `float` | — | Ambient air temperature (°C) |
 | `weather_correction_factor` | `float` | `1.0` | Set to `0.8` for rainy conditions |
-| `rugosity_coefficient` | `float` | `0.82` | Surface roughness: `1.0` polished, `0.92–0.98` dirty, `0.80–0.87` stranded |
+| `rugosity_coefficient` | `float` | `0.82` | Conductor surface roughness: `1.0` polished, `0.92–0.98` dirty, `0.80–0.87` stranded |
 
-## Built-in Environments
+## Default Environments
 
 Two pre-configured environments are provided.
 
@@ -80,7 +80,16 @@ The `Environment` directly drives the IEEE 738 thermal balance equation inside `
 
 - Ampacity (`ampacity_at_environment()`)
 - Steady-state conductor temperature
-- All sag calculations that depend on conductor temperature
-- Congestion (which depends on available capacity)
+- All sag calculations that depend on computed conductor temperature
+- Losses calculations that depend on computed conductor resistance
+- Congestion (which depends on available ampacity)
 
-Calculations that are **not** affected by environment: corona inception voltage, corona voltage gradient, and sag under a mechanical loading profile (`sag_at_loading`).
+
+## EnvironmentImperial
+
+In case of `imperial` unit system, the user can use the same constructor `Environment`, which will accept values in imperial units. These are converted to `metric` system with which all internal calculations are conducted.
+
+| metric name —> imperial name |
+| `elevation_m`  —> `elevation_ft`|
+| `wind_speed_m_per_s`  —> `wind_speed_mph`|
+| `ambient_temperature_c` —> `ambient_temperature_f`|

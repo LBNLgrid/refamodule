@@ -21,12 +21,12 @@ class ConductorMetric(BaseModel, ParameterAccess):
     cost_dol_per_km:             float = Field(0.0, ge=0)
     installation_dol_per_km:     float = Field(0.0, ge=0)
     accessories_dol_per_km:      float = Field(0.0, ge=0)
-    str_costs_dol:               float = Field(0.0, ge=0)
     emissivity:                  float = Field(0.5, ge=0, le=1)
     solar_absorptivity:          float = Field(0.5, ge=0, le=1)
 
     def __add__(self, other):
-        from refa import LineDesignMetric, Line
+        from .line_design import LineDesignMetric
+        from .line import Line
         if isinstance(other, LineDesignMetric):
             return Line(line_design=other.model_copy(deep=True), 
                         conductor=self.model_copy(deep=True))

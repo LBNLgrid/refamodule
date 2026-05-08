@@ -11,3 +11,13 @@
 ::: refa.standards.loading.nesc_250b_warmislands_low
 
 ::: refa.standards.loading.nesc_250b_warmislands_high
+
+::: refa.standards.loading.nesc_250b_heavy_imperial
+
+::: refa.standards.loading.nesc_250b_medium_imperial
+
+::: refa.standards.loading.nesc_250b_light_imperial
+
+::: refa.standards.loading.nesc_250b_warmislands_low_imperial
+
+::: refa.standards.loading.nesc_250b_warmislands_high_imperial

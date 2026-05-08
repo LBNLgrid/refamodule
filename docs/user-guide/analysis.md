@@ -7,7 +7,7 @@
 ```python
 from refa import Analysis
 
-refa = Analysis(project_list=[rebuild, recon, voltageupgrade, hvdc, existing])
+refa = Analysis(project_list=[rebuild, reconductoring, voltageupgrade, hvdc, existing])
 ```
 
 ## Comparison Methods
@@ -18,10 +18,10 @@ refa = Analysis(project_list=[rebuild, recon, voltageupgrade, hvdc, existing])
 | `total_costs_of_projects_including_losses(time_horizon, load_factor)` | Capital + losses NPV |
 | `conductor_costs_of_projects(time_horizon)` | Conductor cost NPV per project |
 | `structure_costs_of_projects(time_horizon)` | Structure cost NPV per project |
-| `losses_costs_of_projects(time_horizon, load_factor)` | Energy loss cost NPV |
-| `congestion_costs_of_projects(time_horizon)` | Congestion cost NPV |
+| `losses_costs_of_projects(time_horizon, load_factor)` | line losses cost NPV per project (resistive line losses, plus corona losses if applicable) |
+| `congestion_costs_of_projects(time_horizon)` | Congestion cost NPV per project|
 
-All methods return a `dict` keyed by project type, with each value being the list of feasible conductor options from that project:
+All methods return a `dict` keyed by project name, with each value being the list of feasible conductor options from that project:
 
 ```python
 {

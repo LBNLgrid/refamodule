@@ -3,12 +3,7 @@ from .line_design import LineDesignMetric
 from .conductor import ConductorMetric
 from .structure_config import StructureConfigDCmetric
 from pydantic import BaseModel, model_validator
-from typing import Dict, Callable
-import pandas as pd
 import numpy as np
-import functools
-import inspect
-from inspect import signature
 from operator import gt, ge, lt, le
 # Map operator strings to Python operator functions
 OPERATORS = {
@@ -816,7 +811,8 @@ class Line(BaseModel, ParameterAccess):
                 ),
                 self._cigre_324_sag(
                     initial_tension_percentage, 
-                    initial_temperature_c, 
+                    initial_temperature_c,
+                    temp_at_current_c=loading_conditions.wind_ice_temperature_c,  
                     loading_conditions=loading_conditions
                 ) if loading_conditions is not None else 0
             )

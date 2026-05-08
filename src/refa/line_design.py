@@ -25,6 +25,12 @@ class LineDesignMetric(BaseModel, ParameterAccess):
         # set nbr_structures
         if self.nbr_structures is None:
             self.nbr_structures = math.ceil(self.length_km * 1000 / self.avg_span_m) + 1
+
+        if self.avg_span_m > self.max_span_m:
+            raise ValueError("avg_span should be smaller of equal to max_span.")
+        if self.max_span_m >= self.length_km * 1e3:
+            raise ValueError("max_span should be smaller than line length.")
+        
         return self
 
     def __getattr__(self, name):
@@ -34,7 +40,8 @@ class LineDesignMetric(BaseModel, ParameterAccess):
         raise AttributeError(f"{type(self).__name__!s} has no attribute {name!r}")
 
     def __add__(self, other):
-        from refa import ConductorMetric, Line
+        from .conductor import ConductorMetric
+        from .line import Line
         if isinstance(other, ConductorMetric):
             return Line(line_design=self.model_copy(deep=True), 
                         conductor=other.model_copy(deep=True))

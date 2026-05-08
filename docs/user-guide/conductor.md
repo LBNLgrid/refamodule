@@ -8,14 +8,14 @@ The `Conductor` class holds all physical, electrical, and cost properties of a b
 
 | Field | Unit | Description |
 |---|---|---|
-| `type` | — | Conductor family: `ACSR`, `ACSS`, `ACCC`, `AECC`, `ACCR`, `ACCS` |
+| `type` | — | Conductor family: `ACSR`, `ACSS`, etc. |
 | `code` | — | Identifier (e.g., `795.0_DRAKE`) |
 | `area_mm2` | mm² | Cross-sectional area |
 | `diameter_mm` | mm | Outer diameter |
 | `weight_n_per_m` | N/m | Linear weight |
 | `conductor_rts_kn` | kN | Rated tensile strength |
 | `elastic_modulus_gpa` | GPa | Young's modulus (for sag-tension) |
-| `coeff_thermal_expan_per_cel` | 1/°C | Coefficient of thermal expansion |
+| `coeff_thermal_expan_per_c` | 1/°C | Coefficient of thermal expansion |
 
 ### Electrical
 
@@ -24,7 +24,7 @@ The `Conductor` class holds all physical, electrical, and cost properties of a b
 | `temp_dc_c` | °C | Reference temperature for DC resistance |
 | `temp_low_c` | °C | Low reference temperature (typically 25°C) |
 | `temp_high_c` | °C | High reference temperature (typically 75°C) |
-| `max_temperature_c` | °C | Maximum continuous operating temperature |
+| `max_temperature_c` | °C | Maximum operating temperature |
 | `res_dc_ohm_per_m` | Ω/m | DC resistance at `temp_dc_c` |
 | `res_low_ohm_per_m` | Ω/m | AC resistance at `temp_low_c` |
 | `res_high_ohm_per_m` | Ω/m | AC resistance at `temp_high_c` |
@@ -35,27 +35,9 @@ The `Conductor` class holds all physical, electrical, and cost properties of a b
 
 | Field | Unit | Description |
 |---|---|---|
-| `dol_per_1000_ft` | $/1000 ft | Conductor material cost |
-| `inst_dol_per_1000_ft` | $/1000 ft | Installation labour cost |
-| `accessories_dol_per_1000_ft` | $/1000 ft | Hardware and accessories cost |
-| `str_costs_dol` | $ | Conductor-specific structure cost (default `0.0`) |
-
-## Using the Bundled Database
-
-The package ships with over 100 conductors in `src/refa/data/conductors.csv`. Load them all at once:
-
-```python
-from refa.defaults import load_bundled_conductors
-
-conductors = load_bundled_conductors()
-
-# Dot-notation access — each entry is a zero-argument factory function
-drake   = conductors.acsr_795_0_drake()
-cuckoo  = conductors.acss_795_0_cuckoo()
-pelican = conductors.acsr_477_0_pelican()
-```
-
-Key names follow the pattern `{type}_{kcmil}_{name}` in lowercase with dots and spaces replaced by underscores.
+| `cost_dol_per_km` | $/km | Conductor material cost |
+| `installation_dol_per_km` | $/km | Installation labour cost |
+| `accessories_dol_per_km` | $/km | Hardware and accessories cost |
 
 ### Individual factory functions
 
@@ -72,9 +54,28 @@ from refa.defaults import (
 drake = acsr_795_0_drake()
 ```
 
-## Loading from a Custom CSV
+## Using a conductor database
 
-Bring your own conductor data in the same column format as the bundled CSV:
+The package contains examples of conductors in `src/refa/data/conductors.csv`.
+
+Load them all at once:
+
+```python
+from refa.defaults import load_conductors_from_csv
+
+conductors = load_conductors_from_csv()
+
+# Dot-notation access — each entry is a zero-argument factory function
+drake   = conductors.acsr_795_0_drake()
+cuckoo  = conductors.acss_795_0_cuckoo()
+pelican = conductors.acsr_477_0_pelican()
+```
+
+Key names follow the pattern `{type}_{kcmil}_{name}` in lowercase with dots and spaces replaced by underscores.
+
+## Loading from a custom CSV
+
+Bring your own conductor data in the same column format as the provided CSV:
 
 ```python
 from refa.defaults import load_conductors_from_csv
@@ -85,10 +86,10 @@ custom = my_conductors.acsr_500_0_hawk()
 
 **Required CSV columns:**
 
-`code`, `type`, `dol_per_1000_ft`, `inst_dol_per_1000_ft`, `accessories_dol_per_1000_ft`,
+`code`, `type`, `cost_dol_per_km`, `installation_dol_per_km`, `accessories_dol_per_km`,
 `str_costs_dol`, `area_mm2`, `diameter_mm`, `weight_n_per_m`, `conductor_rts_kn`,
 `temp_low_c`, `temp_high_c`, `max_temperature_c`, `res_low_ohm_per_m`, `res_high_ohm_per_m`,
-`elastic_modulus_gpa`, `coeff_thermal_expan_per_cel`, `temp_dc_c`, `res_dc_ohm_per_m`,
+`elastic_modulus_gpa`, `coeff_thermal_expan_per_c`, `temp_dc_c`, `res_dc_ohm_per_m`,
 `emissivity`, `solar_absorptivity`
 
 ## Manual Construction
@@ -103,9 +104,9 @@ c = Conductor(
     diameter_mm=16.0,
     weight_n_per_m=5.36,
     conductor_rts_kn=50.26,
-    dol_per_1000_ft=735.0,
-    inst_dol_per_1000_ft=1027.0,
-    accessories_dol_per_1000_ft=263.0,
+    cost_dol_per_km=735.0,
+    installation_dol_per_km=1027.0,
+    accessories_dol_per_km=263.0,
     temp_dc_c=20.0,
     temp_low_c=25.0,
     temp_high_c=75.0,
@@ -114,7 +115,7 @@ c = Conductor(
     res_low_ohm_per_m=0.000209,
     res_high_ohm_per_m=0.000256,
     elastic_modulus_gpa=75.5,
-    coeff_thermal_expan_per_cel=1.92e-05,
+    coeff_thermal_expan_per_c=1.92e-05,
     emissivity=0.5,
     solar_absorptivity=0.5,
 )

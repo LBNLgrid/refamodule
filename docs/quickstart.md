@@ -30,7 +30,7 @@ line = line_design + acss_795_0_cuckoo()
 
 ```python
 # Thermal
-print(line.ampacity_at_environment())                         # 1398 A
+print(line.ampacity_at_environment())                         # 1397 A
 print(line.temperature_at_current(current_a=1400))            # 200 °C
 print(line.temperature_at_current(power_mw=550, voltage_kv=345))  # 106 °C
 
@@ -49,7 +49,7 @@ print(line.corona_voltage_gradient(structure_config=config_ac))    # 29 kV/cm
 
 # Losses
 print(line.resistive_line_losses(current_a=1400, load_factor=0.6))  # 2.78 MWh/m
-print(line.congestion(current_a=1500, voltage_kv=230))              # 1.37 MW
+print(line.congestion(current_a=1500, voltage_kv=230))              # 1.4 MW
 ```
 
 ## Step 3 — Check Feasibility
@@ -65,6 +65,7 @@ print(msg)
 
 feasible, msg = line.is_sag_feasible(current_a=1300, max_sag_m=10, initial_tension_percentage=0.3)
 print(feasible)   # True or False depending on sag result
+print(msg)
 ```
 
 ## Step 4 — Create Projects
@@ -111,6 +112,11 @@ existing = Existing(
     power_mw=400, voltage_kv=230,
     structure_remaining_life=25, conductor_remaining_life=15,
 )
+
+print(recon.total_costs(time_horizon=65))
+print(rebuild.structure_costs(time_horizon=70))
+print(vu.losses_costs(time_horizon=40, load_factor=0.65))
+
 ```
 
 ## Step 5 — Compare Projects
@@ -127,8 +133,8 @@ for project_name, options in results.items():
         print(f"  {opt['conductor']}: ${opt['npv_total_project_costs_mill_dol']:.2f}M")
 ```
 
-??? note "Getting all years instead of the final NPV"
-    Pass `report_all_years=True` to any cost method to receive the cumulative NPV at every year up to `time_horizon`:
+??? note "Getting all years instead of the final net-present cost"
+    Pass `report_all_years=True` to any cost method to receive the cumulative net-present cost at every year up to `time_horizon`:
 
     ```python
     results = rebuild.total_costs(time_horizon=40, report_all_years=True)

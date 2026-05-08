@@ -3,9 +3,9 @@ from .line_design import LineDesignMetric
 from .line import Line
 from .economics import Economics
 from .structure_config import StructureConfigACmetric, StructureConfigDCmetric
-from .system_parameters import ParameterAccess, CF, validate_args, param
+from .system_parameters import ParameterAccess, validate_args, param
 from pydantic import BaseModel, Field, model_validator
-from typing import Optional, List, Callable, Dict
+from typing import Optional, List
 import pandas as pd
 
 
@@ -211,7 +211,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
         if 'losses_at_peak_mwh_per_m' in lines:
             losses = lines.apply(
                 lambda r: (r['losses_at_peak_mwh_per_m'] + r['corona_losses_mwh_per_m']) * 
-                            npv['inflation'] * r['length_km'] * self.cost_of_losses_dol_per_mwh,
+                            npv['inflation'] * r['length_km'] * 1e3 * self.cost_of_losses_dol_per_mwh,
                 axis=1
             )
         else:
@@ -532,7 +532,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
                         load_factor=load_factor
                     )[0] for line in line_list
             ] if self.structure_config is not None else 0
-
+            
             npv = pd.DataFrame(columns=['year'])
             npv['year'] = list(range(time_horizon))
             npv['inflation'] = npv.year.apply(lambda x: (1 + self.inflation)**x)
@@ -540,7 +540,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
 
             losses = lines.apply(
                 lambda r: (r['losses_at_peak_mwh_per_m'] + r['corona_losses_mwh_per_m']) *
-                    npv['inflation'] * self.cost_of_losses_dol_per_mwh * r['length_km'],
+                    npv['inflation'] * self.cost_of_losses_dol_per_mwh * r['length_km'] * 1e3,
                 axis=1
             )
 
@@ -1031,7 +1031,7 @@ class HVDC(ProjectEssentials):
 
             losses = lines.apply(
                 lambda r: (r['losses_at_peak_mwh_per_m'] + r['corona_losses_mwh_per_m']) *
-                    npv['inflation'] * self.cost_of_losses_dol_per_mwh * r['length_km'],
+                    npv['inflation'] * self.cost_of_losses_dol_per_mwh * r['length_km'] * 1e3,
                 axis=1
             )
 

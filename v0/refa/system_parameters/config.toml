@@ -1,8 +1,0 @@
-# refa/config.toml
-# ─────────────────────────────────────────────────────────────────────
-# Unit system configuration for the refa module.
-# Set unit_system before running your script.
-# ─────────────────────────────────────────────────────────────────────
-
-[units]
-unit_system = "imperial"     # available "metric" | "imperial"

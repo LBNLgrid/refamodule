@@ -1,5 +1,6 @@
 """Tests for object construction and the + operator shorthand."""
 import pytest
+from pathlib import Path
 from refa import LineDesign, Conductor, Line, Environment
 from refa.defaults import (
     default_conductor,
@@ -10,7 +11,7 @@ from refa.defaults import (
     acsr_795_0_drake,
     acss_795_0_cuckoo,
     accc_1035_dublin,
-    load_bundled_conductors,
+    load_conductors_from_csv,
 )
 from refa.standards import nesc_250b_heavy
 
@@ -68,8 +69,9 @@ def test_accc_dublin():
     assert c.code == "1035_DUBLIN"
 
 
-def test_load_bundled_conductors():
-    conductors = load_bundled_conductors()
+_DATA_DIR = Path(__file__).parent.parent / "data"
+def test_load_conductors_from_csv():
+    conductors = load_conductors_from_csv(str(_DATA_DIR / "conductors.csv"))
     assert len(conductors) > 0
     pelican = conductors.acsr_477_0_pelican()
     assert pelican.type == "ACSR"

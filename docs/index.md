@@ -2,20 +2,20 @@
 
 **Reconductoring Economic and Financial Analysis Tool**
 
-REFA is a Python module for techno-economic analysis of transmission line capacity upgrade options. It implements industry-standard electrical and mechanical models to evaluate and compare upgrade strategies — from reconductoring to full HVDC conversion — on a consistent net-present-value basis.
+`refa` is a Python module for techno-economic analysis of transmission line capacity upgrade options. It implements industry-standard electrical and mechanical calculations to evaluate and compare upgrade strategies — from reconductoring to full HVDC conversion — on a consistent net-present-value of costs (NPC) basis.
 
 ---
 
 ## What REFA Does
 
-Given an existing transmission corridor and a target power delivery level, REFA helps engineers answer:
+Given an existing transmission corridor and a target power capacity requirement, REFA helps grid planners answer:
 
-- Which conductor can carry the required current without exceeding thermal or mechanical limits?
+- Which least-cost conductor can carry the required current without exceeding current or temperature limits?
 - What is the sag profile under normal and storm loading conditions?
 - Does the operating voltage risk corona discharge?
-- What is the 40-year net present cost of each upgrade option?
+- What is the net-present cost of each upgrade option over a time horizon (e.g. 40 years)?
 
-REFA evaluates five project types — **Rebuild**, **Reconductoring**, **Voltage Upgrade**, **HVDC conversion**, and **Existing** — and ranks them by total lifecycle cost through the `Analysis` class.
+REFA evaluates five project types — **Rebuild**, **Reconductoring**, **Voltage Upgrade**, **HVDC conversion**, and **Existing** — and compares them by total cost using the `Analysis` class.
 
 ---
 
@@ -23,13 +23,14 @@ REFA evaluates five project types — **Rebuild**, **Reconductoring**, **Voltage
 
 | Feature | Details |
 |---|---|
+| **Techno-economic Analysis** | NPC analysis considering key economic parameters, e.g. cost of capital, inflation, and replacement of structures and conductors |
 | **Ampacity** | IEEE 738 steady-state thermal rating |
-| **Sag-tension** | CIGRÉ 324 with NESC 250B loading profiles |
-| **Corona** | Inception voltage and voltage gradient (AC and DC) |
-| **Losses** | Resistive and corona discharge losses |
+| **Temperature and Resistance** | IEEE 738 steady-state temperature and resistance at specified current rating |
+| **Sag-tension** | CIGRÉ TB-324 sag calculations at peak current and under wind-ice loading profiles |
+| **Resistive Line Losses** | Resistive line losses based on calculated condutor resistance and user-specified load factor |
 | **Congestion** | Marginal congestion cost modelling |
-| **Economics** | NPV analysis with WACC, inflation, and replacement scheduling |
-| **Conductor database** | 100+ ACSR, ACSS, ACCC, AECC, ACCR, ACCS conductors |
+| **Conductor database** | Example conductors |
+| **Corona Discharge** | Inception voltage and voltage gradient clculations |
 | **AC and DC** | Separate models for AC and HVDC systems |
 
 ---

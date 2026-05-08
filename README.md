@@ -1,19 +1,22 @@
 # refa
 
-Transmission line analysis and optimization module for AC/DC power systems.
+Reconductoring Economic and Financial Analysis (REFA) Tool.
 
-`refa` implements IEEE 738 (steady-state thermal rating) and CIGRÉ 324 (sag-tension) standards to evaluate and compare line upgrade projects including reconductoring, voltage upgrades, and HVDC conversion.
+The `refa` python module, based on the publicaly-available [REFA tool](https://refa.lbl.gov), aims to unlock more flexible cases of project cost evaluation and enable advanced extensions by developers. 
+
+The REFA tool helps grid planners and policy makers understand the financial and economic costs of different capacity upgrade projects. The tool compares projects under the same economic basis by evaluating the net-present value of costs (NPC), while considering both conventional and advanced conductors.
 
 ## Features
 
-- **Ampacity** — IEEE 738 steady-state current rating and temperature calculations
-- **Sag-tension** — CIGRÉ 324 sag calculations under NESC loading conditions
-- **Corona** — inception voltage and voltage gradient assessment
-- **Losses** — resistive and corona discharge losses with and without congestion
-- **Project types** — Rebuild, Reconductoring, VoltageUpgrade, HVDC, Existing, Analysis
-- **Economics** — NPV-based cost comparison over a user-defined time horizon
-- **Conductor database** — 100+ predefined ACSR, ACSS, ACCC, AECC, ACCR, ACCS conductors
-- **AC/DC support** — separate structure configs and calculations for AC and DC systems
+- **Techno-economic Analysis** — NPC analysis considering key economic parameters, e.g. cost of capital, inflation, and replacement of structures and conductors 
+- **Ampacity** — IEEE 738 steady-state thermal rating 
+- **Temperature and Resistance** — IEEE 738 steady-state temperature and resistance at specified current 
+- **Sag-tension** — CIGRÉ TB-324 with NESC 250B loading profiles 
+- **Resistive Line Losses** — Resistive line losses based on calculated condutor resistance and user-specified load factor
+- **Congestion** — Modeling of congestion due to ampacity limits 
+- **Conductor database** — Example conductors 
+- **Corona Discharge** — Inception voltage and voltage gradient calculations
+- **AC and DC** — Separate models for AC and HVDC lines 
 
 ## Installation
 
@@ -25,52 +28,53 @@ pip install refa
 
 ```python
 from refa import Line, LineDesign, Conductor, Environment
-from refa.defaults import default_conductor, default_clear_environment, load_bundled_conductors
+from refa.defaults import default_conductor, default_clear_environment, acsr_795_0_drake
 from refa.standards import nesc_250b_heavy
 
 # Build a line
 env = default_clear_environment()
 conductor = default_conductor()
+print(conductor)
 line_design = LineDesign(
-    circuits=1,
-    bundles=1,
-    conductors_per_bundle=1,
-    span_m=300,
+    nbr_circuits=1,
+    nbr_bundles=3,
+    nbr_conds_per_bundle=1,
+    length_km=25,
+    avg_span_m=300,
+    max_span_m=350,
     environment=env,
 )
 line = Line(line_design=line_design, conductor=conductor)
 
 # Check ampacity
-print(line.ampacity(max_conductor_temp_c=75))
+print(line.ampacity_at_environment())
 
 # Check feasibility
-print(line.is_ampacity_feasible(current_a=500))
-print(line.is_sag_feasible(loading=nesc_250b_heavy()))
+print(line.is_ampacity_feasible(current_a=1500))
+print(line.is_sag_feasible(current_a=1500, max_sag_m=7, loading_conditions=nesc_250b_heavy()))
 
-# Load all bundled conductors
-conductors = load_bundled_conductors()
-drake = conductors.acsr_795_0_drake()
+# Load a typical conductor 
+drake = acsr_795_0_drake()
 ```
 
 ## Project Analysis
 
 ```python
 from refa import Reconductoring, Economics
-from refa.defaults import default_economics, load_bundled_conductors
+from refa.defaults import default_economics, acsr_795_0_drake, acsr_556_5_dove
 
-conductors = load_bundled_conductors()
 economics = default_economics()
 
 project = Reconductoring(
-    conductor_list=[conductors.acsr_795_0_drake(), conductors.acsr_556_5_dove()],
+    conductor_list=[acsr_795_0_drake(), acsr_556_5_dove()],
     line_design=line_design,
     economics=economics,
-    time_horizon=40,
-    peak_power_mw=200,
+    power_mw=150,
     voltage_kv=115,
+    structure_remaining_life=25
 )
 
-results = project.overall_technical_performance()
+results = project.total_costs(time_horizon=65)
 ```
 
 ## Standards Supported
