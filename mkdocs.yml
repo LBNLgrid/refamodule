@@ -1,0 +1,82 @@
+site_name: REFA
+site_description: Reconductoring Economic and Financial Analysis Tool
+site_url: https://lbnlgrid.github.io/refamodule
+repo_url: https://github.com/LBNLgrid/refamodule
+repo_name: LBNLgrid/refamodule
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_source: false
+            show_root_heading: true
+            show_symbol_type_heading: true
+            docstring_style: google
+            merge_init_into_class: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Quick Start: quickstart.md
+  - User Guide:
+    - Overview: user-guide/concepts.md
+    - Environment: user-guide/environment.md
+    - Conductor: user-guide/conductor.md
+    - Line Design: user-guide/line-design.md
+    - Line Calculations: user-guide/line.md
+    - Loading: user-guide/loading.md
+    - Feasibility: user-guide/feasibility.md
+    - Projects: user-guide/projects.md
+    - Analysis: user-guide/analysis.md
+    - Economics: user-guide/economics.md
+    - Unit System: user-guide/parameter-unit-system.md
+    - Parameter Access: user-guide/parameter-access.md
+    - Parameter Validation: user-guide/Parameter-validation-and-conversion.md
+  - API Reference:
+    - Line: api/line.md
+    - Projects: api/projects.md
+    - Defaults: api/defaults.md
+    - Standards: api/standards.md
+  - Changelog: changelog.md
+  - License: license.md

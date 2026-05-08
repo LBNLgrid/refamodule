@@ -1,0 +1,259 @@
+END USER LICENSE AGREEMENT
+SOFTWARE: REFA V. 1.0
+
+IMPORTANT – READ CAREFULLY: THIS END USER LICENSE AGREEMENT ("AGREEMENT") IS A
+LEGAL AGREEMENT BETWEEN YOU (IN YOUR CAPACITY AS AN INDIVIDUAL AND AS AN AGENT FOR
+YOUR COMPANY, INSTITUTION OR OTHER ENTITY) (COLLECTIVELY, "YOU" OR "LICENSEE") AND
+THE REGENTS OF THE UNIVERSITY OF CALIFORNIA, DEPARTMENT OF ENERGY CONTRACT-
+OPERATORS OF THE ERNEST ORLANDO LAWRENCE BERKELEY NATIONAL LABORATORY
+("BERKELEY LAB").
+
+BY DOWNLOADING, INSTALLING AND/OR USING THE SOFTWARE, YOU CONFIRM THAT YOU HAVE
+READ, UNDERSTAND AND AGREE TO BE BOUND BY THE TERMS OF THIS AGREEMENT. IF YOU ARE
+ENTERING INTO THIS AGREEMENT ON BEHALF OF YOUR EMPLOYER, OR YOUR CLIENT (AND YOU
+HAVE THE LEGAL AUTHORITY TO SIGN CONTRACTS ON THEIR BEHALF), THEN "YOU" REFERS TO
+THAT ENTITY. IF NOT, THEN THIS AGREEMENT BINDS YOU PERSONALLY. THIS AGREEMENT DOES
+NOT CREATE THIRD PARTY BENEFICIARY RIGHTS FOR ANY PARTIES.
+IF YOU DO NOT AGREE TO THESE TERMS AND CONDITIONS, DO NOT DOWNLOAD, INSTALL OR USE
+THE SOFTWARE. TO ENTER INTO THIS AGREEMENT, YOU MUST BE (I) EIGHTEEN (18) YEARS OF AGE
+OR OLDER, AND (II) BE ABLE TO FORM BINDING CONTRACTS UNDER THE LAWS APPLICABLE TO
+YOU. BY DOWNLOADING AND INSTALLING THE SOFTWARE, YOU ARE REPRESENTING AND
+WARRANTING THAT BOTH (I) AND (II) ABOVE ARE CORRECT.
+
+TERMS AND CONDITIONS
+
+1. Definitions
+
+"Software" means one instantiation or instance of the software program(s) (and any related
+documentation, instructions, exhibits, and reference materials provided to Licensee) as well as Updates
+(as defined below) listed in the initial ordering document(s) and any subsequent ordering document(s)
+(each an "Order Schedule") signed by the parties.
+
+2. License Grant.
+
+2.1. Subject to receipt by Berkeley Lab of any required U.S. Department of Energy approvals,
+     Berkeley Lab grants Licensee, and Licensee hereby accepts, a non-transferable, revocable
+     license to use the Software in accordance with the scope of the license defined herein and
+     in the applicable Order Schedule. Licensee is responsible for supplying, at its own cost and
+     expense, any hardware or applications required to use the Software.
+
+2.2. Limitations on License. Licensee will not: (i) for executable code, modify, disassemble,
+     reverse engineer, or decompile the Software therein (or attempt to do any of the foregoing);
+     (ii) attempt to access or use portions of the program code or Software for which Licensee
+     has not acquired a license, (iii) except as specifically authorized otherwise in an Order
+     Schedule, create any derivative works, sublicense, distribute, transfer, rent, lease, or loan
+     the Software, (iv) use the Software, or any derivative works (if permitted as otherwise
+     outlined in an Order Schedule) for the purpose of developing, training, or deploying
+     artificial intelligence (AI) systems, machine learning models, neural networks, or any other
+     automated systems or algorithms designed to replicate human intelligence or behavior,
+     including, but not limited to, using the Software as input, training data, or reference
+     material for AI-related technologies, or (v) extract, analyze, or otherwise use the Software
+     or its outputs for the purpose of creating datasets or training materials for AI-related
+     technologies. Licensee understands and acknowledges that it is granted only those rights set
+     out in this Agreement and any Order Schedule, and no other rights.
+
+2.3. Licensee may install and use copies of the Software on computers and networks only owned,
+     leased or controlled by Licensee, and Licensee will not allow any unauthorized third-party
+     access to the Software. Licensee will be fully liable for the actions or inactions of
+     Licensee's agents and/or subcontractors therein.
+
+2.4. Licensee may copy the Software solely to the extent necessary to exercise the foregoing
+     license, and for backup and archival purposes; provided however that (i) Licensee will
+     reproduce all copyright notices and other proprietary notices on any copies of the Software
+     and Licensee will not remove or alter those notices; (ii) all copies of the Software will be
+     subject to the terms of this Agreement; and (iii) except as otherwise authorized in an Order
+     Schedule, Licensee will not otherwise copy or allow copies of the Software to be made.
+
+3. Copyright; Retention of Rights.
+
+Ownership of Software. Subject to receipt by Berkeley Lab or its licensors of any required approvals
+by the U.S. Department of Energy: (i) Licensee hereby acknowledges that the Software is protected by
+United States copyright law and international treaty provisions; (ii) Berkeley Lab, and its licensors
+(if any), hereby reserve all rights in the Software which are not explicitly granted to Licensee
+herein; and (iii) without limiting the generality of the foregoing, Berkeley Lab and its licensors
+retain all title, copyright, and other proprietary interests in the Software and any copies thereof,
+and Licensee does not acquire any rights, express or implied, in the Software, other than those
+specifically set forth in this Agreement or applicable Order Schedule.
+
+3.1. Derivative Works. If permitted as otherwise outlined in an Order Schedule, Berkeley Lab
+     hereby grants Licensee a paid-up license to Licensee's derivative works of the Software,
+     in both executable and source code formats as applicable, and the right therein to reproduce,
+     prepare further derivative works, distribute copies to the public, perform publicly, display
+     publicly, and to permit others to do so.
+
+4. No Maintenance or Support. Berkeley Lab will be under no obligation whatsoever to: (i) provide
+maintenance or support for the Software; or (ii) to notify Licensee of bug fixes, patches, or updates
+(collectively, "Updates") to the Software (if any). If, in its sole discretion, Berkeley Lab makes an
+Update available to Licensee, and Berkeley Lab does not separately enter into an additional Order
+Schedule or new written license agreement with Licensee relating to such Update, then it will be
+deemed incorporated into the Software and subject to this Agreement.
+
+5. License Fees & Taxes. In consideration of the rights granted hereunder, Licensee will pay Berkeley
+Lab the fees, royalties, or both, as due upon execution of this Agreement in accordance with the
+applicable Order Schedule. Payment must be made in U.S. Dollars by wire transfer, payable to "UC
+Regents Lawrence Berkeley National Laboratory Royalties". Licensee will pay all taxes, duties, import
+and export fees, and any other charges or assessments which are applicable to the performance of this
+Agreement, as it relates to the license rights granted to Licensee hereunder.
+
+6. Confidentiality. Licensee will take appropriate steps to ensure that the source code and executable
+code of the Software remains confidential and is protected against unauthorized disclosure, use, or
+release, and will treat it with at least the same level of care as Licensee would use to protect and
+secure Licensee's own confidential information, but in any event using no less than a reasonable
+standard of care. The confidentiality provisions in this Agreement are consistent with and do not
+supersede, conflict with, or otherwise alter the employee obligations, rights, or liabilities created
+by existing statute or Executive order relating to (1) classified information, (2) communications to
+Congress, (3) the reporting to an Inspector General of a violation of any law, rule, or regulation,
+or mismanagement, a gross waste of funds, an abuse of authority, or a substantial and specific danger
+to public health or safety, or (4) any other whistleblower protection. The definitions, requirements,
+obligations, rights, sanctions, and liabilities created by controlling Executive orders and statutory
+provisions are incorporated into this Agreement and are controlling.
+
+7. U.S. Government Rights. The Software was developed under funding from the U.S. Government. During
+a period of commercialization granted to Berkeley Lab by the U.S. Department of Energy, the U.S.
+Government is granted for itself and others acting on its behalf a nonexclusive, paid-up, irrevocable,
+worldwide license in the Software to reproduce, prepare derivative works, and perform publicly and
+display publicly, by or on behalf of the U.S. Government. Subsequent to that period, the U.S.
+Government is granted for itself and others acting on its behalf a nonexclusive, paid-up, irrevocable,
+worldwide license in the Software to reproduce, prepare derivative works, distribute copies to the
+public, perform publicly and display publicly, and to permit others to do so.
+
+8. Warranty Disclaimer. THE SOFTWARE IS SUPPLIED "AS IS" WITHOUT WARRANTY OF ANY KIND. BERKELEY LAB,
+ITS LICENSORS (IF ANY), THE UNITED STATES, THE UNITED STATES DEPARTMENT OF ENERGY, AND THEIR
+EMPLOYEES: (1) DISCLAIM ANY WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY
+IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, OR
+NON-INFRINGEMENT, (2) DO NOT ASSUME ANY LEGAL LIABILITY OR RESPONSIBILITY FOR THE ACCURACY,
+COMPLETENESS, OR USEFULNESS OF THE SOFTWARE, (3) DO NOT REPRESENT THAT USE OF THE SOFTWARE WOULD
+NOT INFRINGE RIGHTS OF A THIRD PARTY, AND (4) DO NOT WARRANT THAT THE SOFTWARE WILL FUNCTION
+UNINTERRUPTED, THAT IT IS ERROR-FREE, OR THAT ANY ERRORS WILL BE CORRECTED.
+
+9. Limitation of Liability. IN NO EVENT WILL BERKELEY LAB OR ITS LICENSORS (IF ANY), THE UNITED
+STATES, THE UNITED STATES DEPARTMENT OF ENERGY, OR THEIR EMPLOYEES BE LIABLE FOR ANY INDIRECT,
+INCIDENTAL, CONSEQUENTIAL, SPECIAL, OR PUNITIVE DAMAGES OF ANY KIND OR NATURE, INCLUDING BUT NOT
+LIMITED TO LOSS OF PROFITS OR LOSS OF DATA, FOR ANY REASON WHATSOEVER, WHETHER SUCH LIABILITY IS
+ASSERTED ON THE BASIS OF CONTRACT, TORT (INCLUDING NEGLIGENCE OR STRICT LIABILITY), OR OTHERWISE,
+EVEN IF BERKELEY LAB HAS BEEN WARNED OF THE POSSIBILITY OF SUCH LOSS OR DAMAGES. IN NO EVENT WILL
+BERKELEY LAB'S LIABILITY FOR DAMAGES ARISING FROM OR IN CONNECTION WITH THIS AGREEMENT EXCEED THE
+AMOUNT PAID BY LICENSEE FOR THE SOFTWARE AT ISSUE. THE PARTIES ACKNOWLEDGE THAT ANY FEES AS DUE
+UNDER THIS AGREEMENT ARE REFLECTIVE OF THE ALLOCATION OF RISK HEREUNDER.
+
+10. Indemnity. Licensee will indemnify, defend, and hold harmless Berkeley Lab, its licensors (if
+any), the U.S. Government, the Software developers, the Software sponsors, and their agents, officers,
+and employees, against any and all claims, suits, losses, damages, costs, fees, and expenses arising
+out of or in connection with this Agreement. Licensee will pay all costs incurred by Berkeley Lab in
+enforcing this provision, including reasonable attorneys' fees.
+
+11. Term and Termination. The Agreement will remain in full force and effect for the period outlined
+in the Order Schedule ("Term") unless terminated by Berkeley Lab in accordance with this Agreement.
+If Licensee breaches any term of this Agreement, and fail to cure such breach within thirty (30) days
+of the date of written notice, this Agreement will immediately terminate. Upon such termination,
+Licensee will immediately: cease using the Software; return to Berkeley Lab or destroy, all copies of
+the Software; and provide Berkeley Lab with written certification of Licensee's compliance with the
+foregoing. Termination will not relieve Licensee from Licensee's obligations arising prior to such
+termination, including but not limited to the responsibility to pay previously accrued fees.
+Notwithstanding any provision to the contrary, Sections 1 and 3 through 17 will survive termination
+of this Agreement.
+
+12. Export Controls. Licensee will observe all applicable United States and foreign (if any) export
+control laws and regulations, including, without limitation, the International Traffic in Arms
+Regulations (ITAR) and the Export Administration Regulations, with respect to the export, re-export,
+diversion, or transfer of the Software, related technical information, and direct products thereof.
+Export of the Software, related technical information, and direct products thereof from the United
+States may require some form of export control license or other authority from the U.S. Government.
+Failure to obtain any required export control license may result in civil and criminal liability under
+U.S. laws and regulations.
+
+13. Audit. Licensee will maintain all necessary records to ensure compliance with this Agreement,
+including but not limited to, finance and accounting records as would be required by generally accepted
+accounting principles herein, and to retain such records for at least three (3) years after the
+expiration or termination of this Agreement. During the Term of this Agreement and for three (3) years
+thereafter, Berkeley Lab will have the right, upon ten (10) days prior written notice, to audit
+Licensee to ensure compliance with this Agreement, during normal business hours. Berkeley Lab may not
+request an audit more than once a calendar year unless an audit reveals an under reporting of fees due
+to Berkeley Lab, in which case, Berkeley Lab may not request an audit more than once per calendar
+quarter. If any audit reveals a shortfall, Licensee will promptly pay to Berkeley Lab such shortfall.
+If any audit reveals an overpayment, then Licensee will credit such overpayment against its next
+payment or fees to Berkeley Lab. If any audit reveals that fees due Berkeley Lab are more than five
+percent (5%) of amounts remitted to Berkeley Lab, Licensee will reimburse Berkeley Lab for its audit
+expenses for such audit.
+
+14. Notices. All notices and demands under this Agreement will be given to the respective addresses as
+set forth in this Agreement and be deemed effective and properly given: (i) on the date of transmission
+if delivered via electronic mail, provided no automated bounce back message is received by the sender;
+(ii) upon confirmation by a recognized national overnight courier; or (iii) five (5) days after mailing
+if mailed by first-class or certified mail, postage paid. Either party may change the addresses set
+forth above by written notice to the other party.
+
+15. Use of Name. In accordance with California Education Code Section 92000, Licensee will not use in
+advertising, publicity or other promotional activities any name, trade name, trademark, or other
+designation of the University of California, nor use "Ernest Orlando Lawrence Berkeley National
+Laboratory" or "Department of Energy" (including any contraction, abbreviation, or simulation of any
+of the foregoing) without Berkeley Lab's prior written consent.
+
+16. Change of Control & Assignment. Licensee will promptly, and within 60 days, report to Berkeley
+Lab in writing any Change in Control of Licensee's ownership that is a controlling interest, including
+without limitation, any funding or investment. A controlling interest is any interest that is
+significant enough to determine the direction of the Licensee, but in any case, an interest of fifty
+percent (50%) or greater. Licensee will also promptly, and within 60 days, report to Berkeley Lab any
+foreign funding or foreign investment. Licensee's rights and obligations under this Agreement are not
+assignable without the prior written consent of Berkeley lab and any attempt to assign them without
+that consent will be void.
+
+17. GENERAL. The relationship created by this Agreement is one of independent contractors, and not
+partners or joint ventures. This Agreement, together with any Order Schedule and made a part hereof,
+constitute the complete and exclusive agreement between Berkeley Lab and Licensee with respect to its
+subject matter, and supersede all prior oral or written understandings, communications, or agreements.
+If any provision of the main body of the Agreement conflicts with a provision of any Order Schedule,
+then the terms of the Order Schedule will prevail. This Agreement will automatically terminate without
+an obligation to provide any notice if Licensee commences bankruptcy, reorganization, receivership, or
+insolvency proceedings (including without limitation bankruptcy protection under Chapter 7 and 11 of
+the U.S. Bankruptcy Code), or any other proceeding under any U.S. Federal, state, or other law for
+the relief of debtors. Any rule of construction to the effect that ambiguities are to be resolved
+against the drafting party will not apply in interpreting this Agreement. The rights and remedies of
+the parties under this Agreement are cumulative and not exclusive of any rights or remedies to which
+the parties are entitled by law. The exercise by either party of any right or remedy under this
+Agreement or under applicable law will not preclude such party from exercising any other right or
+remedy under this Agreement or to which such party is entitled by law. This Agreement has been written
+in the English language. Licensee waives any rights Licensee may have under the law of Licensee's
+country to have this Agreement written in the language of that country. Licensee's rights and
+obligations under this Agreement will not be assignable without the prior written consent of Berkeley
+Lab and any attempt to assign them without that consent will be void. This Agreement will be governed
+by the laws of the State of California, excluding its rules governing conflicts of laws. If any action
+arises out of or relating to this Agreement, Licensee hereby consents to the exclusive jurisdiction of
+the state courts located in the City and County of Alameda, California, or if applicable, the federal
+courts located in the Northern District of California. No provision in either party's purchase orders
+or in any other business forms employed by either party will supersede the terms of this Agreement,
+and no modification or amendment of this Agreement is binding, unless in writing signed by a duly
+authorized representative of each party. This Agreement is binding upon and will inure to the benefit
+of Berkeley Lab, its successors and assigns. The waiver by either party of any breach of this
+Agreement by the other party will not waive subsequent defaults by such party of the same or a
+different kind. If any provision of this Agreement is held to be unenforceable for any reason, such
+provision will be reformed only to the extent necessary to make it enforceable, and such decision will
+not affect the enforceability of such provision under other circumstances, or of the remaining
+provision hereof.
+
+--------------------------------------------------------------------------------
+
+ORDER SCHEDULE — SLA V2.6 041626
+
+This Order Schedule is hereby incorporated and made part of the End User License Agreement (the
+"Agreement").
+
+1. Software: Reconductoring Economic and Financial Analysis Tool (REFA), version 1.0,
+   Berkeley Lab reference: 2024-118, plus any derivative works therein (unless otherwise specified)
+   plus any associated documentation, if provided. Formats: Source Code and Executable Code.
+
+2. Term: Twenty-five (25) years.
+
+3. Software Order: Licensee is acquiring a non-exclusive license for the Software on the following
+   conditions:
+
+   - Internal Use rights: The Software and any derivative works, if permitted, will be used solely
+     by Licensee and limited to use only within Licensee's information technology infrastructure
+     (i.e., Licensee's hardware, software, and networks under Licensee's control).
+
+   - Creation of derivative works: Licensee may create derivative works of the Software.
+
+4. Total Fees: None.
+
+BY DOWNLOADING, INSTALLING, OR USING THE SOFTWARE, YOU ARE INDICATING YOUR ACCEPTANCE OF THE
+TERMS AND CONDITIONS HEREIN.
