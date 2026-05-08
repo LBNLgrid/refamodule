@@ -79,7 +79,7 @@ def existing_prj(line1, economics):
 def test_rebuild_total_costs_returns_list(rebuild_prj):
     result = rebuild_prj.total_costs(time_horizon=65)
     assert isinstance(result, list)
-    assert len(result) == 2  # ACSS Cuckoo and ACCC Dublin pass ampacity feasibility
+    assert len(result) == 3  # All three conductors pass ampacity feasibility at the higher ampacity
 
 
 def test_rebuild_total_costs_npv_values(rebuild_prj):

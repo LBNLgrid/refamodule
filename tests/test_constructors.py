@@ -69,7 +69,7 @@ def test_accc_dublin():
     assert c.code == "1035_DUBLIN"
 
 
-_DATA_DIR = Path(__file__).parent.parent / "data"
+_DATA_DIR = Path(__file__).parent.parent / "src" / "refa" / "data"
 def test_load_conductors_from_csv():
     conductors = load_conductors_from_csv(str(_DATA_DIR / "conductors.csv"))
     assert len(conductors) > 0

@@ -26,8 +26,8 @@ def test_ampacity_feasible_below_limit(line1):
 
 
 def test_ampacity_not_feasible_above_limit(line1):
-    """Current above ampacity — should not be feasible."""
-    feasible, _ = line1.is_ampacity_feasible(current_a=1500)
+    """Current above ampacity (~1781 A) — should not be feasible."""
+    feasible, _ = line1.is_ampacity_feasible(current_a=2000)
     assert feasible is False
 
 
