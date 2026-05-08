@@ -9,7 +9,7 @@ dist/
 build/
 .eggs/
 *.whl
-.github/
+# .github/ is intentionally tracked
 
 # Virtual environments
 .venv/
