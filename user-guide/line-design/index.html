@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Reconductoring Economic and Financial Analysis Tool">
+        <meta name="description" content="Reconductoring Economic and Financial Analysis (REFA) Tool">
       
       
       
@@ -757,6 +757,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#linedesignimperial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LineDesignImperial
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1342,6 +1353,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#linedesignimperial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LineDesignImperial
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1363,7 +1385,7 @@
 
 
 <h1 id="line-design">Line Design</h1>
-<p><code>LineDesign</code> captures the geometry and circuit configuration of a transmission corridor — everything except which conductor is strung on it.</p>
+<p><code>LineDesign</code> captures the characteristics and circuit configuration of a transmission corridor — excluding the conductor strung on it.</p>
 <h2 id="fields">Fields</h2>
 <table>
 <thead>
@@ -1379,13 +1401,13 @@
 <td><code>environment</code></td>
 <td><code>Environment</code></td>
 <td>—</td>
-<td>Meteorological conditions</td>
+<td>Weather and geographical conditions</td>
 </tr>
 <tr>
 <td><code>nbr_circuits</code></td>
 <td><code>int</code></td>
 <td>1–3</td>
-<td>Number of circuits on the tower</td>
+<td>Number of circuits in the line corridor</td>
 </tr>
 <tr>
 <td><code>nbr_bundles</code></td>
@@ -1403,37 +1425,37 @@
 <td><code>length_km</code></td>
 <td><code>float</code></td>
 <td>&gt;0</td>
-<td>Total line length (km)</td>
+<td>Total line length (km or mile)</td>
 </tr>
 <tr>
 <td><code>avg_span_m</code></td>
 <td><code>float</code></td>
 <td>&gt;0</td>
-<td>Average span between structures (m)</td>
+<td>Average span between structures (m or ft)</td>
 </tr>
 <tr>
 <td><code>max_span_m</code></td>
 <td><code>float</code></td>
 <td>&gt;0</td>
-<td>Longest individual span (m)</td>
+<td>Longest individual span (m or ft)</td>
 </tr>
 <tr>
 <td><code>nbr_structures</code></td>
 <td><code>int</code></td>
 <td>≥1, optional</td>
-<td>Auto-calculated if not provided</td>
+<td>Auto-calculated from line length and average span</td>
 </tr>
 <tr>
 <td><code>max_sag_m</code></td>
 <td><code>float</code></td>
 <td>optional</td>
-<td>Maximum allowable sag (m) — required for sag feasibility checks</td>
+<td>Maximum allowable sag (m or ft) — required for sag feasibility checks</td>
 </tr>
 <tr>
-<td><code>structore_cost_dol</code></td>
+<td><code>structure_cost_dol</code></td>
 <td><code>float</code></td>
 <td>≥0</td>
-<td>Per-structure cost override (default <code>0</code>)</td>
+<td>Structure cost specific to used conductor (default <code>0</code>)</td>
 </tr>
 </tbody>
 </table>
@@ -1484,6 +1506,13 @@
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">line</span> <span class="o">=</span> <span class="n">line_design</span> <span class="o">+</span> <span class="n">acsr_795_0_drake</span><span class="p">()</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># equivalent to: Line(line_design=line_design, conductor=acsr_795_0_drake())</span>
 </code></pre></div>
+<h2 id="linedesignimperial">LineDesignImperial</h2>
+<p>In case of <code>imperial</code> unit system, the user can use the same constructor <code>LineDesign</code>, which will accept values in imperial units. These are converted to <code>metric</code> system with which all internal calculations are conducted.</p>
+<p>| metric name —&gt; imperial name |
+| <code>length_km</code> —&gt; <code>length_mile</code> |
+| <code>avg_span_m</code> —&gt; <code>avg_span_ft</code> |
+| <code>max_span_m</code> —&gt; <code>max_span_ft</code> |
+| <code>max_sag_m</code> —&gt; <code>max_sag_ft</code> |</p>
 
 
 

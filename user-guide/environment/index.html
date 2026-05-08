@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Reconductoring Economic and Financial Analysis Tool">
+        <meta name="description" content="Reconductoring Economic and Financial Analysis (REFA) Tool">
       
       
       
@@ -647,10 +647,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#built-in-environments" class="md-nav__link">
+  <a href="#default-environments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Built-in Environments
+        Default Environments
       
     </span>
   </a>
@@ -673,6 +673,17 @@
     <span class="md-ellipsis">
       
         Effect on Calculations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environmentimperial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EnvironmentImperial
       
     </span>
   </a>
@@ -1266,10 +1277,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#built-in-environments" class="md-nav__link">
+  <a href="#default-environments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Built-in Environments
+        Default Environments
       
     </span>
   </a>
@@ -1298,6 +1309,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#environmentimperial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EnvironmentImperial
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1319,7 +1341,7 @@
 
 
 <h1 id="environment">Environment</h1>
-<p>The <code>Environment</code> class captures the meteorological and geographic conditions that affect conductor heat balance and corona calculations.</p>
+<p>The <code>Environment</code> class captures weather and geographic conditions that affect conductor heat balance, sag, and corona calculations.</p>
 <h2 id="fields">Fields</h2>
 <table>
 <thead>
@@ -1341,7 +1363,7 @@
 <td><code>latitude</code></td>
 <td><code>float</code></td>
 <td>—</td>
-<td>Geographic latitude in degrees (–90 to 90)</td>
+<td>Geographic latitude in degrees (–90° to 90°)</td>
 </tr>
 <tr>
 <td><code>elevation_m</code></td>
@@ -1395,11 +1417,11 @@
 <td><code>rugosity_coefficient</code></td>
 <td><code>float</code></td>
 <td><code>0.82</code></td>
-<td>Surface roughness: <code>1.0</code> polished, <code>0.92–0.98</code> dirty, <code>0.80–0.87</code> stranded</td>
+<td>Conductor surface roughness: <code>1.0</code> polished, <code>0.92–0.98</code> dirty, <code>0.80–0.87</code> stranded</td>
 </tr>
 </tbody>
 </table>
-<h2 id="built-in-environments">Built-in Environments</h2>
+<h2 id="default-environments">Default Environments</h2>
 <p>Two pre-configured environments are provided.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Clear sky</label><label for="__tabbed_1_2">Industrial atmosphere</label></div>
 <div class="tabbed-content">
@@ -1455,10 +1477,16 @@
 <ul>
 <li>Ampacity (<code>ampacity_at_environment()</code>)</li>
 <li>Steady-state conductor temperature</li>
-<li>All sag calculations that depend on conductor temperature</li>
-<li>Congestion (which depends on available capacity)</li>
+<li>All sag calculations that depend on computed conductor temperature</li>
+<li>Losses calculations that depend on computed conductor resistance</li>
+<li>Congestion (which depends on available ampacity)</li>
 </ul>
-<p>Calculations that are <strong>not</strong> affected by environment: corona inception voltage, corona voltage gradient, and sag under a mechanical loading profile (<code>sag_at_loading</code>).</p>
+<h2 id="environmentimperial">EnvironmentImperial</h2>
+<p>In case of <code>imperial</code> unit system, the user can use the same constructor <code>Environment</code>, which will accept values in imperial units. These are converted to <code>metric</code> system with which all internal calculations are conducted.</p>
+<p>| metric name —&gt; imperial name |
+| <code>elevation_m</code>  —&gt; <code>elevation_ft</code>|
+| <code>wind_speed_m_per_s</code>  —&gt; <code>wind_speed_mph</code>|
+| <code>ambient_temperature_c</code> —&gt; <code>ambient_temperature_f</code>|</p>
 
 
 

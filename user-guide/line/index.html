@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Reconductoring Economic and Financial Analysis Tool">
+        <meta name="description" content="Reconductoring Economic and Financial Analysis (REFA) Tool">
       
       
       
@@ -1619,7 +1619,7 @@
 
 
 <h1 id="line-calculations">Line Calculations</h1>
-<p><code>Line</code> is the core calculation object. It combines a <code>LineDesign</code> and a <code>Conductor</code> and exposes all technical analysis methods.</p>
+<p><code>Line</code> is a core calculation object. It combines a <code>LineDesign</code> and a <code>Conductor</code> and exposes all technical analysis methods.</p>
 <h2 id="construction">Construction</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line</span><span class="p">,</span> <span class="n">LineDesign</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa.defaults</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_clear_environment</span><span class="p">,</span> <span class="n">acss_795_0_cuckoo</span>
@@ -1635,17 +1635,18 @@
 </code></pre></div>
 <hr />
 <h2 id="thermal-calculations-ieee-738">Thermal Calculations (IEEE 738)</h2>
-<p>REFA implements the IEEE 738 steady-state thermal balance to calculate conductor temperature and ampacity.</p>
+<p>REFA implements the IEEE 738 steady-state thermal balance to calculate conductor temperature, resistance, and ampacity.</p>
 <h3 id="ampacity">Ampacity</h3>
-<p>Maximum current the conductor can carry without exceeding its rated temperature at the given environmental conditions.</p>
+<p>Maximum current the conductor can carry without exceeding its maximum (rated) temperature at the given environmental conditions. Updating the maximum temperature of the conductor will result in a different current rating (ampacity).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">ampacity</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">ampacity_at_environment</span><span class="p">()</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># 1398 A  (ACSS 795 CUCKOO, clear sky, 25°C, 1 m/s wind, noon, 45°N)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># 1398 A  </span>
 </code></pre></div>
 <h3 id="conductor-temperature">Conductor Temperature</h3>
+<p>Given the peak current in the line, the conductor temperature can be calculated using IEEE 738.
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From current</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">temp</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">temperature_at_current</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="mi">1400</span><span class="p">)</span>           <span class="c1"># 200 °C</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">temp</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">temperature_at_current</span><span class="p">(</span><span class="n">power_mw</span><span class="o">=</span><span class="mi">550</span><span class="p">,</span> <span class="n">voltage_kv</span><span class="o">=</span><span class="mi">345</span><span class="p">)</span>  <span class="c1"># 106 °C</span>
-</code></pre></div>
+</code></pre></div></p>
 <h3 id="conductor-resistance">Conductor Resistance</h3>
 <p>Resistance interpolated between the low and high temperature reference points.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">res</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">resistance_at_current</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="mi">1400</span><span class="p">)</span>             <span class="c1"># Ω/m</span>
@@ -1653,15 +1654,15 @@
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Current vs. power+voltage</p>
-<p>Most <code>Line</code> methods accept <strong>either</strong> <code>current_a</code> <strong>or</strong> the pair <code>(power_mw, voltage_kv)</code>, but not both. REFA converts power and voltage to current using:</p>
+<p>Most <code>Line</code> methods accept <strong>either</strong> <code>current_a</code> <strong>or</strong> the pair <code>(power_mw, voltage_kv)</code>, but not both. REFA deduced current from power and voltage to current using:</p>
 <ul>
 <li>AC (3-phase): <code>I = P / (√3 · V)</code></li>
-<li>DC: <code>I = P / (2 · V)</code></li>
+<li>DC: <code>I = P / (nbr_poles · V)</code></li>
 </ul>
 </div>
 <hr />
 <h2 id="sag-calculations-cigre-324">Sag Calculations (CIGRÉ 324)</h2>
-<p>REFA implements the CIGRÉ 324 catenary sag-tension model. All sag methods require an <code>initial_tension_percentage</code> — the initial stringing tension as a fraction of the conductor's rated tensile strength.</p>
+<p>REFA implements the CIGRÉ 324 catenary sag-tension model. All sag methods require an <code>initial_tension_percentage</code> — the initial stringing tension as a fraction of the conductor's rated tensile strength (RTS).</p>
 <h3 id="sag-at-steady-state-current">Sag at Steady-State Current</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">sag</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">sag_at_current</span><span class="p">(</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">current_a</span><span class="o">=</span><span class="mi">1400</span><span class="p">,</span>
@@ -1711,8 +1712,8 @@
 <hr />
 <h2 id="losses">Losses</h2>
 <h3 id="resistive-losses">Resistive Losses</h3>
-<p>Annual energy losses in MWh/m per year, accounting for a load factor.</p>
-<p>The loss factor is computed as: <code>LF = 0.3 × load_factor + 0.7 × load_factor²</code></p>
+<p>Annual line losses in MWh/m per year, accounting for a load factor.</p>
+<p>The utilization factor of the line is computed as: <code>UF = 0.3 × load_factor + 0.7 × load_factor²</code></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># From current</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">losses</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">resistive_line_losses</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="mi">1400</span><span class="p">,</span> <span class="n">load_factor</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># 2.78 MWh/m</span>

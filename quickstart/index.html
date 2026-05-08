@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Reconductoring Economic and Financial Analysis Tool">
+        <meta name="description" content="Reconductoring Economic and Financial Analysis (REFA) Tool">
       
       
       
@@ -1359,7 +1359,7 @@
 </code></pre></div>
 <h2 id="step-2-run-technical-calculations">Step 2 — Run Technical Calculations</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Thermal</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">ampacity_at_environment</span><span class="p">())</span>                         <span class="c1"># 1398 A</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">ampacity_at_environment</span><span class="p">())</span>                         <span class="c1"># 1397 A</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">temperature_at_current</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="mi">1400</span><span class="p">))</span>            <span class="c1"># 200 °C</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">temperature_at_current</span><span class="p">(</span><span class="n">power_mw</span><span class="o">=</span><span class="mi">550</span><span class="p">,</span> <span class="n">voltage_kv</span><span class="o">=</span><span class="mi">345</span><span class="p">))</span>  <span class="c1"># 106 °C</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
@@ -1378,7 +1378,7 @@
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Losses</span>
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">resistive_line_losses</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="mi">1400</span><span class="p">,</span> <span class="n">load_factor</span><span class="o">=</span><span class="mf">0.6</span><span class="p">))</span>  <span class="c1"># 2.78 MWh/m</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">congestion</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span> <span class="n">voltage_kv</span><span class="o">=</span><span class="mi">230</span><span class="p">))</span>              <span class="c1"># 1.37 MW</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">congestion</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span> <span class="n">voltage_kv</span><span class="o">=</span><span class="mi">230</span><span class="p">))</span>              <span class="c1"># 1.4 MW</span>
 </code></pre></div>
 <h2 id="step-3-check-feasibility">Step 3 — Check Feasibility</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Ampacity feasibility: checks current &lt; ampacity AND ampacity &lt; 3 × current</span>
@@ -1391,6 +1391,7 @@
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">feasible</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">is_sag_feasible</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="mi">1300</span><span class="p">,</span> <span class="n">max_sag_m</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">initial_tension_percentage</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">feasible</span><span class="p">)</span>   <span class="c1"># True or False depending on sag result</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="step-4-create-projects">Step 4 — Create Projects</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rebuild</span><span class="p">,</span> <span class="n">Reconductoring</span><span class="p">,</span> <span class="n">VoltageUpgrade</span><span class="p">,</span> <span class="n">HVDC</span><span class="p">,</span> <span class="n">Existing</span>
@@ -1434,6 +1435,10 @@
 <a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>    <span class="n">power_mw</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">voltage_kv</span><span class="o">=</span><span class="mi">230</span><span class="p">,</span>
 <a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>    <span class="n">structure_remaining_life</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">conductor_remaining_life</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
 <a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a><span class="p">)</span>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a><span class="nb">print</span><span class="p">(</span><span class="n">recon</span><span class="o">.</span><span class="n">total_costs</span><span class="p">(</span><span class="n">time_horizon</span><span class="o">=</span><span class="mi">65</span><span class="p">))</span>
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a><span class="nb">print</span><span class="p">(</span><span class="n">rebuild</span><span class="o">.</span><span class="n">structure_costs</span><span class="p">(</span><span class="n">time_horizon</span><span class="o">=</span><span class="mi">70</span><span class="p">))</span>
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a><span class="nb">print</span><span class="p">(</span><span class="n">vu</span><span class="o">.</span><span class="n">losses_costs</span><span class="p">(</span><span class="n">time_horizon</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">load_factor</span><span class="o">=</span><span class="mf">0.65</span><span class="p">))</span>
 </code></pre></div>
 <h2 id="step-5-compare-projects">Step 5 — Compare Projects</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa</span><span class="w"> </span><span class="kn">import</span> <span class="n">Analysis</span>
@@ -1447,8 +1452,8 @@
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;conductor&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: $</span><span class="si">{</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;npv_total_project_costs_mill_dol&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">M&quot;</span><span class="p">)</span>
 </code></pre></div>
 <details class="note">
-<summary>Getting all years instead of the final NPV</summary>
-<p>Pass <code>report_all_years=True</code> to any cost method to receive the cumulative NPV at every year up to <code>time_horizon</code>:</p>
+<summary>Getting all years instead of the final net-present cost</summary>
+<p>Pass <code>report_all_years=True</code> to any cost method to receive the cumulative net-present cost at every year up to <code>time_horizon</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">results</span> <span class="o">=</span> <span class="n">rebuild</span><span class="o">.</span><span class="n">total_costs</span><span class="p">(</span><span class="n">time_horizon</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">report_all_years</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 </details>

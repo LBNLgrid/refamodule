@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Reconductoring Economic and Financial Analysis Tool">
+        <meta name="description" content="Reconductoring Economic and Financial Analysis (REFA) Tool">
       
       
       
@@ -708,23 +708,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#using-the-bundled-database" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using the Bundled Database
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Using the Bundled Database">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
   <a href="#individual-factory-functions" class="md-nav__link">
     <span class="md-ellipsis">
@@ -742,10 +725,21 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#using-a-conductor-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using a conductor database
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#loading-from-a-custom-csv" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Loading from a Custom CSV
+        Loading from a custom CSV
       
     </span>
   </a>
@@ -1366,23 +1360,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#using-the-bundled-database" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using the Bundled Database
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Using the Bundled Database">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
   <a href="#individual-factory-functions" class="md-nav__link">
     <span class="md-ellipsis">
@@ -1400,10 +1377,21 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#using-a-conductor-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using a conductor database
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#loading-from-a-custom-csv" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Loading from a Custom CSV
+        Loading from a custom CSV
       
     </span>
   </a>
@@ -1468,7 +1456,7 @@
 <tr>
 <td><code>type</code></td>
 <td>—</td>
-<td>Conductor family: <code>ACSR</code>, <code>ACSS</code>, <code>ACCC</code>, <code>AECC</code>, <code>ACCR</code>, <code>ACCS</code></td>
+<td>Conductor family: <code>ACSR</code>, <code>ACSS</code>, etc.</td>
 </tr>
 <tr>
 <td><code>code</code></td>
@@ -1501,7 +1489,7 @@
 <td>Young's modulus (for sag-tension)</td>
 </tr>
 <tr>
-<td><code>coeff_thermal_expan_per_cel</code></td>
+<td><code>coeff_thermal_expan_per_c</code></td>
 <td>1/°C</td>
 <td>Coefficient of thermal expansion</td>
 </tr>
@@ -1535,7 +1523,7 @@
 <tr>
 <td><code>max_temperature_c</code></td>
 <td>°C</td>
-<td>Maximum continuous operating temperature</td>
+<td>Maximum operating temperature</td>
 </tr>
 <tr>
 <td><code>res_dc_ohm_per_m</code></td>
@@ -1575,62 +1563,58 @@
 </thead>
 <tbody>
 <tr>
-<td><code>dol_per_1000_ft</code></td>
-<td>$/1000 ft</td>
+<td><code>cost_dol_per_km</code></td>
+<td>$/km</td>
 <td>Conductor material cost</td>
 </tr>
 <tr>
-<td><code>inst_dol_per_1000_ft</code></td>
-<td>$/1000 ft</td>
+<td><code>installation_dol_per_km</code></td>
+<td>$/km</td>
 <td>Installation labour cost</td>
 </tr>
 <tr>
-<td><code>accessories_dol_per_1000_ft</code></td>
-<td>$/1000 ft</td>
+<td><code>accessories_dol_per_km</code></td>
+<td>$/km</td>
 <td>Hardware and accessories cost</td>
-</tr>
-<tr>
-<td><code>str_costs_dol</code></td>
-<td>$</td>
-<td>Conductor-specific structure cost (default <code>0.0</code>)</td>
 </tr>
 </tbody>
 </table>
-<h2 id="using-the-bundled-database">Using the Bundled Database</h2>
-<p>The package ships with over 100 conductors in <code>src/refa/data/conductors.csv</code>. Load them all at once:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa.defaults</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_bundled_conductors</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">conductors</span> <span class="o">=</span> <span class="n">load_bundled_conductors</span><span class="p">()</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Dot-notation access — each entry is a zero-argument factory function</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">drake</span>   <span class="o">=</span> <span class="n">conductors</span><span class="o">.</span><span class="n">acsr_795_0_drake</span><span class="p">()</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">cuckoo</span>  <span class="o">=</span> <span class="n">conductors</span><span class="o">.</span><span class="n">acss_795_0_cuckoo</span><span class="p">()</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">pelican</span> <span class="o">=</span> <span class="n">conductors</span><span class="o">.</span><span class="n">acsr_477_0_pelican</span><span class="p">()</span>
-</code></pre></div>
-<p>Key names follow the pattern <code>{type}_{kcmil}_{name}</code> in lowercase with dots and spaces replaced by underscores.</p>
 <h3 id="individual-factory-functions">Individual factory functions</h3>
 <p>Frequently used conductors are also importable directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa.defaults</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">acsr_795_0_drake</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">acss_795_0_cuckoo</span><span class="p">,</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">accc_1035_dublin</span><span class="p">,</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">default_conductor</span><span class="p">,</span>   <span class="c1"># ACSR 556.5 DOVE</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">drake</span> <span class="o">=</span> <span class="n">acsr_795_0_drake</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa.defaults</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">acsr_795_0_drake</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">acss_795_0_cuckoo</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">accc_1035_dublin</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">default_conductor</span><span class="p">,</span>   <span class="c1"># ACSR 556.5 DOVE</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">drake</span> <span class="o">=</span> <span class="n">acsr_795_0_drake</span><span class="p">()</span>
 </code></pre></div>
-<h2 id="loading-from-a-custom-csv">Loading from a Custom CSV</h2>
-<p>Bring your own conductor data in the same column format as the bundled CSV:</p>
+<h2 id="using-a-conductor-database">Using a conductor database</h2>
+<p>The package contains examples of conductors in <code>src/refa/data/conductors.csv</code>.</p>
+<p>Load them all at once:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa.defaults</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_conductors_from_csv</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">conductors</span> <span class="o">=</span> <span class="n">load_conductors_from_csv</span><span class="p">()</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Dot-notation access — each entry is a zero-argument factory function</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">drake</span>   <span class="o">=</span> <span class="n">conductors</span><span class="o">.</span><span class="n">acsr_795_0_drake</span><span class="p">()</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">cuckoo</span>  <span class="o">=</span> <span class="n">conductors</span><span class="o">.</span><span class="n">acss_795_0_cuckoo</span><span class="p">()</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">pelican</span> <span class="o">=</span> <span class="n">conductors</span><span class="o">.</span><span class="n">acsr_477_0_pelican</span><span class="p">()</span>
+</code></pre></div>
+<p>Key names follow the pattern <code>{type}_{kcmil}_{name}</code> in lowercase with dots and spaces replaced by underscores.</p>
+<h2 id="loading-from-a-custom-csv">Loading from a custom CSV</h2>
+<p>Bring your own conductor data in the same column format as the provided CSV:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa.defaults</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_conductors_from_csv</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">my_conductors</span> <span class="o">=</span> <span class="n">load_conductors_from_csv</span><span class="p">(</span><span class="s2">&quot;path/to/my_conductors.csv&quot;</span><span class="p">)</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">custom</span> <span class="o">=</span> <span class="n">my_conductors</span><span class="o">.</span><span class="n">acsr_500_0_hawk</span><span class="p">()</span>
 </code></pre></div>
 <p><strong>Required CSV columns:</strong></p>
-<p><code>code</code>, <code>type</code>, <code>dol_per_1000_ft</code>, <code>inst_dol_per_1000_ft</code>, <code>accessories_dol_per_1000_ft</code>,
+<p><code>code</code>, <code>type</code>, <code>cost_dol_per_km</code>, <code>installation_dol_per_km</code>, <code>accessories_dol_per_km</code>,
 <code>str_costs_dol</code>, <code>area_mm2</code>, <code>diameter_mm</code>, <code>weight_n_per_m</code>, <code>conductor_rts_kn</code>,
 <code>temp_low_c</code>, <code>temp_high_c</code>, <code>max_temperature_c</code>, <code>res_low_ohm_per_m</code>, <code>res_high_ohm_per_m</code>,
-<code>elastic_modulus_gpa</code>, <code>coeff_thermal_expan_per_cel</code>, <code>temp_dc_c</code>, <code>res_dc_ohm_per_m</code>,
+<code>elastic_modulus_gpa</code>, <code>coeff_thermal_expan_per_c</code>, <code>temp_dc_c</code>, <code>res_dc_ohm_per_m</code>,
 <code>emissivity</code>, <code>solar_absorptivity</code></p>
 <h2 id="manual-construction">Manual Construction</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa</span><span class="w"> </span><span class="kn">import</span> <span class="n">Conductor</span>
@@ -1642,9 +1626,9 @@
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">diameter_mm</span><span class="o">=</span><span class="mf">16.0</span><span class="p">,</span>
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">weight_n_per_m</span><span class="o">=</span><span class="mf">5.36</span><span class="p">,</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">conductor_rts_kn</span><span class="o">=</span><span class="mf">50.26</span><span class="p">,</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">dol_per_1000_ft</span><span class="o">=</span><span class="mf">735.0</span><span class="p">,</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">inst_dol_per_1000_ft</span><span class="o">=</span><span class="mf">1027.0</span><span class="p">,</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">accessories_dol_per_1000_ft</span><span class="o">=</span><span class="mf">263.0</span><span class="p">,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">cost_dol_per_km</span><span class="o">=</span><span class="mf">735.0</span><span class="p">,</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">installation_dol_per_km</span><span class="o">=</span><span class="mf">1027.0</span><span class="p">,</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">accessories_dol_per_km</span><span class="o">=</span><span class="mf">263.0</span><span class="p">,</span>
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="n">temp_dc_c</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span>
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="n">temp_low_c</span><span class="o">=</span><span class="mf">25.0</span><span class="p">,</span>
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="n">temp_high_c</span><span class="o">=</span><span class="mf">75.0</span><span class="p">,</span>
@@ -1653,7 +1637,7 @@
 <a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="n">res_low_ohm_per_m</span><span class="o">=</span><span class="mf">0.000209</span><span class="p">,</span>
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="n">res_high_ohm_per_m</span><span class="o">=</span><span class="mf">0.000256</span><span class="p">,</span>
 <a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    <span class="n">elastic_modulus_gpa</span><span class="o">=</span><span class="mf">75.5</span><span class="p">,</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    <span class="n">coeff_thermal_expan_per_cel</span><span class="o">=</span><span class="mf">1.92e-05</span><span class="p">,</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    <span class="n">coeff_thermal_expan_per_c</span><span class="o">=</span><span class="mf">1.92e-05</span><span class="p">,</span>
 <a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    <span class="n">emissivity</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
 <a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    <span class="n">solar_absorptivity</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
 <a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="p">)</span>

@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Reconductoring Economic and Financial Analysis Tool">
+        <meta name="description" content="Reconductoring Economic and Financial Analysis (REFA) Tool">
       
       
       
@@ -1335,17 +1335,17 @@
 
 <h1 id="refa">REFA</h1>
 <p><strong>Reconductoring Economic and Financial Analysis Tool</strong></p>
-<p>REFA is a Python module for techno-economic analysis of transmission line capacity upgrade options. It implements industry-standard electrical and mechanical models to evaluate and compare upgrade strategies — from reconductoring to full HVDC conversion — on a consistent net-present-value basis.</p>
+<p><code>refa</code> is a Python module for techno-economic analysis of transmission line capacity upgrade options. It implements industry-standard electrical and mechanical calculations to evaluate and compare upgrade strategies — from reconductoring to full HVDC conversion — on a consistent net-present-value of costs (NPC) basis.</p>
 <hr />
 <h2 id="what-refa-does">What REFA Does</h2>
-<p>Given an existing transmission corridor and a target power delivery level, REFA helps engineers answer:</p>
+<p>Given an existing transmission corridor and a target power capacity requirement, REFA helps grid planners answer:</p>
 <ul>
-<li>Which conductor can carry the required current without exceeding thermal or mechanical limits?</li>
+<li>Which least-cost conductor can carry the required current without exceeding current or temperature limits?</li>
 <li>What is the sag profile under normal and storm loading conditions?</li>
 <li>Does the operating voltage risk corona discharge?</li>
-<li>What is the 40-year net present cost of each upgrade option?</li>
+<li>What is the net-present cost of each upgrade option over a time horizon (e.g. 40 years)?</li>
 </ul>
-<p>REFA evaluates five project types — <strong>Rebuild</strong>, <strong>Reconductoring</strong>, <strong>Voltage Upgrade</strong>, <strong>HVDC conversion</strong>, and <strong>Existing</strong> — and ranks them by total lifecycle cost through the <code>Analysis</code> class.</p>
+<p>REFA evaluates five project types — <strong>Rebuild</strong>, <strong>Reconductoring</strong>, <strong>Voltage Upgrade</strong>, <strong>HVDC conversion</strong>, and <strong>Existing</strong> — and compares them by total cost using the <code>Analysis</code> class.</p>
 <hr />
 <h2 id="key-features">Key Features</h2>
 <table>
@@ -1357,32 +1357,36 @@
 </thead>
 <tbody>
 <tr>
+<td><strong>Techno-economic Analysis</strong></td>
+<td>NPC analysis considering key economic parameters, e.g. cost of capital, inflation, and replacement of structures and conductors</td>
+</tr>
+<tr>
 <td><strong>Ampacity</strong></td>
 <td>IEEE 738 steady-state thermal rating</td>
 </tr>
 <tr>
+<td><strong>Temperature and Resistance</strong></td>
+<td>IEEE 738 steady-state temperature and resistance at specified current rating</td>
+</tr>
+<tr>
 <td><strong>Sag-tension</strong></td>
-<td>CIGRÉ 324 with NESC 250B loading profiles</td>
+<td>CIGRÉ TB-324 sag calculations at peak current and under wind-ice loading profiles</td>
 </tr>
 <tr>
-<td><strong>Corona</strong></td>
-<td>Inception voltage and voltage gradient (AC and DC)</td>
-</tr>
-<tr>
-<td><strong>Losses</strong></td>
-<td>Resistive and corona discharge losses</td>
+<td><strong>Resistive Line Losses</strong></td>
+<td>Resistive line losses based on calculated condutor resistance and user-specified load factor</td>
 </tr>
 <tr>
 <td><strong>Congestion</strong></td>
 <td>Marginal congestion cost modelling</td>
 </tr>
 <tr>
-<td><strong>Economics</strong></td>
-<td>NPV analysis with WACC, inflation, and replacement scheduling</td>
+<td><strong>Conductor database</strong></td>
+<td>Example conductors</td>
 </tr>
 <tr>
-<td><strong>Conductor database</strong></td>
-<td>100+ ACSR, ACSS, ACCC, AECC, ACCR, ACCS conductors</td>
+<td><strong>Corona Discharge</strong></td>
+<td>Inception voltage and voltage gradient clculations</td>
 </tr>
 <tr>
 <td><strong>AC and DC</strong></td>

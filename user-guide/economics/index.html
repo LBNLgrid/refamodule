@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Reconductoring Economic and Financial Analysis Tool">
+        <meta name="description" content="Reconductoring Economic and Financial Analysis (REFA) Tool">
       
       
       
@@ -1319,7 +1319,7 @@
 
 
 <h1 id="economics">Economics</h1>
-<p>The <code>Economics</code> class holds all financial assumptions used in NPV calculations.</p>
+<p>The <code>Economics</code> class holds all cost and financial assumptions used in net-present cost calculations.</p>
 <h2 id="fields">Fields</h2>
 <table>
 <thead>
@@ -1353,7 +1353,7 @@
 <tr>
 <td><code>cost_of_losses_dol_per_mwh</code></td>
 <td>$40/MWh</td>
-<td>Value of energy lost to resistive and corona losses</td>
+<td>Cost of energy, used to compute energy lost to resistive and corona losses</td>
 </tr>
 <tr>
 <td><code>cost_of_congestion_dol_per_mwh</code></td>
@@ -1363,27 +1363,7 @@
 <tr>
 <td><code>cost_of_structures_dol_per_unit</code></td>
 <td>$100,000</td>
-<td>Per-structure cost when <code>structure_costs_specific_to_conductor=False</code></td>
-</tr>
-<tr>
-<td><code>tgt_structure_cost_dol</code></td>
-<td>—</td>
-<td>Tangent structure unit cost</td>
-</tr>
-<tr>
-<td><code>ra_structure_cost_dol</code></td>
-<td>—</td>
-<td>Running angle structure unit cost</td>
-</tr>
-<tr>
-<td><code>nade_structure_cost_dol</code></td>
-<td>—</td>
-<td>Non-angled deadend structure unit cost</td>
-</tr>
-<tr>
-<td><code>de_structure_cost_dol</code></td>
-<td>—</td>
-<td>Deadend structure unit cost</td>
+<td>Generic per-structure cost when <code>structure_costs_specific_to_conductor=False</code></td>
 </tr>
 </tbody>
 </table>
@@ -1398,23 +1378,19 @@
 <h2 id="custom-economics">Custom Economics</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa</span><span class="w"> </span><span class="kn">import</span> <span class="n">Economics</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">econ</span> <span class="o">=</span> <span class="n">Economics</span><span class="p">(</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">ec</span> <span class="o">=</span> <span class="n">Economics</span><span class="p">(</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">conductors_lifetime</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">structures_lifetime</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">wacc</span><span class="o">=</span><span class="mf">0.09</span><span class="p">,</span>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">inflation</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">cost_of_losses_dol_per_mwh</span><span class="o">=</span><span class="mf">55.0</span><span class="p">,</span>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">cost_of_congestion_dol_per_mwh</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">cost_of_structures_dol_per_unit</span><span class="o">=</span><span class="mi">120_000</span><span class="p">,</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">tgt_structure_cost_dol</span><span class="o">=</span><span class="mi">80_000</span><span class="p">,</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">ra_structure_cost_dol</span><span class="o">=</span><span class="mi">100_000</span><span class="p">,</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="n">nade_structure_cost_dol</span><span class="o">=</span><span class="mi">130_000</span><span class="p">,</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="n">de_structure_cost_dol</span><span class="o">=</span><span class="mi">150_000</span><span class="p">,</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">cost_of_structures_dol_per_unit</span><span class="o">=</span><span class="mi">120_000</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">)</span>
 </code></pre></div>
 <h2 id="npv-methodology">NPV Methodology</h2>
-<p>For each year <code>t</code> in the time horizon, costs are discounted and inflated as:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>NPV contribution at year t = cost × (1 + inflation)^t / (1 + WACC)^t
+<p>For each year <code>y</code> in the time horizon, costs are discounted and inflated as:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>NPV contribution at year y = cost × (1 + inflation)^y / (1 + WACC)^y
 </code></pre></div>
 <p>Capital costs (conductor and structure) are only incurred in years when a replacement is scheduled:</p>
 <ul>
@@ -1422,7 +1398,7 @@
 <li>First structure replacement: at <code>structure_remaining_life</code>, then every <code>structures_lifetime</code> years.</li>
 </ul>
 <p>Operating costs (losses, congestion) are incurred every year.</p>
-<p>All reported NPV values are in <strong>millions of dollars</strong> (<code>mill_dol</code>).</p>
+<p>All reported net-present cost values are in <strong>millions of dollars</strong> (<code>mill_dol</code>).</p>
 
 
 

@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Reconductoring Economic and Financial Analysis Tool">
+        <meta name="description" content="Reconductoring Economic and Financial Analysis (REFA) Tool">
       
       
       
@@ -1145,15 +1145,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#010-2026-04-30" class="md-nav__link">
+  <a href="#010-2026-05-01" class="md-nav__link">
     <span class="md-ellipsis">
       
-        [0.1.0] - 2026-04-30
+        [0.1.0] - 2026-05-01
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[0.1.0] - 2026-04-30">
+    <nav class="md-nav" aria-label="[0.1.0] - 2026-05-01">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1234,15 +1234,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#010-2026-04-30" class="md-nav__link">
+  <a href="#010-2026-05-01" class="md-nav__link">
     <span class="md-ellipsis">
       
-        [0.1.0] - 2026-04-30
+        [0.1.0] - 2026-05-01
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[0.1.0] - 2026-04-30">
+    <nav class="md-nav" aria-label="[0.1.0] - 2026-05-01">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1282,21 +1282,20 @@
 
 
 <h1 id="changelog">Changelog</h1>
-<h2 id="010-2026-04-30">[0.1.0] - 2026-04-30</h2>
+<h2 id="010-2026-05-01">[0.1.0] - 2026-05-01</h2>
 <h3 id="added">Added</h3>
 <ul>
-<li>Initial release of REFA (Reconductoring Economic and Financial Analysis Tool)</li>
-<li>IEEE 738 steady-state thermal rating and temperature calculations</li>
-<li>CIGRÉ 324 sag-tension calculations under NESC loading conditions</li>
-<li>Corona inception voltage and voltage gradient assessment (AC and DC)</li>
-<li>Resistive and corona discharge loss calculations (with and without congestion)</li>
-<li>Project types: Rebuild, Reconductoring, VoltageUpgrade, HVDC, Existing, Analysis</li>
-<li>NPV-based economic evaluation over a user-defined time horizon</li>
-<li>100+ predefined conductors (ACSR, ACSS, ACCC, AECC, ACCR, ACCS)</li>
-<li>NESC 250B loading district profiles (heavy, medium, light, warm islands)</li>
+<li>Initial release of REFA (Reconductoring Economic and Financial Analysis) module</li>
+<li>Unit conversion when accessing different parameters</li>
+<li>Corona inception voltage and voltage gradient assessment</li>
 <li>AC and DC structure configuration support</li>
-<li>Bundled conductor database via <code>load_bundled_conductors()</code></li>
-<li><code>str_costs_dol</code> field on <code>Conductor</code> for conductor-specific structure costs</li>
+<li>NPV-based economic evaluation over user-defined time horizons</li>
+<li>Project types: Rebuild, Reconductoring, VoltageUpgrade, HVDC, Existing, Analysis</li>
+<li>CIGRÉ 324 sag-tension calculations at peak current and under wind-ice loading conditions</li>
+<li>NESC 250B loading district profiles (heavy, medium, light, warm islands)</li>
+<li>Resistive and corona discharge loss calculations (with and without congestion)</li>
+<li>IEEE 738 steady-state thermal rating, temperature, and resistance calculations</li>
+<li>Default conductor database at <code>src/refa/defaults/conductor.py</code></li>
 <li>Full unit test suite (62 tests) covering all calculation methods</li>
 <li>GitHub Actions CI (Python 3.9–3.12) and PyPI publish workflow</li>
 </ul>

@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Reconductoring Economic and Financial Analysis Tool">
+        <meta name="description" content="Reconductoring Economic and Financial Analysis (REFA) Tool">
       
       
       
@@ -1324,10 +1324,10 @@
 <h2 id="ampacity-feasibility">Ampacity Feasibility</h2>
 <p>Checks that:</p>
 <ol>
-<li>The conductor has <strong>sufficient capacity</strong> — ampacity exceeds the target current.</li>
-<li>The conductor is <strong>not grossly over-designed</strong> — ampacity is less than 3× the target current.</li>
+<li>The conductor has <strong>sufficient capacity</strong> — ampacity exceeds the target peak current.</li>
+<li>The conductor is <strong>not grossly over-designed</strong> — ampacity is less than 3× the target peak current.</li>
 </ol>
-<p>Both conditions must hold for the check to pass. This dual-bound ensures that candidates that are heavily oversized for the target power level are also excluded.</p>
+<p>Both conditions must hold for the check to pass. This dual-bound ensures that candidates that are heavily oversized for the target power requirement are also excluded.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">feasible</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">is_ampacity_feasible</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="mi">1300</span><span class="p">)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># (True, &#39;&#39;)</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>

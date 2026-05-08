@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Reconductoring Economic and Financial Analysis Tool">
+        <meta name="description" content="Reconductoring Economic and Financial Analysis (REFA) Tool">
       
       
       
@@ -1429,7 +1429,7 @@
 
 
 <h1 id="projects">Projects</h1>
-<p>A project wraps one or more <code>Line</code> objects with an <code>Economics</code> model and computes net-present-value costs over a specified time horizon.</p>
+<p>All project types inherit from <code>ProjectEssentials</code>, which wraps one or more <code>Line</code> objects with an <code>Economics</code> model and computes net-present-value costs over a specified time horizon.</p>
 <hr />
 <h2 id="common-parameters">Common Parameters</h2>
 <p>All project types share these required fields:</p>
@@ -1450,12 +1450,12 @@
 <tr>
 <td><code>voltage_kv</code></td>
 <td><code>float</code></td>
-<td>Operating voltage (kV, ≥60)</td>
+<td>Operating voltage (kV, ≥0)</td>
 </tr>
 <tr>
 <td><code>economics</code></td>
 <td><code>Economics</code></td>
-<td>Financial assumptions</td>
+<td>Economic and financial assumptions</td>
 </tr>
 </tbody>
 </table>
@@ -1518,7 +1518,7 @@
 </div>
 <hr />
 <h2 id="rebuild">Rebuild</h2>
-<p>Assumes all conductors and structures are replaced from scratch. Conductor and structure replacement cycles both start at year 0.</p>
+<p>Assumes all conductors and structures are replaced at the start of the time horizon. Conductor and structure replacement cycles both start at year 0.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rebuild</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa.defaults</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_structure_config_ac</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
@@ -1610,7 +1610,7 @@
 </code></pre></div>
 <hr />
 <h2 id="cost-methods">Cost Methods</h2>
-<p>All project types expose the same set of cost methods:</p>
+<p>All project types expose this set of cost methods:</p>
 <table>
 <thead>
 <tr>
@@ -1625,7 +1625,7 @@
 </tr>
 <tr>
 <td><code>total_costs_including_losses(time_horizon, load_factor)</code></td>
-<td>Total cost + loss cost NPV</td>
+<td>Total cost + losses cost NPV</td>
 </tr>
 <tr>
 <td><code>conductor_costs(time_horizon)</code></td>
@@ -1637,7 +1637,7 @@
 </tr>
 <tr>
 <td><code>losses_costs(time_horizon, load_factor)</code></td>
-<td>Energy loss cost NPV</td>
+<td>Line losses cost NPV</td>
 </tr>
 <tr>
 <td><code>congestion_costs(time_horizon)</code></td>
@@ -1655,6 +1655,10 @@
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="o">...</span>
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="p">]</span>
 </code></pre></div>
+<p>VoltageUpgrade project has an additional method:</p>
+<p>| <code>substation_upgrade_costs(time_horizon)</code> | Substation costs |</p>
+<p>HVDC project has an additional method:</p>
+<p>| <code>converter_costs(time_horizon)</code> | Converter costs |</p>
 <p>Pass <code>report_all_years=True</code> to receive the cumulative NPV at every year up to <code>time_horizon</code> rather than just the final value.</p>
 <hr />
 <h2 id="remaining-life">Remaining Life</h2>
