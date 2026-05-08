@@ -30,6 +30,7 @@ dependencies = [
     "numpy>=1.24",
     "pandas>=2.0",
     "pydantic>=2.0",
+    "tomli>=1.1; python_version < '3.11'",
 ]
 
 [project.optional-dependencies]
@@ -56,4 +57,4 @@ version = { attr = "refa._version.__version__" }
 where = ["src"]
 
 [tool.setuptools.package-data]
-refa = ["data/*.csv"]
+refa = ["data/*.csv", "system_parameters/config.toml"]

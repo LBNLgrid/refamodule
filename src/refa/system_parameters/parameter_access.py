@@ -547,7 +547,14 @@ CF = _CF()
 
 
 # ----- Unit System
-import tomllib
+import sys
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    try:
+        import tomllib
+    except ImportError:
+        import tomli as tomllib  # type: ignore[no-redef]
 from pathlib import Path
 
 _CONFIG_PATH = Path(__file__).parent / "config.toml"
