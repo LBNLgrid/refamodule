@@ -2,7 +2,9 @@
 
 **Reconductoring Economic and Financial Analysis Tool**
 
-`refa` is a Python module for techno-economic analysis of transmission line capacity upgrade options. It implements industry-standard electrical and mechanical calculations to evaluate and compare upgrade strategies — from reconductoring to full HVDC conversion — on a consistent net-present-value of costs (NPC) basis.
+The `refa` python module, based on the publicaly-available [REFA tool](https://gridintegration.lbl.gov/refa/), aims to unlock more flexible cases of project cost evaluation and enable advanced extensions by developers.
+
+The REFA tool helps grid planners and policy makers understand the financial and economic costs of different capacity upgrade projects. The tool compares projects under the same economic basis by evaluating the net-present value of costs (NPC), while considering both conventional and advanced conductors.
 
 ---
 

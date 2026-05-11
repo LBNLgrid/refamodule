@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+- Update `docs/index.md` with improved project description linking to the REFA tool
+
 ## [0.1.1] - 2026-05-08
 
 ### Changed
