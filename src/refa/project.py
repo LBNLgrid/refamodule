@@ -321,14 +321,16 @@ class ProjectEssentials(BaseModel, ParameterAccess):
                     line.resistive_line_losses_considering_congestion(
                         voltage_kv=self.voltage_kv,
                         current_a=line._current(self.power_mw, self.voltage_kv),
-                        load_factor=load_factor
+                        load_factor=load_factor,
+                        internal_calc=True
                     )[0] for line in line_list
                 ]
                 lines['corona_losses_mwh_per_m'] = [
                     line.corona_discharge_losses(
                         voltage_kv=self.voltage_kv, 
                         structure_config=self.structure_config, 
-                        load_factor=load_factor
+                        load_factor=load_factor,
+                        internal_calc=True
                     )[0] for line in line_list 
                 ] if self.structure_config is not None else 0
 
@@ -522,14 +524,16 @@ class ProjectEssentials(BaseModel, ParameterAccess):
                 line.resistive_line_losses_considering_congestion(
                         voltage_kv=self.voltage_kv,
                         current_a=line._current(self.power_mw, self.voltage_kv),
-                        load_factor=load_factor
+                        load_factor=load_factor,
+                        internal_calc=True
                     )[0] for line in line_list
             ]
             lines['corona_losses_mwh_per_m'] = [
                 line.corona_discharge_losses(
                         voltage_kv=self.voltage_kv,
                         structure_config=self.structure_config, 
-                        load_factor=load_factor
+                        load_factor=load_factor,
+                        internal_calc=True
                     )[0] for line in line_list
             ] if self.structure_config is not None else 0
             
@@ -797,7 +801,8 @@ class HVDC(ProjectEssentials):
                         voltage_kv=self.voltage_kv,
                         current_a=line._current(self.power_mw, self.voltage_kv, is_hvdc=True),
                         load_factor=load_factor,
-                        is_hvdc=True
+                        is_hvdc=True,
+                        internal_calc=True
                     )[0] for line in line_list
                 ]
                 lines['corona_losses_mwh_per_m'] = [
@@ -805,7 +810,8 @@ class HVDC(ProjectEssentials):
                         voltage_kv=self.voltage_kv, 
                         structure_config=self.structure_config, 
                         load_factor=load_factor,
-                        is_hvdc=True
+                        is_hvdc=True,
+                        internal_calc=True
                     )[0] for line in line_list 
                 ] if self.structure_config is not None else 0
 
@@ -1012,7 +1018,8 @@ class HVDC(ProjectEssentials):
                     voltage_kv=self.voltage_kv,
                     current_a=line._current(self.power_mw, self.voltage_kv, is_hvdc=True),
                     load_factor=load_factor,
-                    is_hvdc=True
+                    is_hvdc=True,
+                    internal_calc=True
                 )[0] for line in line_list
             ]
             lines['corona_losses_mwh_per_m'] = [
@@ -1020,7 +1027,8 @@ class HVDC(ProjectEssentials):
                     voltage_kv=self.voltage_kv, 
                     structure_config=self.structure_config, 
                     load_factor=load_factor,
-                    is_hvdc=True
+                    is_hvdc=True,
+                    internal_calc=True
                 )[0] for line in line_list 
             ] if self.structure_config is not None else 0
 

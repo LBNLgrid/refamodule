@@ -573,7 +573,7 @@ class Line(BaseModel, ParameterAccess):
      
     @validate_args(load_factor=param(">=", 0, "<=", 1), current_a=param(">", 0),
                    voltage_kv=param(">", 0, "<", 1000), power_mw=param(">", 0, "<", 10000))
-    def resistive_line_losses(self, load_factor, current_a=None, voltage_kv=None, power_mw=None, is_hvdc=False):
+    def resistive_line_losses(self, load_factor, current_a=None, voltage_kv=None, power_mw=None, is_hvdc=False, internal_calc=False):
         
         if (current_a is None) == (power_mw is None):
             raise ValueError("Either current_a or power_mw must be provided.")
@@ -590,7 +590,7 @@ class Line(BaseModel, ParameterAccess):
         losses_at_peak_mwh_per_m = \
             res_at_current_ohm_per_m * current_a ** 2 * loss_factor * nbr_conds * 8760 * 1e-6
 
-        if UnitSystem.is_metric():
+        if UnitSystem.is_metric() or internal_calc:
             return losses_at_peak_mwh_per_m, LB.mwh_per_m
         else:
             return losses_at_peak_mwh_per_m * CF.mile_to_m, LB.mwh_per_mile
@@ -598,7 +598,7 @@ class Line(BaseModel, ParameterAccess):
   
     @validate_args(load_factor=param(">=", 0, "<=", 1), current_a=param(">", 0),
                    voltage_kv=param(">", 0, "<", 1000), power_mw=param(">", 0, "<", 10000))
-    def resistive_line_losses_considering_congestion(self, load_factor, voltage_kv, power_mw=None, current_a=None, is_hvdc=False):
+    def resistive_line_losses_considering_congestion(self, load_factor, voltage_kv, power_mw=None, current_a=None, is_hvdc=False, internal_calc=False):
         
         if (current_a is None) == (power_mw is None):
             raise ValueError("Either current_a or power_mw must be provided.")
@@ -630,14 +630,14 @@ class Line(BaseModel, ParameterAccess):
             losses_at_peak_mwh_per_m = \
                 res_at_current_ohm_per_m * current_a ** 2 * loss_factor * nbr_conds * 8760 * 1e-6
 
-        if UnitSystem.is_metric():
+        if UnitSystem.is_metric() or internal_calc:
             return float(losses_at_peak_mwh_per_m), LB.mwh_per_m
         else:
             return float(losses_at_peak_mwh_per_m * CF.mile_to_m), LB.mwh_per_mile
 
 
     @validate_args(load_factor=param(">=", 0, "<=", 1), voltage_kv=param(">", 0, "<", 1000))
-    def corona_discharge_losses(self, voltage_kv, structure_config, load_factor, is_hvdc=False):
+    def corona_discharge_losses(self, voltage_kv, structure_config, load_factor, is_hvdc=False, internal_calc=False):
 
         if isinstance(structure_config, StructureConfigDCmetric) != is_hvdc:
             raise ValueError("Make sure that StructureConfigAC is provided for AC line (keep default `is_hvdc=False`), "
@@ -669,7 +669,7 @@ class Line(BaseModel, ParameterAccess):
                                           structure_config.distance_pos_neg_poles_m / 15 / 15)) / 10) * \
                     self.nbr_circuits * self.nbr_bundles * self.nbr_conds_per_bundle * loss_factor * 8760 * 1e-6
 
-            if UnitSystem.is_metric():
+            if UnitSystem.is_metric() or internal_calc:
                 return float(corona_losses_mwh_per_m), LB.mwh_per_m
             else:
                 return float(corona_losses_mwh_per_m * CF.mile_to_m), LB.mwh_per_mile
