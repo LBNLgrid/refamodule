@@ -1,6 +1,9 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.2] - 2026-05-26
+
+### Fixed
+- Imperial unit system: loss calculation methods in `line.py` now return metric units when called internally from `project.py` (added `internal_calc` parameter)
 
 ### Changed
 - Update `docs/index.md` with improved project description linking to the REFA tool
