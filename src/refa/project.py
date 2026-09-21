@@ -620,8 +620,8 @@ class Existing(ProjectEssentials):
             description="Year at which structure replacement is planned, corresponding to structures_remaining_life.")
     
     prj_name: str = "Existing"
-    structure_config: StructureConfigACmetric | None = None
-    structure_config_loading: StructureConfigLoading | None = None
+    structure_config: Optional[StructureConfigACmetric] = None
+    structure_config_loading: Optional[StructureConfigLoading] = None
         
 
 class Rebuild(ProjectEssentials):
@@ -629,8 +629,8 @@ class Rebuild(ProjectEssentials):
     conductor_remaining_life: int = 0
 
     prj_name: str = "Rebuild"
-    structure_config: StructureConfigACmetric | None = None
-    structure_config_loading: StructureConfigLoading | None = None
+    structure_config: Optional[StructureConfigACmetric] = None
+    structure_config_loading: Optional[StructureConfigLoading] = None
 
 
 class Reconductoring(ProjectEssentials):
@@ -638,8 +638,8 @@ class Reconductoring(ProjectEssentials):
             description="Year at which structure replacement is planned, corresponding to structures_remaining_life.")
     
     prj_name: str = "Reconductoring"
-    structure_config: StructureConfigACmetric | None = None
-    structure_config_loading: StructureConfigLoading | None = None
+    structure_config: Optional[StructureConfigACmetric] = None
+    structure_config_loading: Optional[StructureConfigLoading] = None
     conductor_remaining_life: int = 0
     
 
@@ -651,8 +651,8 @@ class VoltageUpgrade(ProjectEssentials):
     cost_substations_upgrade_dol: float = Field(..., ge=0)
     
     prj_name: str = "VoltageUpgrade"
-    structure_config: StructureConfigACmetric | None = None
-    structure_config_loading: StructureConfigLoading | None = None
+    structure_config: Optional[StructureConfigACmetric] = None
+    structure_config_loading: Optional[StructureConfigLoading] = None
 
     # Aggregated cost for the case where some structures need to be modified due to the voltage upgrade
     cost_structures_modif_dol: float = Field(0, ge=0)
@@ -696,8 +696,8 @@ class HVDC(ProjectEssentials):
     cost_converters_dol: float = Field(..., ge=0)   
     
     prj_name: str = "HVDC"
-    structure_config: StructureConfigDCmetric | None = None
-    structure_config_loading: StructureConfigLoading | None = None
+    structure_config: Optional[StructureConfigDCmetric] = None
+    structure_config_loading: Optional[StructureConfigLoading] = None
 
     # Aggregated cost for the case where some structures need to be modified
     cost_structures_modif_dol: float = Field(0, ge=0)

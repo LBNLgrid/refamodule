@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.2.0] - 2026-09-21
+
+### Added
+- `StructureConfigLoading` model (`line_angle_deg`, `material_and_geometry`) for mechanical loading calculations, exported from the package top level
+- `Line.mechanical_loading()` method computing horizontal structure loading (RUS Bulletin 200) from CIGRÉ 324 sag-tension results
+- CIGRÉ 324 sag calculation now also returns intermediate loading parameters (weights and tensions)
+- `structure_config_loading` field on all project types (`Existing`, `Rebuild`, `Reconductoring`, `VoltageUpgrade`, `HVDC`)
+- Extended default structure configurations and `default_structure_config_loading()` helper
+- `rugosity_coefficient` field on `Conductor` (with support for reading it from the conductor CSV), and `extra="allow"` on `ConductorMetric`
+
+### Changed
+- Default conductor `solar_absorptivity` changed from 0.5 to 0.6
+- Simplified argument validation logic in `system_parameters` (unit normalization and constraint handling)
+- Consistent `structure_costs_dol` naming for structure costs across project cost calculations
+
+### Removed
+- **Breaking:** `rugosity_coefficient` removed from `Environment` (moved to `Conductor`)
+- **Breaking:** `structure_cost_dol` field removed from `LineDesign`
+
 ## [0.1.2] - 2026-05-26
 
 ### Fixed
