@@ -13,8 +13,7 @@ def default_clear_environment():
         hour=12,
         ambient_temperature_c=25.0,
         atmosphere= _clear_atmosphere(),
-        weather_correction_factor=1.0, 
-        rugosity_coefficient=0.82
+        weather_correction_factor=1.0
     )
 
 def default_industrial_environment():
@@ -28,8 +27,7 @@ def default_industrial_environment():
         hour=12,
         ambient_temperature_c=25.0,
         atmosphere= _industrial_atmosphere(),
-        weather_correction_factor=1.0,
-        rugosity_coefficient=0.82
+        weather_correction_factor=1.0
     )
 
 
@@ -44,8 +42,7 @@ def default_clear_environment_imperial():
         hour=12,
         ambient_temperature_f=77,
         atmosphere=_clear_atmosphere(),
-        weather_correction_factor=1.0,
-        rugosity_coefficient=0.82
+        weather_correction_factor=1.0
     )
 
 
@@ -60,8 +57,7 @@ def default_industrial_environment_imperial():
         hour=12,
         ambient_temperature_f=77,
         atmosphere=_industrial_atmosphere(),
-        weather_correction_factor=1.0,
-        rugosity_coefficient=0.82
+        weather_correction_factor=1.0
     )
 
 

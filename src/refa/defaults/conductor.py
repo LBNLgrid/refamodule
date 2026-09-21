@@ -24,7 +24,8 @@ def default_conductor():
         elastic_modulus_gpa=75.5,
         coeff_thermal_expan_per_c=1.92e-05,
         emissivity=0.5,
-        solar_absorptivity=0.5,
+        solar_absorptivity=0.6,
+        rugosity_coefficient=0.82
     )
 
 
@@ -49,7 +50,8 @@ def default_conductor_imperial():
         elastic_modulus_ksi=75.5 * CF.gpa_to_ksi,
         coeff_thermal_expan_per_f=1.92e-05 * 5 / 9,
         emissivity=0.5,
-        solar_absorptivity=0.5,
+        solar_absorptivity=0.6,
+        rugosity_coefficient=0.82
     )
 
 # ----- Conductors from csv file
@@ -110,7 +112,8 @@ def load_conductors_from_csv(csv_path: str) -> ConductorDict:
                     elastic_modulus_gpa=float(data['elastic_modulus_gpa']),
                     coeff_thermal_expan_per_c=float(data['coeff_thermal_expan_per_c']),
                     emissivity=float(data['emissivity']),
-                    solar_absorptivity=float(data['solar_absorptivity'])
+                    solar_absorptivity=float(data['solar_absorptivity']),
+                    rugosity_coefficient=float(data.get('rugosity_coefficient', 0.82))  # Default to 0.82 if not provided
                 )
             return conductor_func
         
@@ -143,6 +146,7 @@ def acsr_266_8_waxwing():
         coeff_thermal_expan_per_c=2.12e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_266_8_partridge():
@@ -167,6 +171,7 @@ def acsr_266_8_partridge():
         coeff_thermal_expan_per_c=1.92e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_336_4_merlin():
@@ -191,6 +196,7 @@ def acsr_336_4_merlin():
         coeff_thermal_expan_per_c=2.12e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_336_4_linnet():
@@ -215,6 +221,7 @@ def acsr_336_4_linnet():
         coeff_thermal_expan_per_c=1.92e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_336_4_oriole():
@@ -239,6 +246,7 @@ def acsr_336_4_oriole():
         coeff_thermal_expan_per_c=1.78e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_397_5_chickadee():
@@ -263,6 +271,7 @@ def acsr_397_5_chickadee():
         coeff_thermal_expan_per_c=1.92e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_397_5_ibis():
@@ -287,6 +296,7 @@ def acsr_397_5_ibis():
         coeff_thermal_expan_per_c=1.92e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_397_5_lark():
@@ -311,6 +321,7 @@ def acsr_397_5_lark():
         coeff_thermal_expan_per_c=1.78e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_477_0_pelican():
@@ -335,6 +346,7 @@ def acsr_477_0_pelican():
         coeff_thermal_expan_per_c=2.12e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_477_0_flicker():
@@ -359,6 +371,7 @@ def acsr_477_0_flicker():
         coeff_thermal_expan_per_c=2e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_477_0_hawk():
@@ -383,6 +396,7 @@ def acsr_477_0_hawk():
         coeff_thermal_expan_per_c=1.92e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_477_0_hen():
@@ -407,6 +421,7 @@ def acsr_477_0_hen():
         coeff_thermal_expan_per_c=1.78e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_556_5_osprey():
@@ -431,6 +446,7 @@ def acsr_556_5_osprey():
         coeff_thermal_expan_per_c=2.12e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_556_5_parakeet():
@@ -455,6 +471,7 @@ def acsr_556_5_parakeet():
         coeff_thermal_expan_per_c=2e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_556_5_dove():
@@ -479,6 +496,7 @@ def acsr_556_5_dove():
         coeff_thermal_expan_per_c=1.92e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_636_0_kingbird():
@@ -503,6 +521,7 @@ def acsr_636_0_kingbird():
         coeff_thermal_expan_per_c=2.12e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_636_0_rook():
@@ -527,6 +546,7 @@ def acsr_636_0_rook():
         coeff_thermal_expan_per_c=2e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_636_0_grosbeak():
@@ -551,6 +571,7 @@ def acsr_636_0_grosbeak():
         coeff_thermal_expan_per_c=1.92e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_666_6_flamingo():
@@ -575,6 +596,7 @@ def acsr_666_6_flamingo():
         coeff_thermal_expan_per_c=2e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_795_0_tern():
@@ -599,6 +621,7 @@ def acsr_795_0_tern():
         coeff_thermal_expan_per_c=2.08e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_795_0_cuckoo():
@@ -623,6 +646,7 @@ def acsr_795_0_cuckoo():
         coeff_thermal_expan_per_c=2e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_795_0_drake():
@@ -647,6 +671,7 @@ def acsr_795_0_drake():
         coeff_thermal_expan_per_c=1.92e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_900_0_canary():
@@ -671,6 +696,7 @@ def acsr_900_0_canary():
         coeff_thermal_expan_per_c=1.93e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_954_0_rail():
@@ -695,6 +721,7 @@ def acsr_954_0_rail():
         coeff_thermal_expan_per_c=2.08e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_954_0_cardinal():
@@ -719,6 +746,7 @@ def acsr_954_0_cardinal():
         coeff_thermal_expan_per_c=1.93e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_1033_5_ortolan():
@@ -743,6 +771,7 @@ def acsr_1033_5_ortolan():
         coeff_thermal_expan_per_c=2.08e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_1033_5_curlew():
@@ -767,6 +796,7 @@ def acsr_1033_5_curlew():
         coeff_thermal_expan_per_c=1.93e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_1113_0_bluejay():
@@ -791,6 +821,7 @@ def acsr_1113_0_bluejay():
         coeff_thermal_expan_per_c=2.08e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_1192_5_bunting():
@@ -815,6 +846,7 @@ def acsr_1192_5_bunting():
         coeff_thermal_expan_per_c=2.08e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_1272_0_bittern():
@@ -839,6 +871,7 @@ def acsr_1272_0_bittern():
         coeff_thermal_expan_per_c=2.08e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_1272_0_pheasant():
@@ -863,6 +896,7 @@ def acsr_1272_0_pheasant():
         coeff_thermal_expan_per_c=1.93e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_1351_5_dipper():
@@ -887,6 +921,7 @@ def acsr_1351_5_dipper():
         coeff_thermal_expan_per_c=2.08e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_1351_5_martin():
@@ -911,6 +946,7 @@ def acsr_1351_5_martin():
         coeff_thermal_expan_per_c=1.93e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_1431_0_bobolink():
@@ -935,6 +971,7 @@ def acsr_1431_0_bobolink():
         coeff_thermal_expan_per_c=2.08e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_1590_0_lapwing():
@@ -959,6 +996,7 @@ def acsr_1590_0_lapwing():
         coeff_thermal_expan_per_c=2.08e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acsr_1590_0_falcon():
@@ -983,6 +1021,7 @@ def acsr_1590_0_falcon():
         coeff_thermal_expan_per_c=1.93e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_266_8_partridge():
@@ -1007,6 +1046,7 @@ def acss_266_8_partridge():
         coeff_thermal_expan_per_c=1.92e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_336_4_linnet():
@@ -1031,6 +1071,7 @@ def acss_336_4_linnet():
         coeff_thermal_expan_per_c=1.73e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_336_4_oriole():
@@ -1055,6 +1096,7 @@ def acss_336_4_oriole():
         coeff_thermal_expan_per_c=1.6e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_397_5_ibis():
@@ -1079,6 +1121,7 @@ def acss_397_5_ibis():
         coeff_thermal_expan_per_c=1.73e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_397_5_lark():
@@ -1103,6 +1146,7 @@ def acss_397_5_lark():
         coeff_thermal_expan_per_c=1.6e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_477_0_flicker():
@@ -1127,6 +1171,7 @@ def acss_477_0_flicker():
         coeff_thermal_expan_per_c=1.8e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_477_0_hawk():
@@ -1151,6 +1196,7 @@ def acss_477_0_hawk():
         coeff_thermal_expan_per_c=1.73e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_477_0_hen():
@@ -1175,6 +1221,7 @@ def acss_477_0_hen():
         coeff_thermal_expan_per_c=1.6e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_556_5_parakeet():
@@ -1199,6 +1246,7 @@ def acss_556_5_parakeet():
         coeff_thermal_expan_per_c=1.8e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_556_5_dove():
@@ -1223,6 +1271,7 @@ def acss_556_5_dove():
         coeff_thermal_expan_per_c=1.73e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_636_0_grosbeak():
@@ -1247,6 +1296,7 @@ def acss_636_0_grosbeak():
         coeff_thermal_expan_per_c=1.73e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_666_6_flamingo():
@@ -1271,6 +1321,7 @@ def acss_666_6_flamingo():
         coeff_thermal_expan_per_c=1.8e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_795_0_tern():
@@ -1295,6 +1346,7 @@ def acss_795_0_tern():
         coeff_thermal_expan_per_c=1.87e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_795_0_cuckoo():
@@ -1319,6 +1371,7 @@ def acss_795_0_cuckoo():
         coeff_thermal_expan_per_c=1.8e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_795_0_drake():
@@ -1343,6 +1396,7 @@ def acss_795_0_drake():
         coeff_thermal_expan_per_c=1.73e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_900_0_canary():
@@ -1367,6 +1421,7 @@ def acss_900_0_canary():
         coeff_thermal_expan_per_c=1.74e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_954_0_rail():
@@ -1391,6 +1446,7 @@ def acss_954_0_rail():
         coeff_thermal_expan_per_c=1.87e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_954_0_cardinal():
@@ -1415,6 +1471,7 @@ def acss_954_0_cardinal():
         coeff_thermal_expan_per_c=1.74e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_1033_5_ortolan():
@@ -1439,6 +1496,7 @@ def acss_1033_5_ortolan():
         coeff_thermal_expan_per_c=1.87e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_1033_5_curlew():
@@ -1463,6 +1521,7 @@ def acss_1033_5_curlew():
         coeff_thermal_expan_per_c=1.74e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_1113_0_bluejay():
@@ -1487,6 +1546,7 @@ def acss_1113_0_bluejay():
         coeff_thermal_expan_per_c=1.87e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_1192_5_bunting():
@@ -1511,6 +1571,7 @@ def acss_1192_5_bunting():
         coeff_thermal_expan_per_c=1.87e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_1272_0_bittern():
@@ -1535,6 +1596,7 @@ def acss_1272_0_bittern():
         coeff_thermal_expan_per_c=1.87e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_1272_0_pheasant():
@@ -1559,6 +1621,7 @@ def acss_1272_0_pheasant():
         coeff_thermal_expan_per_c=1.74e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_1351_5_dipper():
@@ -1583,6 +1646,7 @@ def acss_1351_5_dipper():
         coeff_thermal_expan_per_c=1.87e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_1351_5_martin():
@@ -1607,6 +1671,7 @@ def acss_1351_5_martin():
         coeff_thermal_expan_per_c=1.74e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_1431_0_bobolink():
@@ -1631,6 +1696,7 @@ def acss_1431_0_bobolink():
         coeff_thermal_expan_per_c=1.87e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_1590_0_lapwing():
@@ -1655,6 +1721,7 @@ def acss_1590_0_lapwing():
         coeff_thermal_expan_per_c=1.87e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def acss_1590_0_falcon():
@@ -1679,6 +1746,7 @@ def acss_1590_0_falcon():
         coeff_thermal_expan_per_c=1.74e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_297_helsinki():
@@ -1703,6 +1771,7 @@ def accc_297_helsinki():
         coeff_thermal_expan_per_c=1.79e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_434_copenhagen():
@@ -1727,6 +1796,7 @@ def accc_434_copenhagen():
         coeff_thermal_expan_per_c=1.91e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_467_glasgow():
@@ -1751,6 +1821,7 @@ def accc_467_glasgow():
         coeff_thermal_expan_per_c=1.75e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_540_casablanca():
@@ -1775,6 +1846,7 @@ def accc_540_casablanca():
         coeff_thermal_expan_per_c=1.86e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_619_oslo():
@@ -1799,6 +1871,7 @@ def accc_619_oslo():
         coeff_thermal_expan_per_c=1.76e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_623_lisbon():
@@ -1823,6 +1896,7 @@ def accc_623_lisbon():
         coeff_thermal_expan_per_c=1.91e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_725_amsterdam():
@@ -1847,6 +1921,7 @@ def accc_725_amsterdam():
         coeff_thermal_expan_per_c=1.91e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_832_brussels():
@@ -1871,6 +1946,7 @@ def accc_832_brussels():
         coeff_thermal_expan_per_c=1.92e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_1002_warsaw():
@@ -1895,6 +1971,7 @@ def accc_1002_warsaw():
         coeff_thermal_expan_per_c=1.94e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_1035_dublin():
@@ -1919,6 +1996,7 @@ def accc_1035_dublin():
         coeff_thermal_expan_per_c=1.89e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_1078_hamburg():
@@ -1943,6 +2021,7 @@ def accc_1078_hamburg():
         coeff_thermal_expan_per_c=1.95e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_1120_milan():
@@ -1967,6 +2046,7 @@ def accc_1120_milan():
         coeff_thermal_expan_per_c=1.96e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_1169_rome():
@@ -1991,6 +2071,7 @@ def accc_1169_rome():
         coeff_thermal_expan_per_c=1.92e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_1242_vienna():
@@ -2015,6 +2096,7 @@ def accc_1242_vienna():
         coeff_thermal_expan_per_c=1.99e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_1319_budapest():
@@ -2039,6 +2121,7 @@ def accc_1319_budapest():
         coeff_thermal_expan_per_c=1.96e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_1363_prague():
@@ -2063,6 +2146,7 @@ def accc_1363_prague():
         coeff_thermal_expan_per_c=2.01e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_1447_munich():
@@ -2087,6 +2171,7 @@ def accc_1447_munich():
         coeff_thermal_expan_per_c=1.99e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_1498_london():
@@ -2111,6 +2196,7 @@ def accc_1498_london():
         coeff_thermal_expan_per_c=1.98e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_1606_paris():
@@ -2135,6 +2221,7 @@ def accc_1606_paris():
         coeff_thermal_expan_per_c=2.05e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_1865_antwerp():
@@ -2159,6 +2246,7 @@ def accc_1865_antwerp():
         coeff_thermal_expan_per_c=2.03e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accc_1999_madrid():
@@ -2183,6 +2271,7 @@ def accc_1999_madrid():
         coeff_thermal_expan_per_c=2.05e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_2715_sanford():
@@ -2207,6 +2296,7 @@ def aecc_2715_sanford():
         coeff_thermal_expan_per_c=1.35e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_2609_killdeer():
@@ -2231,6 +2321,7 @@ def aecc_2609_killdeer():
         coeff_thermal_expan_per_c=1.35e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_2117_blanca():
@@ -2255,6 +2346,7 @@ def aecc_2117_blanca():
         coeff_thermal_expan_per_c=1.35e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_2093_williamson():
@@ -2279,6 +2371,7 @@ def aecc_2093_williamson():
         coeff_thermal_expan_per_c=1.35e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_2074_helvellyn():
@@ -2303,6 +2396,7 @@ def aecc_2074_helvellyn():
         coeff_thermal_expan_per_c=1.35e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_1608_bersfort():
@@ -2327,6 +2421,7 @@ def aecc_1608_bersfort():
         coeff_thermal_expan_per_c=1.35e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_1494_altar():
@@ -2351,6 +2446,7 @@ def aecc_1494_altar():
         coeff_thermal_expan_per_c=1.46e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_1360_sierra():
@@ -2375,6 +2471,7 @@ def aecc_1360_sierra():
         coeff_thermal_expan_per_c=1.46e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_1099_ruddy():
@@ -2399,6 +2496,7 @@ def aecc_1099_ruddy():
         coeff_thermal_expan_per_c=1.46e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_1094_pennell():
@@ -2423,6 +2521,7 @@ def aecc_1094_pennell():
         coeff_thermal_expan_per_c=1.46e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_1039_fishers():
@@ -2447,6 +2546,7 @@ def aecc_1039_fishers():
         coeff_thermal_expan_per_c=1.46e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_1027_gould():
@@ -2471,6 +2571,7 @@ def aecc_1027_gould():
         coeff_thermal_expan_per_c=1.46e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_979_fernow():
@@ -2495,6 +2596,7 @@ def aecc_979_fernow():
         coeff_thermal_expan_per_c=1.46e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_817_tern():
@@ -2519,6 +2621,7 @@ def aecc_817_tern():
         coeff_thermal_expan_per_c=1.35e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_738_martin():
@@ -2543,6 +2646,7 @@ def aecc_738_martin():
         coeff_thermal_expan_per_c=1.34e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def aecc_632_hawk():
@@ -2567,6 +2671,7 @@ def aecc_632_hawk():
         coeff_thermal_expan_per_c=1.46e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accr_300_ostrich():
@@ -2591,6 +2696,7 @@ def accr_300_ostrich():
         coeff_thermal_expan_per_c=1.67e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accr_336_linnet():
@@ -2615,6 +2721,7 @@ def accr_336_linnet():
         coeff_thermal_expan_per_c=1.67e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accr_397_ibis():
@@ -2639,6 +2746,7 @@ def accr_397_ibis():
         coeff_thermal_expan_per_c=1.67e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accr_477_hawk():
@@ -2663,6 +2771,7 @@ def accr_477_hawk():
         coeff_thermal_expan_per_c=1.67e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accr_557_dove():
@@ -2687,6 +2796,7 @@ def accr_557_dove():
         coeff_thermal_expan_per_c=1.67e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accr_636_grosbeak():
@@ -2711,6 +2821,7 @@ def accr_636_grosbeak():
         coeff_thermal_expan_per_c=1.65e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accr_795_drake():
@@ -2735,6 +2846,7 @@ def accr_795_drake():
         coeff_thermal_expan_per_c=1.65e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accr_954_cardinal():
@@ -2759,6 +2871,7 @@ def accr_954_cardinal():
         coeff_thermal_expan_per_c=1.71e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accr_1033_curlew():
@@ -2783,6 +2896,7 @@ def accr_1033_curlew():
         coeff_thermal_expan_per_c=1.71e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accr_1112_finch():
@@ -2807,6 +2921,7 @@ def accr_1112_finch():
         coeff_thermal_expan_per_c=1.71e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accr_1272_pheasant():
@@ -2831,6 +2946,7 @@ def accr_1272_pheasant():
         coeff_thermal_expan_per_c=1.71e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accr_1351_martin():
@@ -2855,6 +2971,7 @@ def accr_1351_martin():
         coeff_thermal_expan_per_c=1.71e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accr_1590_falcon():
@@ -2879,6 +2996,7 @@ def accr_1590_falcon():
         coeff_thermal_expan_per_c=1.71e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_266_8_shenandoah():
@@ -2903,6 +3021,7 @@ def accs_266_8_shenandoah():
         coeff_thermal_expan_per_c=1.44e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_325_0_olympic():
@@ -2927,6 +3046,7 @@ def accs_325_0_olympic():
         coeff_thermal_expan_per_c=1.44e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_336_4_wrangell():
@@ -2951,6 +3071,7 @@ def accs_336_4_wrangell():
         coeff_thermal_expan_per_c=1.44e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_336_4_badlands():
@@ -2975,6 +3096,7 @@ def accs_336_4_badlands():
         coeff_thermal_expan_per_c=1.34e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_397_5_andes():
@@ -2999,6 +3121,7 @@ def accs_397_5_andes():
         coeff_thermal_expan_per_c=1.44e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_397_5_joshua_tree():
@@ -3023,6 +3146,7 @@ def accs_397_5_joshua_tree():
         coeff_thermal_expan_per_c=1.44e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_397_5_sequoia():
@@ -3047,6 +3171,7 @@ def accs_397_5_sequoia():
         coeff_thermal_expan_per_c=1.34e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_477_0_rogers():
@@ -3071,6 +3196,7 @@ def accs_477_0_rogers():
         coeff_thermal_expan_per_c=1.5e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_477_0_yosemite():
@@ -3095,6 +3221,7 @@ def accs_477_0_yosemite():
         coeff_thermal_expan_per_c=1.44e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_477_0_capitol_reef():
@@ -3119,6 +3246,7 @@ def accs_477_0_capitol_reef():
         coeff_thermal_expan_per_c=1.34e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_636_0_tortugas():
@@ -3143,6 +3271,7 @@ def accs_636_0_tortugas():
         coeff_thermal_expan_per_c=1.5e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_636_0_yellowstone():
@@ -3167,6 +3296,7 @@ def accs_636_0_yellowstone():
         coeff_thermal_expan_per_c=1.5e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_636_0_glacier():
@@ -3191,6 +3321,7 @@ def accs_636_0_glacier():
         coeff_thermal_expan_per_c=1.44e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_636_0_carlsbad():
@@ -3215,6 +3346,7 @@ def accs_636_0_carlsbad():
         coeff_thermal_expan_per_c=1.5e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_641_7_congaree():
@@ -3239,6 +3371,7 @@ def accs_641_7_congaree():
         coeff_thermal_expan_per_c=1.5e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_714_0_vinson():
@@ -3263,6 +3396,7 @@ def accs_714_0_vinson():
         coeff_thermal_expan_per_c=1.5e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_795_0_kilimanjaro():
@@ -3287,6 +3421,7 @@ def accs_795_0_kilimanjaro():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_795_0_alps():
@@ -3311,6 +3446,7 @@ def accs_795_0_alps():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_795_0_wind_cave():
@@ -3335,6 +3471,7 @@ def accs_795_0_wind_cave():
         coeff_thermal_expan_per_c=1.5e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_795_0_denali():
@@ -3359,6 +3496,7 @@ def accs_795_0_denali():
         coeff_thermal_expan_per_c=1.44e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_795_0_rocky():
@@ -3383,6 +3521,7 @@ def accs_795_0_rocky():
         coeff_thermal_expan_per_c=1.44e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_954_0_crater_lake():
@@ -3407,6 +3546,7 @@ def accs_954_0_crater_lake():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_954_0_grand_canyon():
@@ -3431,6 +3571,7 @@ def accs_954_0_grand_canyon():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_954_0_fuji():
@@ -3455,6 +3596,7 @@ def accs_954_0_fuji():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_954_0_jasper():
@@ -3479,6 +3621,7 @@ def accs_954_0_jasper():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_954_0_arches():
@@ -3503,6 +3646,7 @@ def accs_954_0_arches():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_973_1_everglades():
@@ -3527,6 +3671,7 @@ def accs_973_1_everglades():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1033_5_big_bend():
@@ -3551,6 +3696,7 @@ def accs_1033_5_big_bend():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1033_5_lassen():
@@ -3575,6 +3721,7 @@ def accs_1033_5_lassen():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1033_5_tahoe():
@@ -3599,6 +3746,7 @@ def accs_1033_5_tahoe():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1033_5_samoa():
@@ -3623,6 +3771,7 @@ def accs_1033_5_samoa():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1113_0_cook():
@@ -3647,6 +3796,7 @@ def accs_1113_0_cook():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1113_0_blanc():
@@ -3671,6 +3821,7 @@ def accs_1113_0_blanc():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1113_0_niagara():
@@ -3695,6 +3846,7 @@ def accs_1113_0_niagara():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1113_0_gannett():
@@ -3719,6 +3871,7 @@ def accs_1113_0_gannett():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1192_5_washington():
@@ -3743,6 +3896,7 @@ def accs_1192_5_washington():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1192_5_elbert():
@@ -3767,6 +3921,7 @@ def accs_1192_5_elbert():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1192_5_kings_canyon():
@@ -3791,6 +3946,7 @@ def accs_1192_5_kings_canyon():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1192_5_acadia():
@@ -3815,6 +3971,7 @@ def accs_1192_5_acadia():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1233_6_redwood():
@@ -3839,6 +3996,7 @@ def accs_1233_6_redwood():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1233_6_mesa_verde():
@@ -3863,6 +4021,7 @@ def accs_1233_6_mesa_verde():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1233_6_biscayne():
@@ -3887,6 +4046,7 @@ def accs_1233_6_biscayne():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1272_0_saguaro():
@@ -3911,6 +4071,7 @@ def accs_1272_0_saguaro():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1272_0_sierra_nevada():
@@ -3935,6 +4096,7 @@ def accs_1272_0_sierra_nevada():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1272_0_eldorado():
@@ -3959,6 +4121,7 @@ def accs_1272_0_eldorado():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1272_0_voyageurs():
@@ -3983,6 +4146,7 @@ def accs_1272_0_voyageurs():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1351_5_cascades():
@@ -4007,6 +4171,7 @@ def accs_1351_5_cascades():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1351_5_banff():
@@ -4031,6 +4196,7 @@ def accs_1351_5_banff():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1351_5_elbrus():
@@ -4055,6 +4221,7 @@ def accs_1351_5_elbrus():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1590_0_bryce_canyon():
@@ -4079,6 +4246,7 @@ def accs_1590_0_bryce_canyon():
         coeff_thermal_expan_per_c=1.56e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1590_0_adirondack():
@@ -4103,6 +4271,7 @@ def accs_1590_0_adirondack():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1590_0_zion():
@@ -4127,6 +4296,7 @@ def accs_1590_0_zion():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1780_0_teton():
@@ -4151,6 +4321,7 @@ def accs_1780_0_teton():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1780_0_everest():
@@ -4175,6 +4346,7 @@ def accs_1780_0_everest():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 
 def accs_1780_0_katmai():
@@ -4199,5 +4371,6 @@ def accs_1780_0_katmai():
         coeff_thermal_expan_per_c=1.45e-05,
         emissivity=0.5,
         solar_absorptivity=0.5,
+        rugosity_coefficient=0.82
     )
 

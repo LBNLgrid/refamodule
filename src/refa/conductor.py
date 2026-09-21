@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from .system_parameters import ParameterAccess, CF
 
 
@@ -23,6 +23,10 @@ class ConductorMetric(BaseModel, ParameterAccess):
     accessories_dol_per_km:      float = Field(0.0, ge=0)
     emissivity:                  float = Field(0.5, ge=0, le=1)
     solar_absorptivity:          float = Field(0.5, ge=0, le=1)
+    rugosity_coefficient:        float = Field(0.82, ge=0, le=1)
+
+    # Enable extra fields
+    model_config = ConfigDict(extra='allow')
 
     def __add__(self, other):
         from .line_design import LineDesignMetric
@@ -58,7 +62,8 @@ class ConductorImperial:
                 installation_dol_per_kft:    float = Field(0.0, ge=0),
                 accessories_dol_per_kft:     float = Field(0.0, ge=0),
                 emissivity:                  float = 0.5,
-                solar_absorptivity:          float = 0.5) -> ConductorMetric:
+                solar_absorptivity:          float = 0.5,
+                rugosity_coefficient:        float   = 0.82) -> ConductorMetric:
         """
         Returns a ConductorMetric directly.
         ConductorImperial is never instantiated.
@@ -84,4 +89,5 @@ class ConductorImperial:
             accessories_dol_per_km      = accessories_dol_per_kft    * CF.m_to_ft,
             emissivity                  = emissivity,
             solar_absorptivity          = solar_absorptivity,
+            rugosity_coefficient        = rugosity_coefficient,
         )

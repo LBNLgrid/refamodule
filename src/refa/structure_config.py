@@ -38,3 +38,8 @@ class StructureConfigDCimperial:
             structure_height_m=structure_height_ft * CF.ft_to_m,
             distance_pos_neg_poles_m=distance_pos_neg_poles_ft * CF.ft_to_m,
         )
+
+
+class StructureConfigLoading(BaseModel):
+    line_angle_deg: float = Field(..., gt=0, description="Line angle in degrees. Used in mechanical loading calculations.")
+    material_and_geometry: str = Field('Steel_Pole', description="Material and geometry of the structure. Used in mechanical loading calculations.")

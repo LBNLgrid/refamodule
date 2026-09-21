@@ -14,7 +14,6 @@ class EnvironmentMetric(BaseModel, ParameterAccess):
     atmosphere:                      dict    = Field(...)
     ambient_temperature_c:           float   = Field(..., ge=-60, le=40)        
     weather_correction_factor:       float   = Field(1.0,  gt=0)
-    rugosity_coefficient:            float   = Field(0.82, gt=0)
 
 
 class EnvironmentImperial:
@@ -28,8 +27,7 @@ class EnvironmentImperial:
                 atmosphere:                      dict,
                 ambient_temperature_f:           float,
                 date:                            dt.date = None,
-                weather_correction_factor:       float   = 1.0,
-                rugosity_coefficient:            float   = 0.82) -> EnvironmentMetric:
+                weather_correction_factor:       float   = 1.0) -> EnvironmentMetric:
         return EnvironmentMetric(
             date                            = date or dt.date.today(),
             latitude                        = latitude,
@@ -41,5 +39,4 @@ class EnvironmentImperial:
             atmosphere                      = atmosphere,
             ambient_temperature_c           = (ambient_temperature_f - 32) * 5 / 9,
             weather_correction_factor       = weather_correction_factor,
-            rugosity_coefficient            = rugosity_coefficient,
         )

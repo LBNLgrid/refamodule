@@ -4,7 +4,7 @@ from .environment import EnvironmentMetric, EnvironmentImperial
 from .line_design import LineDesignMetric, LineDesignImperial
 from .loading import LoadingMetric, LoadingImperial
 from .structure_config import (
-    StructureConfigACmetric, StructureConfigACimperial, StructureConfigDCmetric, StructureConfigDCimperial
+    StructureConfigACmetric, StructureConfigACimperial, StructureConfigDCmetric, StructureConfigDCimperial, StructureConfigLoading
 )
 from .line import Line
 from .economics import Economics

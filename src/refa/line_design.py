@@ -16,7 +16,6 @@ class LineDesignMetric(BaseModel, ParameterAccess):
 
     nbr_structures:       Optional[int]   = Field(None, gt=0)
     max_sag_m:            Optional[float] = Field(None, gt=0)
-    structure_cost_dol:   float           = Field(0, ge=0)
 
     @model_validator(mode="after")
     def _update_parameters(self):

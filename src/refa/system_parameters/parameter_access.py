@@ -547,14 +547,7 @@ CF = _CF()
 
 
 # ----- Unit System
-import sys
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    try:
-        import tomllib
-    except ImportError:
-        import tomli as tomllib  # type: ignore[no-redef]
+import tomllib
 from pathlib import Path
 
 _CONFIG_PATH = Path(__file__).parent / "config.toml"
@@ -710,26 +703,20 @@ def validate_args(**param_rules: dict):
     active_constraints = {}
 
     for met_name, rule in param_rules.items():
-        raw    = rule["constraints"]
-        imp    = rule["imperial"]
-        to_imp = rule["to_imperial"]
+        raw = rule["constraints"]
+        imp = rule["imperial"]
 
-        if imperial and imp is not None:
-            # unpack and validate immediately so errors are obvious
+        if imp is not None:
             if not (isinstance(imp, tuple) and len(imp) == 2):
                 raise ValueError(
                     f"'{met_name}': imperial must be (imperial_name, to_si), "
                     f"got {imp!r}"
                 )
             imp_name, to_si = imp   # e.g. "max_sag_ft", CF.ft_to_m
-
             imp_lookup[imp_name] = (met_name, to_si)
-            active_constraints[imp_name] = tuple(
-                _apply_inv(to_si, to_imp, v, met_name) if i % 2 == 1 else v
-                for i, v in enumerate(raw)
-            )
-        else:
-            active_constraints[met_name] = raw
+
+        # Always store metric constraints
+        active_constraints[met_name] = raw
 
     def _to_si(k, v):
         met, to_si = imp_lookup[k]
@@ -752,11 +739,8 @@ def validate_args(**param_rules: dict):
         for p in orig_sig.parameters.values():
             rule = param_rules.get(p.name)
             if rule and rule["imperial"] is not None:
-                imp_name, to_si = rule["imperial"]
-                default         = p.default
-                if default not in (inspect.Parameter.empty, None):
-                    default = _apply_inv(to_si, rule["to_imperial"], default, p.name)
-                params.append(p.replace(name=imp_name, default=default))
+                imp_name, _ = rule["imperial"]
+                params.append(p.replace(name=imp_name))
             else:
                 params.append(p)
         return orig_sig.replace(parameters=params)
@@ -765,8 +749,8 @@ def validate_args(**param_rules: dict):
         orig_sig   = inspect.signature(fn)
         active_sig = _imperial_sig(orig_sig) if imperial else orig_sig
 
-        # sanity check — every active_constraints key must appear in active_sig
-        sig_names = set(active_sig.parameters)
+        # sanity check — every metric constraint key must appear in orig_sig
+        sig_names = set(orig_sig.parameters)
         for name in active_constraints:
             if name not in sig_names:
                 raise ValueError(
@@ -776,30 +760,34 @@ def validate_args(**param_rules: dict):
 
         @functools.wraps(fn)
         def wrapper(*args, **kwargs):
-            if imperial:
-                metric_to_imperial = {met: imp for imp, (met, _) in imp_lookup.items()}
-                converted_kwargs = {}
-                for k, v in kwargs.items():
-                    if k in metric_to_imperial and v is not None:
-                        converted_kwargs[metric_to_imperial[k]] = v
-                    else:
-                        converted_kwargs[k] = v
-                kwargs = converted_kwargs
-            
-            bound = active_sig.bind(*args, **kwargs)
+            # Map imperial names to metric names for argument detection
+            imperial_to_metric = {imp: met for imp, (met, _) in imp_lookup.items()}
+
+            # Normalize all arguments to metric names and values
+            normalized_kwargs = {}
+            for k, v in kwargs.items():
+                if v is None:
+                    normalized_kwargs[k] = v
+                    continue
+
+                if k in imperial_to_metric:
+                    # User passed an imperial parameter name → convert to metric
+                    metric_name = imperial_to_metric[k]
+                    metric_value = _to_si(k, v)[1]  # Convert imperial value to metric
+                    normalized_kwargs[metric_name] = metric_value
+                else:
+                    # User passed metric name or non-unit param → keep as-is
+                    normalized_kwargs[k] = v
+
+            # Bind using metric signature (original function signature)
+            bound = orig_sig.bind(*args, **normalized_kwargs)
             bound.apply_defaults()
 
             for k, v in bound.arguments.items():
                 _validate(k, v)
 
-            final = (
-                {(_to_si(k, v)[0] if k in imp_lookup and v is not None else k):
-                 (_to_si(k, v)[1] if k in imp_lookup and v is not None else v)
-                 for k, v in bound.arguments.items()}
-                if imperial else
-                dict(bound.arguments)
-            )
-            return fn(**final)
+            # All arguments are now in metric, call function directly
+            return fn(**bound.arguments)
 
         wrapper.__signature__ = active_sig
         return wrapper

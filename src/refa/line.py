@@ -283,7 +283,9 @@ class Line(BaseModel, ParameterAccess):
             else:
                 tension_max = tension_holder
 
-        return float(new_sag)
+        return float(new_sag), {'initial_weight_n_per_m': initial_weight, 'new_weight_n_per_m': new_weight, 
+                                'initial_tension_n': initial_tension, 'new_tension_n': new_tension, 
+                                'ice_weight_n_per_m': ice_weight, 'wind_weight_n_per_m': wind_weight}
 
     
     def _sag(self, initial_tension_percentage,  initial_temperature_c=10,
@@ -312,7 +314,7 @@ class Line(BaseModel, ParameterAccess):
             initial_temperature_c=initial_temperature_c, 
             temp_at_current_c=temp_at_current_c, 
             loading_conditions=loading_conditions
-        )
+        )[0]
                                                   
         return sag
 
@@ -348,12 +350,12 @@ class Line(BaseModel, ParameterAccess):
                     initial_tension_percentage, 
                     initial_temperature_c, 
                     temp_at_current_c=self._ieee_738_steady_state_temperature(current_a=current_a, is_hvdc=is_hvdc)[0]
-                ),
+                )[0],
                 self._cigre_324_sag(
                     initial_tension_percentage, 
                     initial_temperature_c, 
                     loading_conditions=loading_conditions
-                ) if loading_conditions is not None else 0
+                )[0] if loading_conditions is not None else 0
             )
             sag_ok = True if sag < max_sag_m else False
             message += f"Sag {sag} meters exceeds the limit {max_sag_m} meters. " if not sag_ok else ""
@@ -455,7 +457,7 @@ class Line(BaseModel, ParameterAccess):
             initial_tension_percentage=initial_tension_percentage, 
             initial_temperature_c=initial_temperature_c, 
             temp_at_current_c=temp_at_current_c
-        )
+        )[0]
         if UnitSystem.is_metric():                                     
             return sag, 'm'
         else:
@@ -475,7 +477,7 @@ class Line(BaseModel, ParameterAccess):
             initial_tension_percentage=initial_tension_percentage, 
             initial_temperature_c=initial_temperature_c, 
             temp_at_current_c=temp_at_current_c,
-        )
+        )[0]
         
         if UnitSystem.is_metric():                                     
             return sag, LB.m
@@ -493,7 +495,7 @@ class Line(BaseModel, ParameterAccess):
             initial_tension_percentage=initial_tension_percentage, 
             initial_temperature_c=initial_temperature_c, 
             temp_at_current_c=temp_at_current_c
-        )
+        )[0]
         
         if UnitSystem.is_metric():                                     
             return sag, LB.m
@@ -511,7 +513,7 @@ class Line(BaseModel, ParameterAccess):
             initial_temperature_c=initial_temperature_c, 
             temp_at_current_c=loading_conditions.wind_ice_temperature_c, 
             loading_conditions=loading_conditions
-        )
+        )[0]
         
         if UnitSystem.is_metric():                                     
             return sag, LB.m
@@ -567,6 +569,34 @@ class Line(BaseModel, ParameterAccess):
         voltage_gradient_kv_per_cm = inception_voltage / d
 
         return float(voltage_gradient_kv_per_cm), "kv/cm"
+
+
+    @validate_args(initial_tension_percentage=param(">=", 0.1, "<=", 0.6),
+                initial_temperature_c=param(">", 0, "<", 75))
+    def mechanical_loading(self, initial_tension_percentage, loading_conditions, structure_config_loading, initial_temperature_c=10):
+       
+        # Tension at the point of attachment on structure (N)
+        sag_m, loading_params = self._cigre_324_sag(
+            initial_tension_percentage=initial_tension_percentage,
+            initial_temperature_c=initial_temperature_c,
+            temp_at_current_c=loading_conditions.wind_ice_temperature_c,  
+            loading_conditions=loading_conditions
+        )
+        loading_params['str_tension_n'] = loading_params['new_tension_n'] + (loading_params['initial_weight_n_per_m'] + loading_params['ice_weight_n_per_m']) * sag_m / 2
+        loading_params['angle_rad'] = structure_config_loading.line_angle_deg / 2 * np.pi / 180 # defined as 1/2 of the line angle
+
+        # Use US Dept. Agriculture - RUS Bulletin 200
+        # Transverse force (N)
+        force_transverse = loading_params['wind_weight_n_per_m'] * self.max_span_m * np.cos(loading_params['angle_rad']) + \
+                                loading_params['str_tension_n'] * np.sin(loading_params['angle_rad'])
+
+        # Longitudinal force (N)
+        force_longitudinal = loading_params['str_tension_n'] * np.cos(loading_params['angle_rad'])
+
+        # Horizontal force a vector summation of F_t and F_l (N)
+        force_horizontal = np.sqrt(pow(force_transverse, 2) + pow(force_longitudinal, 2)) * self.nbr_bundles * self.nbr_conds_per_bundle
+
+        return force_horizontal
 
 
     # evaluate losses and congestion 
@@ -808,13 +838,13 @@ class Line(BaseModel, ParameterAccess):
                     initial_tension_percentage, 
                     initial_temperature_c, 
                     temp_at_current_c=self._ieee_738_steady_state_temperature(current_a=current_a, is_hvdc=is_hvdc)[0]
-                ),
+                )[0],
                 self._cigre_324_sag(
                     initial_tension_percentage, 
                     initial_temperature_c,
                     temp_at_current_c=loading_conditions.wind_ice_temperature_c,  
                     loading_conditions=loading_conditions
-                ) if loading_conditions is not None else 0
+                )[0] if loading_conditions is not None else 0
             )
             sag_ok = True if sag < max_sag_m else False
             if UnitSystem.is_metric():

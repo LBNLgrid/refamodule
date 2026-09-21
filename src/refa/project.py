@@ -2,7 +2,7 @@ from .conductor import ConductorMetric
 from .line_design import LineDesignMetric
 from .line import Line
 from .economics import Economics
-from .structure_config import StructureConfigACmetric, StructureConfigDCmetric
+from .structure_config import StructureConfigACmetric, StructureConfigDCmetric, StructureConfigLoading
 from .system_parameters import ParameterAccess, validate_args, param
 from pydantic import BaseModel, Field, model_validator
 from typing import Optional, List
@@ -126,16 +126,14 @@ class ProjectEssentials(BaseModel, ParameterAccess):
         
         line_design = pd.DataFrame([line.line_design.model_dump() for line in lines])
         conductors = pd.DataFrame([line.conductor.model_dump() for line in lines])
-        lines_df = conductors.join(line_design)
+        lines_df = conductors.join(line_design, lsuffix="", rsuffix="_y")
         
         lines_df = lines_df.reset_index(drop=True)
         desired_cols = line_design.columns.to_list() + \
             ['code', 'type', 'cost_dol_per_km', 'installation_dol_per_km',
-            'accessories_dol_per_km', 'max_temperature_c', 'str_costs_dol']
+            'accessories_dol_per_km', 'max_temperature_c', 'structure_costs_dol']
         valid_cols = lines_df.columns.intersection(desired_cols)
         lines_df = lines_df[valid_cols].copy()
-        if 'str_costs_dol' in lines_df.columns:
-            lines_df = lines_df.rename(columns={'str_costs_dol': 'structure_cost_dol'})
         
         return lines_df
        
@@ -176,7 +174,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
             )
         else:
             structures = lines.apply(
-                lambda r: r['structure_cost_dol'] * r['nbr_structures'] * npv['inflation'] * npv['structures_inv'],
+                lambda r: r['structure_costs_dol'] * npv['inflation'] * npv['structures_inv'],
                 axis=1
             )
 
@@ -400,7 +398,7 @@ class ProjectEssentials(BaseModel, ParameterAccess):
                 )
             else:
                 structures = lines.apply(
-                    lambda r: r['structure_cost_dol'] * npv['inflation'] * npv['structures_inv'],
+                    lambda r: r['structure_costs_dol'] * npv['inflation'] * npv['structures_inv'],
                     axis=1
                 )
 
@@ -622,7 +620,8 @@ class Existing(ProjectEssentials):
             description="Year at which structure replacement is planned, corresponding to structures_remaining_life.")
     
     prj_name: str = "Existing"
-    structure_config: StructureConfigACmetric = None
+    structure_config: StructureConfigACmetric | None = None
+    structure_config_loading: StructureConfigLoading | None = None
         
 
 class Rebuild(ProjectEssentials):
@@ -630,7 +629,8 @@ class Rebuild(ProjectEssentials):
     conductor_remaining_life: int = 0
 
     prj_name: str = "Rebuild"
-    structure_config: StructureConfigACmetric = None
+    structure_config: StructureConfigACmetric | None = None
+    structure_config_loading: StructureConfigLoading | None = None
 
 
 class Reconductoring(ProjectEssentials):
@@ -638,7 +638,8 @@ class Reconductoring(ProjectEssentials):
             description="Year at which structure replacement is planned, corresponding to structures_remaining_life.")
     
     prj_name: str = "Reconductoring"
-    structure_config: StructureConfigACmetric = None
+    structure_config: StructureConfigACmetric | None = None
+    structure_config_loading: StructureConfigLoading | None = None
     conductor_remaining_life: int = 0
     
 
@@ -650,7 +651,8 @@ class VoltageUpgrade(ProjectEssentials):
     cost_substations_upgrade_dol: float = Field(..., ge=0)
     
     prj_name: str = "VoltageUpgrade"
-    structure_config: StructureConfigACmetric = None
+    structure_config: StructureConfigACmetric | None = None
+    structure_config_loading: StructureConfigLoading | None = None
 
     # Aggregated cost for the case where some structures need to be modified due to the voltage upgrade
     cost_structures_modif_dol: float = Field(0, ge=0)
@@ -694,7 +696,8 @@ class HVDC(ProjectEssentials):
     cost_converters_dol: float = Field(..., ge=0)   
     
     prj_name: str = "HVDC"
-    structure_config: StructureConfigDCmetric = None
+    structure_config: StructureConfigDCmetric | None = None
+    structure_config_loading: StructureConfigLoading | None = None
 
     # Aggregated cost for the case where some structures need to be modified
     cost_structures_modif_dol: float = Field(0, ge=0)
@@ -886,7 +889,7 @@ class HVDC(ProjectEssentials):
                 )
             else:
                 structures = lines.apply(
-                    lambda r: r['structure_cost_dol'] * npv['inflation'] * npv['structures_inv'],
+                    lambda r: r['structure_costs_dol'] * npv['inflation'] * npv['structures_inv'],
                     axis=1
                 )
 
