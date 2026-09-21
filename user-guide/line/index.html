@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1749,22 +1749,22 @@
 <p>Run all calculations in a single call. The returned dictionary grows with each optional parameter provided:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Minimum — ampacity and sag only</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">perf</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">overall_technical_performance</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="mi">1500</span><span class="p">)</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># {&#39;ampacity_a&#39;: 1398.3, &#39;sag_m&#39;: 14.1}</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># {'ampacity_a': 1398.3, 'sag_m': 14.1}</span>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Add congestion (requires voltage_kv)</span>
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="n">perf</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">overall_technical_performance</span><span class="p">(</span><span class="n">power_mw</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">voltage_kv</span><span class="o">=</span><span class="mi">230</span><span class="p">)</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># {&#39;ampacity_a&#39;: ..., &#39;sag_m&#39;: ..., &#39;congestion_mw&#39;: 0}</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># {'ampacity_a': ..., 'sag_m': ..., 'congestion_mw': 0}</span>
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Add resistive losses (requires load_factor)</span>
 <a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="n">perf</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">overall_technical_performance</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span> <span class="n">load_factor</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># adds &#39;resistive_losses_mwh_per_m&#39;</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># adds 'resistive_losses_mwh_per_m'</span>
 <a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
 <a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># Add corona (requires structure_config and voltage_kv)</span>
 <a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="n">perf</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">overall_technical_performance</span><span class="p">(</span>
 <a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>    <span class="n">current_a</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span> <span class="n">voltage_kv</span><span class="o">=</span><span class="mi">230</span><span class="p">,</span> <span class="n">load_factor</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
 <a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>    <span class="n">structure_config</span><span class="o">=</span><span class="n">config_ac</span><span class="p">,</span>
 <a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="p">)</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="c1"># adds &#39;corona_inception_voltage_kv&#39;, &#39;corona_voltage_gradient_kv_per_cm&#39;, &#39;corona_losses_mwh_per_m&#39;</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="c1"># adds 'corona_inception_voltage_kv', 'corona_voltage_gradient_kv_per_cm', 'corona_losses_mwh_per_m'</span>
 </code></pre></div>
 
 
@@ -1864,7 +1864,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

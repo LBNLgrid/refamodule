@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1653,12 +1653,12 @@
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Get area in metric (current system)</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">area_metric</span><span class="p">,</span> <span class="n">unit_metric</span> <span class="o">=</span> <span class="n">conductor</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">&#39;area&#39;</span><span class="p">)</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Returns: (500, &#39;mm²&#39;)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">area_metric</span><span class="p">,</span> <span class="n">unit_metric</span> <span class="o">=</span> <span class="n">conductor</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">'area'</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Returns: (500, 'mm²')</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Get area in imperial</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">area_imperial</span><span class="p">,</span> <span class="n">unit_imperial</span> <span class="o">=</span> <span class="n">conductor</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">&#39;area&#39;</span><span class="p">,</span> <span class="n">unit_system</span><span class="o">=</span><span class="s1">&#39;imperial&#39;</span><span class="p">)</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Returns: (987, &#39;kcmil&#39;)  # approximately</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">area_imperial</span><span class="p">,</span> <span class="n">unit_imperial</span> <span class="o">=</span> <span class="n">conductor</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">'area'</span><span class="p">,</span> <span class="n">unit_system</span><span class="o">=</span><span class="s1">'imperial'</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Returns: (987, 'kcmil')  # approximately</span>
 </code></pre></div></p>
 <h3 id="set_parameterparameter_name-value-unit_systemnone"><code>set_parameter(parameter_name, value, unit_system=None)</code></h3>
 <p>Sets a parameter value with automatic conversion to internal metric storage. The parameter <code>unit_system</code> is used to specify that this entry is provided in a different system than the current global unit system.</p>
@@ -1668,14 +1668,14 @@
 - <code>unit_system</code> (str, optional): Unit system of the input value - <code>'metric'</code>, <code>'imperial'</code>, or <code>None</code> (uses current system)</p>
 <p><strong>Example:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Set area in metric</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">conductor</span><span class="o">.</span><span class="n">set_parameter</span><span class="p">(</span><span class="s1">&#39;area&#39;</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">unit_system</span><span class="o">=</span><span class="s1">&#39;metric&#39;</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">conductor</span><span class="o">.</span><span class="n">set_parameter</span><span class="p">(</span><span class="s1">'area'</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">unit_system</span><span class="o">=</span><span class="s1">'metric'</span><span class="p">)</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Set area in imperial (automatically converts to metric for storage)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">conductor</span><span class="o">.</span><span class="n">set_parameter</span><span class="p">(</span><span class="s1">&#39;area&#39;</span><span class="p">,</span> <span class="mi">987</span><span class="p">,</span> <span class="n">unit_system</span><span class="o">=</span><span class="s1">&#39;imperial&#39;</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">conductor</span><span class="o">.</span><span class="n">set_parameter</span><span class="p">(</span><span class="s1">'area'</span><span class="p">,</span> <span class="mi">987</span><span class="p">,</span> <span class="n">unit_system</span><span class="o">=</span><span class="s1">'imperial'</span><span class="p">)</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Internally stored as ~500 mm²</span>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Set using current unit system from config</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">conductor</span><span class="o">.</span><span class="n">set_parameter</span><span class="p">(</span><span class="s1">&#39;diameter&#39;</span><span class="p">,</span> <span class="mf">25.4</span><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">conductor</span><span class="o">.</span><span class="n">set_parameter</span><span class="p">(</span><span class="s1">'diameter'</span><span class="p">,</span> <span class="mf">25.4</span><span class="p">)</span>
 </code></pre></div></p>
 <h3 id="get_parameter_infoparameter_name"><code>get_parameter_info(parameter_name)</code></h3>
 <p>Retrieves metadata about a parameter including its internal name and unit definitions.</p>
@@ -1688,12 +1688,12 @@
   - <code>'imperial_unit'</code>: Imperial unit abbreviation (e.g., <code>'kcmil'</code>)
   - <code>'description'</code>: Human-readable description</p>
 <p><strong>Example:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">info</span> <span class="o">=</span> <span class="n">conductor</span><span class="o">.</span><span class="n">get_parameter_info</span><span class="p">(</span><span class="s1">&#39;area&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">info</span> <span class="o">=</span> <span class="n">conductor</span><span class="o">.</span><span class="n">get_parameter_info</span><span class="p">(</span><span class="s1">'area'</span><span class="p">)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Returns: {</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">#     &#39;internal_name&#39;: &#39;area_mm2&#39;,</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">#     &#39;metric_unit&#39;: &#39;mm2&#39;,</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">#     &#39;imperial_unit&#39;: &#39;kcmil&#39;,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">#     &#39;description&#39;: &#39;Conductor cross-sectional area&#39;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">#     'internal_name': 'area_mm2',</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">#     'metric_unit': 'mm2',</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">#     'imperial_unit': 'kcmil',</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">#     'description': 'Conductor cross-sectional area'</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># }</span>
 </code></pre></div></p>
 <h3 id="list_parameters"><code>list_parameters()</code></h3>
@@ -1705,7 +1705,7 @@
 - List of parameter names (strings)</p>
 <p><strong>Example:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">params</span> <span class="o">=</span> <span class="n">conductor</span><span class="o">.</span><span class="n">list_parameters</span><span class="p">()</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Returns: [&#39;area&#39;, &#39;diameter&#39;, &#39;weight&#39;, &#39;conductor_rts&#39;, &#39;temp_dc&#39;, ...]</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Returns: ['area', 'diameter', 'weight', 'conductor_rts', 'temp_dc', ...]</span>
 </code></pre></div></p>
 <h3 id="get_all_parametersunit_systemnone"><code>get_all_parameters(unit_system=None)</code></h3>
 <p>Retrieves all parameters (with their values and units) as a dictionary in the specified unit system.</p>
@@ -1714,11 +1714,11 @@
 <p><strong>Returns:</strong>
 - Dictionary mapping parameter names to <code>(value, unit_label)</code> tuples</p>
 <p><strong>Example:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">all_params</span> <span class="o">=</span> <span class="n">conductor</span><span class="o">.</span><span class="n">get_all_parameters</span><span class="p">(</span><span class="n">unit_system</span><span class="o">=</span><span class="s1">&#39;imperial&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">all_params</span> <span class="o">=</span> <span class="n">conductor</span><span class="o">.</span><span class="n">get_all_parameters</span><span class="p">(</span><span class="n">unit_system</span><span class="o">=</span><span class="s1">'imperial'</span><span class="p">)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Returns: {</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">#     &#39;area&#39;: (987, &#39;kcmil&#39;),</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">#     &#39;diameter&#39;: (1.0, &#39;in&#39;),</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">#     &#39;weight&#39;: (0.15, &#39;lbs/kft&#39;),</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">#     'area': (987, 'kcmil'),</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">#     'diameter': (1.0, 'in'),</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">#     'weight': (0.15, 'lbs/kft'),</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">#     ...</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># }</span>
 </code></pre></div></p>
@@ -1736,7 +1736,7 @@
 - List of parameter names that have metric/imperial conversions</p>
 <p><strong>Example:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">convertible</span> <span class="o">=</span> <span class="n">ConductorMetric</span><span class="o">.</span><span class="n">get_parameters_needing_conversion</span><span class="p">()</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Returns: [&#39;area&#39;, &#39;diameter&#39;, &#39;weight&#39;, &#39;conductor_rts&#39;, ...]</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Returns: ['area', 'diameter', 'weight', 'conductor_rts', ...]</span>
 </code></pre></div></p>
 <h2 id="supported-models">Supported Models</h2>
 <p>The <code>ParameterAccess</code> interface is available on:</p>
@@ -1753,7 +1753,7 @@
 <h2 id="unit-system-configuration">Unit System Configuration</h2>
 <p>The default unit system is read from <code>refa/system_parameters/config.toml</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">[units]</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">unit_system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;metric&quot;</span><span class="w">  </span><span class="c1"># or &quot;imperial&quot;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">unit_system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"metric"</span><span class="w">  </span><span class="c1"># or "imperial"</span>
 </code></pre></div>
 <p>It is recommended to chang the unit system before importing from the REFA module. To check the active unit system at runtime:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa.system_parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnitSystem</span>
@@ -1781,12 +1781,12 @@
 <p>The <code>LB</code> object provides display labels for all units:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa.system_parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">LB</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">LB</span><span class="o">.</span><span class="n">mm2</span>      <span class="c1"># &quot;mm²&quot;</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">LB</span><span class="o">.</span><span class="n">kcmil</span>    <span class="c1"># &quot;kcmil&quot;</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">LB</span><span class="o">.</span><span class="n">m</span>        <span class="c1"># &quot;m&quot;</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="n">LB</span><span class="o">.</span><span class="n">ft</span>       <span class="c1"># &quot;ft&quot;</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="n">LB</span><span class="o">.</span><span class="n">celsius</span>  <span class="c1"># &quot;°C&quot;</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="n">LB</span><span class="o">.</span><span class="n">fahrenheit</span> <span class="c1"># &quot;°F&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">LB</span><span class="o">.</span><span class="n">mm2</span>      <span class="c1"># "mm²"</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">LB</span><span class="o">.</span><span class="n">kcmil</span>    <span class="c1"># "kcmil"</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">LB</span><span class="o">.</span><span class="n">m</span>        <span class="c1"># "m"</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="n">LB</span><span class="o">.</span><span class="n">ft</span>       <span class="c1"># "ft"</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="n">LB</span><span class="o">.</span><span class="n">celsius</span>  <span class="c1"># "°C"</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="n">LB</span><span class="o">.</span><span class="n">fahrenheit</span> <span class="c1"># "°F"</span>
 </code></pre></div>
 <h2 id="nested-parameter-access">Nested Parameter Access</h2>
 <p>For composite models like <code>Line</code> and <code>ProjectEssentials</code>, parameters from nested objects are accessible as follows:</p>
@@ -1800,10 +1800,10 @@
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="p">)</span>
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Access conductor parameter directly from line</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="n">area</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">conductor</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">&#39;area&#39;</span><span class="p">)</span>  
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="n">area</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">conductor</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">'area'</span><span class="p">)</span>  
 <a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
 <a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># Access line_design parameter directly from line</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="n">length</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">line_design</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">&#39;length&#39;</span><span class="p">)</span>  
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="n">length</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">line_design</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">'length'</span><span class="p">)</span>  
 </code></pre></div>
 <h2 id="error-handling">Error Handling</h2>
 <p>All functions raise <code>ValueError</code> if:
@@ -1812,10 +1812,10 @@
 - A parameter is not found in the model</p>
 <p>Example:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">conductor</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">&#39;unknown_param&#39;</span><span class="p">)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">conductor</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">'unknown_param'</span><span class="p">)</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="c1"># Error: Unknown parameter &#39;unknown_param&#39;. Available: [&#39;area&#39;, &#39;diameter&#39;, ...]</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="c1"># Error: Unknown parameter 'unknown_param'. Available: ['area', 'diameter', ...]</span>
 </code></pre></div></p>
 
 
@@ -1915,7 +1915,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

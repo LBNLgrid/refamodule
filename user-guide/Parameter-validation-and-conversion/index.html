@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1998,11 +1998,11 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">refa.system_parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_args</span><span class="p">,</span> <span class="n">param</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nd">@validate_args</span><span class="p">(</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">voltage_kv</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">power_mw</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">voltage_kv</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;"</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">power_mw</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;"</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">power_mw</span><span class="p">,</span> <span class="n">voltage_kv</span><span class="p">,</span> <span class="n">is_hvdc</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate current from power and voltage.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="sd">"""Calculate current from power and voltage."""</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="k">return</span> <span class="n">power_mw</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">/</span> <span class="p">(</span><span class="n">voltage_kv</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
 </code></pre></div>
 <p>When called:
@@ -2012,17 +2012,17 @@
 <h3 id="validation-with-imperial-conversion">Validation with Imperial Conversion</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@validate_args</span><span class="p">(</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">max_sag_m</span><span class="o">=</span><span class="n">param</span><span class="p">(</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="n">imperial</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;max_sag_ft&quot;</span><span class="p">,</span> <span class="n">CF</span><span class="o">.</span><span class="n">ft_to_m</span><span class="p">),</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="n">imperial</span><span class="o">=</span><span class="p">(</span><span class="s2">"max_sag_ft"</span><span class="p">,</span> <span class="n">CF</span><span class="o">.</span><span class="n">ft_to_m</span><span class="p">),</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="n">to_imperial</span><span class="o">=</span><span class="n">CF</span><span class="o">.</span><span class="n">m_to_ft</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="p">)</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">)</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_sag_feasible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_sag_m</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if sag is feasible.&quot;&quot;&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="sd">"""Check if sag is feasible."""</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="k">pass</span>
 </code></pre></div>
 <p>When in imperial mode:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">UnitSystem</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;imperial&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">UnitSystem</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'imperial'</span><span class="p">)</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">line</span><span class="o">.</span><span class="n">is_sag_feasible</span><span class="p">(</span><span class="n">max_sag_ft</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># User passes feet</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Decorator converts to meters internally</span>
 </code></pre></div></p>
@@ -2063,24 +2063,24 @@
 </table>
 <h3 id="examples">Examples</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Single constraint: must be positive</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Range constraint: between 0 and 1</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;=&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;="</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;="</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Multiple constraints: &gt; 0 AND &lt; 1000</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;"</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Exact value</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">param</span><span class="p">(</span><span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">param</span><span class="p">(</span><span class="s2">"=="</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="imperial-unit-conversion">Imperial Unit Conversion</h2>
 <h3 id="specifying-imperial-parameters">Specifying Imperial Parameters</h3>
 <p>When a parameter has an imperial equivalent, use the <code>imperial</code> and <code>to_imperial</code> arguments:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nd">@validate_args</span><span class="p">(</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">max_sag_m</span><span class="o">=</span><span class="n">param</span><span class="p">(</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>        <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        <span class="n">imperial</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;max_sag_ft&quot;</span><span class="p">,</span> <span class="n">CF</span><span class="o">.</span><span class="n">ft_to_m</span><span class="p">),</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>        <span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        <span class="n">imperial</span><span class="o">=</span><span class="p">(</span><span class="s2">"max_sag_ft"</span><span class="p">,</span> <span class="n">CF</span><span class="o">.</span><span class="n">ft_to_m</span><span class="p">),</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>        <span class="n">to_imperial</span><span class="o">=</span><span class="n">CF</span><span class="o">.</span><span class="n">m_to_ft</span>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="p">)</span>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">)</span>
@@ -2110,14 +2110,14 @@
 <h3 id="temperature-conversion-example">Temperature Conversion Example</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nd">@validate_args</span><span class="p">(</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">temp_at_current_c</span><span class="o">=</span><span class="n">param</span><span class="p">(</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">60</span><span class="p">,</span> <span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        <span class="n">imperial</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;temp_at_current_f&quot;</span><span class="p">,</span> <span class="n">CF</span><span class="o">.</span><span class="n">f_to_c</span><span class="p">),</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        <span class="s2">"&gt;"</span><span class="p">,</span> <span class="o">-</span><span class="mi">60</span><span class="p">,</span> <span class="s2">"&lt;="</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        <span class="n">imperial</span><span class="o">=</span><span class="p">(</span><span class="s2">"temp_at_current_f"</span><span class="p">,</span> <span class="n">CF</span><span class="o">.</span><span class="n">f_to_c</span><span class="p">),</span>
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        <span class="n">to_imperial</span><span class="o">=</span><span class="n">CF</span><span class="o">.</span><span class="n">c_to_f</span>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="p">),</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">initial_temperature_c</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">initial_temperature_c</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;"</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="p">)</span>
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">temperature_at_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp_at_current_c</span><span class="p">,</span> <span class="n">initial_temperature_c</span><span class="p">):</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate temperature at current.&quot;&quot;&quot;</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="sd">"""Calculate temperature at current."""</span>
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    <span class="k">pass</span>
 </code></pre></div>
 <p>Usage:
@@ -2125,18 +2125,18 @@
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">line</span><span class="o">.</span><span class="n">temperature_at_current</span><span class="p">(</span><span class="n">temp_at_current_c</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">initial_temperature_c</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Imperial mode</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">UnitSystem</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;imperial&#39;</span><span class="p">)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">UnitSystem</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'imperial'</span><span class="p">)</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">line</span><span class="o">.</span><span class="n">temperature_at_current</span><span class="p">(</span><span class="n">temp_at_current_f</span><span class="o">=</span><span class="mi">122</span><span class="p">,</span> <span class="n">initial_temperature_c</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># 122°F ≈ 50°C (converted automatically)</span>
 </code></pre></div></p>
 <h2 id="real-world-examples-from-line-class">Real-World Examples from Line Class</h2>
 <h3 id="example-1-current-calculation">Example 1: Current Calculation</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nd">@validate_args</span><span class="p">(</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">voltage_kv</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">power_mw</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">voltage_kv</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;"</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">power_mw</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;"</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p">)</span>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">power_mw</span><span class="p">,</span> <span class="n">voltage_kv</span><span class="p">,</span> <span class="n">is_hvdc</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="sd">"""</span>
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="sd">    Calculate current from power and voltage.</span>
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="sd">    Args:</span>
@@ -2146,7 +2146,7 @@
 <a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
 <a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="sd">        Current in Amperes</span>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="sd">    """</span>
 <a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    <span class="k">if</span> <span class="n">is_hvdc</span><span class="p">:</span>
 <a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>        <span class="k">return</span> <span class="n">power_mw</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">/</span> <span class="n">voltage_kv</span>
 <a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>    <span class="k">else</span><span class="p">:</span>
@@ -2155,16 +2155,16 @@
 <h3 id="example-2-sag-calculation-with-temperature">Example 2: Sag Calculation with Temperature</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nd">@validate_args</span><span class="p">(</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="n">temp_at_current_c</span><span class="o">=</span><span class="n">param</span><span class="p">(</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>        <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">60</span><span class="p">,</span> <span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>        <span class="n">imperial</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;temp_at_current_f&quot;</span><span class="p">,</span> <span class="n">CF</span><span class="o">.</span><span class="n">f_to_c</span><span class="p">),</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>        <span class="s2">"&gt;"</span><span class="p">,</span> <span class="o">-</span><span class="mi">60</span><span class="p">,</span> <span class="s2">"&lt;="</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>        <span class="n">imperial</span><span class="o">=</span><span class="p">(</span><span class="s2">"temp_at_current_f"</span><span class="p">,</span> <span class="n">CF</span><span class="o">.</span><span class="n">f_to_c</span><span class="p">),</span>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>        <span class="n">to_imperial</span><span class="o">=</span><span class="n">CF</span><span class="o">.</span><span class="n">c_to_f</span>
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="p">),</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">initial_temperature_c</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">initial_temperature_c</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;"</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">)</span>
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">sag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp_at_current_c</span><span class="p">,</span> <span class="n">initial_temperature_c</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
 <a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>         <span class="n">current_a</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">power_mw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">voltage_kv</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>         <span class="n">loading_conditions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_hvdc</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span><span class="sd">"""</span>
 <a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="sd">    Calculate conductor sag using CIGRE 324 method.</span>
 <a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
 <a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="sd">    Args:</span>
@@ -2178,16 +2178,16 @@
 <a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>
 <a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="sd">        Sag in meters</span>
-<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="sd">    """</span>
 <a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>    <span class="c1"># Implementation uses validated and converted parameters</span>
 <a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>    <span class="k">pass</span>
 </code></pre></div>
 <h3 id="example-3-feasibility-check-with-imperial-support">Example 3: Feasibility Check with Imperial Support</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nd">@validate_args</span><span class="p">(</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">current_a</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">current_a</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">max_sag_m</span><span class="o">=</span><span class="n">param</span><span class="p">(</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>        <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>        <span class="n">imperial</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;max_sag_ft&quot;</span><span class="p">,</span> <span class="n">CF</span><span class="o">.</span><span class="n">ft_to_m</span><span class="p">),</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>        <span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>        <span class="n">imperial</span><span class="o">=</span><span class="p">(</span><span class="s2">"max_sag_ft"</span><span class="p">,</span> <span class="n">CF</span><span class="o">.</span><span class="n">ft_to_m</span><span class="p">),</span>
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>        <span class="n">to_imperial</span><span class="o">=</span><span class="n">CF</span><span class="o">.</span><span class="n">m_to_ft</span>
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="p">)</span>
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="p">)</span>
@@ -2195,7 +2195,7 @@
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>                    <span class="n">initial_tension_percentage</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span>
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>                    <span class="n">initial_temperature_c</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
 <a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>                    <span class="n">loading_conditions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_hvdc</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">    </span><span class="sd">"""</span>
 <a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="sd">    Check if sag is feasible for given conditions.</span>
 <a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
 <a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="sd">    Args:</span>
@@ -2209,7 +2209,7 @@
 <a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>
 <a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="sd">        Boolean indicating feasibility</span>
-<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="sd">    """</span>
 <a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>    <span class="n">calculated_sag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sag</span><span class="p">(</span>
 <a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>        <span class="n">temp_at_current_c</span><span class="o">=...</span><span class="p">,</span>
 <a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>        <span class="n">initial_temperature_c</span><span class="o">=</span><span class="n">initial_temperature_c</span><span class="p">,</span>
@@ -2222,10 +2222,10 @@
 <h2 id="real-world-examples-from-projectessentials-class">Real-World Examples from ProjectEssentials Class</h2>
 <h3 id="example-1-cost-calculation">Example 1: Cost Calculation</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nd">@validate_args</span><span class="p">(</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">time_horizon</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">time_horizon</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;="</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="p">)</span>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">total_costs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_horizon</span><span class="p">,</span> <span class="n">report_all_years</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="sd">"""</span>
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="sd">    Calculate total project costs over time horizon.</span>
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="sd">    Args:</span>
@@ -2234,18 +2234,18 @@
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="sd">        Dictionary of costs or DataFrame if report_all_years=True</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="sd">    """</span>
 <a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    <span class="c1"># Implementation uses validated time_horizon</span>
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>    <span class="k">pass</span>
 </code></pre></div>
 <h3 id="example-2-multi-parameter-validation">Example 2: Multi-Parameter Validation</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nd">@validate_args</span><span class="p">(</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">time_horizon</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">load_factor</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;=&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">time_horizon</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;="</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">load_factor</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;="</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;="</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="p">)</span>
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">total_costs_including_losses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_horizon</span><span class="p">,</span> <span class="n">load_factor</span><span class="p">,</span> 
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>                                 <span class="n">report_all_years</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span><span class="sd">"""</span>
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="sd">    Calculate total costs including loss costs.</span>
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
 <a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="sd">    Args:</span>
@@ -2255,7 +2255,7 @@
 <a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
 <a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="sd">        Dictionary of costs or DataFrame if report_all_years=True</span>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="sd">    """</span>
 <a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>    <span class="c1"># Implementation uses both validated parameters</span>
 <a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>    <span class="k">pass</span>
 </code></pre></div>
@@ -2266,22 +2266,22 @@
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="n">line</span><span class="o">.</span><span class="n">get_current</span><span class="p">(</span><span class="n">power_mw</span><span class="o">=-</span><span class="mi">50</span><span class="p">,</span> <span class="n">voltage_kv</span><span class="o">=</span><span class="mi">345</span><span class="p">)</span>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="c1"># Output: &#39;power_mw&#39; = -50 is out of range: must be &gt; 0</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="c1"># Output: 'power_mw' = -50 is out of range: must be &gt; 0</span>
 </code></pre></div>
 <h3 id="configuration-errors">Configuration Errors</h3>
 <p>If the decorator is misconfigured, errors are raised at decoration time:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Error: parameter name not in function signature</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nd">@validate_args</span><span class="p">(</span><span class="n">unknown_param</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nd">@validate_args</span><span class="p">(</span><span class="n">unknown_param</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">known_param</span><span class="p">):</span>
 <a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="k">pass</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Raises: ValueError: validate() key &#39;unknown_param&#39; not found in my_function signature</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Raises: ValueError: validate() key 'unknown_param' not found in my_function signature</span>
 </code></pre></div>
 <h2 id="signature-adaptation">Signature Adaptation</h2>
 <p>The decorator automatically adapts the function signature based on the active unit system:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nd">@validate_args</span><span class="p">(</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="n">max_sag_m</span><span class="o">=</span><span class="n">param</span><span class="p">(</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>        <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>        <span class="n">imperial</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;max_sag_ft&quot;</span><span class="p">,</span> <span class="n">CF</span><span class="o">.</span><span class="n">ft_to_m</span><span class="p">),</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>        <span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>        <span class="n">imperial</span><span class="o">=</span><span class="p">(</span><span class="s2">"max_sag_ft"</span><span class="p">,</span> <span class="n">CF</span><span class="o">.</span><span class="n">ft_to_m</span><span class="p">),</span>
 <a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>        <span class="n">to_imperial</span><span class="o">=</span><span class="n">CF</span><span class="o">.</span><span class="n">m_to_ft</span>
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    <span class="p">)</span>
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="p">)</span>
@@ -2292,7 +2292,7 @@
 <a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="n">help</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">is_sag_feasible</span><span class="p">)</span>
 <a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># Shows: is_sag_feasible(self, max_sag_m, ...)</span>
 <a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="n">UnitSystem</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;imperial&#39;</span><span class="p">)</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="n">UnitSystem</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">'imperial'</span><span class="p">)</span>
 <a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>
 <a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="c1"># In imperial mode</span>
 <a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="n">help</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">is_sag_feasible</span><span class="p">)</span>
@@ -2302,8 +2302,8 @@
 <h3 id="1-always-validate-user-input">1. Always Validate User Input</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Good: Validates all user-facing parameters</span>
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nd">@validate_args</span><span class="p">(</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="n">voltage_kv</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">power_mw</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="n">voltage_kv</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;"</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">power_mw</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;"</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="p">)</span>
 <a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">power_mw</span><span class="p">,</span> <span class="n">voltage_kv</span><span class="p">):</span>
 <a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    <span class="k">pass</span>
@@ -2315,19 +2315,19 @@
 <h3 id="2-use-realistic-constraints">2. Use Realistic Constraints</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Good: Realistic physical constraints</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nd">@validate_args</span><span class="p">(</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="n">voltage_kv</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>  <span class="c1"># Typical transmission voltages</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="n">power_mw</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>    <span class="c1"># Typical transmission power</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="n">voltage_kv</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;"</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>  <span class="c1"># Typical transmission voltages</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="n">power_mw</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;"</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>    <span class="c1"># Typical transmission power</span>
 <a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="p">)</span>
 <a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
 <a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Avoid: Unrealistic constraints</span>
 <a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="nd">@validate_args</span><span class="p">(</span>
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>    <span class="n">voltage_kv</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mf">1e10</span><span class="p">),</span>  <span class="c1"># Unrealistic upper bound</span>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>    <span class="n">power_mw</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="mf">1e20</span><span class="p">)</span>     <span class="c1"># Unrealistic upper bound</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>    <span class="n">voltage_kv</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;"</span><span class="p">,</span> <span class="mf">1e10</span><span class="p">),</span>  <span class="c1"># Unrealistic upper bound</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>    <span class="n">power_mw</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"&lt;"</span><span class="p">,</span> <span class="mf">1e20</span><span class="p">)</span>     <span class="c1"># Unrealistic upper bound</span>
 <a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="p">)</span>
 </code></pre></div>
 <h3 id="3-handle-none-values">3. Handle None Values</h3>
 <p>The decorator automatically skips validation for <code>None</code> values:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nd">@validate_args</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nd">@validate_args</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="n">param</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_a</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="k">if</span> <span class="n">current_a</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>        <span class="c1"># Handle None case</span>
@@ -2340,11 +2340,11 @@
 <h3 id="constraint-checking">Constraint Checking</h3>
 <p>Constraints are checked using Python's comparison operators:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">OPERATORS</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>    <span class="s2">&quot;&gt;&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">,</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="s2">&quot;&gt;=&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="p">,</span>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="s2">&quot;&lt;&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">,</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="s2">&quot;&lt;=&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">,</span>
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    <span class="s2">&quot;==&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">,</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>    <span class="s2">"&gt;"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">,</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="s2">"&gt;="</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="p">,</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="s2">"&lt;"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">,</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="s2">"&lt;="</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">,</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    <span class="s2">"=="</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">,</span>
 <a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="unit-system-detection">Unit System Detection</h3>
@@ -2473,7 +2473,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

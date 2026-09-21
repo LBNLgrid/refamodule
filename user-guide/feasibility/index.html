@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1329,14 +1329,14 @@
 </ol>
 <p>Both conditions must hold for the check to pass. This dual-bound ensures that candidates that are heavily oversized for the target power requirement are also excluded.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">feasible</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">is_ampacity_feasible</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="mi">1300</span><span class="p">)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># (True, &#39;&#39;)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># (True, '')</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">feasible</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">is_ampacity_feasible</span><span class="p">(</span><span class="n">current_a</span><span class="o">=</span><span class="mi">1500</span><span class="p">)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># (False, &#39;Ampacity 1398 A is not sufficient for peak current 1500 A.&#39;)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># (False, 'Ampacity 1398 A is not sufficient for peak current 1500 A.')</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># From power and voltage</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">feasible</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">is_ampacity_feasible</span><span class="p">(</span><span class="n">power_mw</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">voltage_kv</span><span class="o">=</span><span class="mi">115</span><span class="p">)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># (True, &#39;&#39;)  — 200 MW at 115 kV ≈ 1004 A, within [ampacity/3, ampacity]</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># (True, '')  — 200 MW at 115 kV ≈ 1004 A, within [ampacity/3, ampacity]</span>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Over-designed lines are also flagged</p>
@@ -1363,13 +1363,13 @@ When sag feasibility is evaluated by a project (<code>select_sag_feasible=True</
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">structure_config</span><span class="o">=</span><span class="n">my_config_ac</span><span class="p">,</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">voltage_kv</span><span class="o">=</span><span class="mi">230</span><span class="p">,</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># (True, &#39;&#39;)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># (True, '')</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">feasible</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">is_corona_feasible</span><span class="p">(</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">structure_config</span><span class="o">=</span><span class="n">my_config_ac</span><span class="p">,</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">voltage_kv</span><span class="o">=</span><span class="mi">345</span><span class="p">,</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># (False, &#39;Corona inception voltage 230.2 kV is below the line voltage.&#39;)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># (False, 'Corona inception voltage 230.2 kV is below the line voltage.')</span>
 </code></pre></div>
 <hr />
 <h2 id="feasibility-in-projects">Feasibility in Projects</h2>
@@ -1480,7 +1480,7 @@ When sag feasibility is evaluated by a project (<code>select_sag_feasible=True</
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
