@@ -79,4 +79,5 @@ nav:
     - Defaults: api/defaults.md
     - Standards: api/standards.md
   - Changelog: changelog.md
+  - REFA API: https://lbnlgrid.github.io/refaapi/
   - License: license.md
